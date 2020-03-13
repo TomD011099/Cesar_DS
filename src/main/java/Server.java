@@ -40,7 +40,9 @@ public class Server {
                 System.out.println("Sending " + fileName + " (" + bytes.length + " bytes)");
                 out.write(bytes, 0, bytes.length);
                 out.flush();
-                System.out.println("Done.");
+
+                if (reader.readLine().equals("Done."))
+                    System.out.println("Done.");
 
                 fileInputStream.close();
                 writer.close();

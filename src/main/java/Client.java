@@ -42,6 +42,8 @@ public class Client {
             fileOutputStream.flush();
             System.out.println("File " + hostPath + " downloaded to " + localPath + " (" + bytes.length + ")");
 
+            writer.println("Done.");
+
             fileOutputStream.close();
             in.close();
             reader.close();
