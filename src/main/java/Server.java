@@ -13,6 +13,7 @@ public class Server {
             System.out.println("Server online on port " + port);
 
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+            byte[] bytes;
 
             while (true) {
                 Socket socket = serverSocket.accept();
@@ -23,15 +24,16 @@ public class Server {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                 String fileName = reader.readLine();
+                System.out.println("File " + fileName + " requested.");
 
                 File file = new File(fileName);
                 if (!file.exists()) {
                     System.err.println(fileName + "does not exist.");
                     return;
-                } else {
+                } else
                     System.out.println("File " + fileName + " found, starting transfer.");
-                }
-                byte[] bytes = new byte[(int)file.length()];
+
+                bytes = new byte[(int)file.length()];
                 BufferedInputStream fileInputStream = new BufferedInputStream(new FileInputStream(file));
                 fileInputStream.read(bytes, 0, bytes.length);
 
@@ -42,7 +44,7 @@ public class Server {
                 out.flush();
 
                 if (reader.readLine().equals("Done."))
-                    System.out.println("Done.");
+                    System.out.println("Done.\n");
 
                 fileInputStream.close();
                 writer.close();
