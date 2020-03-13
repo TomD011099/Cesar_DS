@@ -28,6 +28,8 @@ public class Server {
                 if (!file.exists()) {
                     System.err.println(fileName + "does not exist.");
                     return;
+                } else {
+                    System.out.println("File found, starting transfer.");
                 }
                 byte[] bytes = new byte[(int)file.length()];
                 BufferedInputStream fileInputStream = new BufferedInputStream(new FileInputStream(file));
