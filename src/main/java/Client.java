@@ -30,16 +30,18 @@ public class Client {
             System.out.println("Total amount of bytes to read: " + bytes.length);
 
             bytesRead = in.read(bytes, 0, bytes.length);
-            System.out.println("Read " + bytesRead + " bytes.");
-            current = bytesRead;
+            System.out.println("Read " + bytesRead + " bytes. Len = " + len);
 
-            /*
-            do {
-                bytesRead = in.read(bytes, current, (bytes.length - current));
-                //System.out.println("Read " + bytesRead + " bytes.");
-                if (bytesRead >= 0)
-                    current += bytesRead;
-            } while (bytesRead > -1);*/
+            if (bytesRead != len) {
+                current = bytesRead;
+
+                do {
+                    bytesRead = in.read(bytes, current, (bytes.length - current));
+                    //System.out.println("Read " + bytesRead + " bytes.");
+                    if (bytesRead >= 0)
+                        current += bytesRead;
+                } while (bytesRead > -1);
+            }
 
             fileOutputStream.write(bytes, 0, bytes.length);
             fileOutputStream.flush();
