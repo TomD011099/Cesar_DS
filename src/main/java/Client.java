@@ -37,9 +37,10 @@ public class Client {
                 System.out.println("More reads");
                 do {
                     bytesRead = in.read(bytes, current, (bytes.length - current));
+                    current += bytesRead;
                     System.out.println("Read " + current + " bytes.");
-                    if (bytesRead >= 0)
-                        current += bytesRead;
+                    if (bytesRead == -1)
+                        break;
                 } while (current < len);
             }
 
