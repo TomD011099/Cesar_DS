@@ -34,7 +34,7 @@ public class Client {
 
             if (bytesRead != len) {
                 current = bytesRead;
-
+                System.out.println("More reads");
                 do {
                     bytesRead = in.read(bytes, current, (bytes.length - current));
                     System.out.println("Read " + current + " bytes.");
@@ -42,6 +42,8 @@ public class Client {
                         current += bytesRead;
                 } while (current < len);
             }
+
+            System.out.println("File received, downloading to " + localPath);
 
             fileOutputStream.write(bytes, 0, bytes.length);
             fileOutputStream.flush();
