@@ -25,6 +25,10 @@ public class Server {
                 String fileName = reader.readLine();
 
                 File file = new File(fileName);
+                if (!file.exists()) {
+                    System.err.println(fileName + "does not exist.");
+                    return;
+                }
                 byte[] bytes = new byte[(int)file.length()];
                 BufferedInputStream fileInputStream = new BufferedInputStream(new FileInputStream(file));
                 fileInputStream.read(bytes, 0, bytes.length);
