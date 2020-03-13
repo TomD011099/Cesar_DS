@@ -40,7 +40,7 @@ public class Client {
                     //System.out.println("Read " + bytesRead + " bytes.");
                     if (bytesRead >= 0)
                         current += bytesRead;
-                } while (bytesRead > -1);
+                } while (current < len);
             }
 
             fileOutputStream.write(bytes, 0, bytes.length);
