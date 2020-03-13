@@ -23,15 +23,17 @@ public class Client {
             BufferedOutputStream fileOutputStream = new BufferedOutputStream(new FileOutputStream(localPath));
 
             writer.println(hostPath);
-            
+
             int len = Integer.parseInt(reader.readLine());
             byte[] bytes = new byte[len];
 
             bytesRead = in.read(bytes, 0, bytes.length);
             current = bytesRead;
+            System.out.println("Total amount of bytes to read: " + bytes.length);
 
             do {
                 bytesRead = in.read(bytes, current, (bytes.length - current));
+                System.out.println("Read " + bytesRead + " bytes.");
                 if (bytesRead >= 0)
                     current += bytesRead;
             } while (bytesRead > -1);
@@ -54,5 +56,7 @@ public class Client {
             System.err.println("IO error: " + e.getMessage());
             e.printStackTrace();
         }
+
+        return;
     }
 }
