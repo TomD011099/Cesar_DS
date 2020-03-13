@@ -27,13 +27,15 @@ public class Client {
             int len = Integer.parseInt(reader.readLine());
             byte[] bytes = new byte[len];
 
-            bytesRead = in.read(bytes, 0, bytes.length);
-            current = bytesRead;
             System.out.println("Total amount of bytes to read: " + bytes.length);
+
+            bytesRead = in.read(bytes, 0, bytes.length);
+            System.out.println("Read " + bytesRead + " bytes.");
+            current = bytesRead;
 
             do {
                 bytesRead = in.read(bytes, current, (bytes.length - current));
-                System.out.println("Read " + bytesRead + " bytes.");
+                //System.out.println("Read " + bytesRead + " bytes.");
                 if (bytesRead >= 0)
                     current += bytesRead;
             } while (bytesRead > -1);
