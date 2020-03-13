@@ -18,8 +18,12 @@ public class Client {
 
             InputStream in = socket.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            OutputStream out = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(out, true);
             BufferedOutputStream fileOutputStream = new BufferedOutputStream(new FileOutputStream(localPath));
 
+            writer.println(hostPath);
+            
             int len = Integer.parseInt(reader.readLine());
             byte[] bytes = new byte[len];
 
@@ -39,6 +43,8 @@ public class Client {
             fileOutputStream.close();
             in.close();
             reader.close();
+            out.close();
+            writer.close();
             socket.close();
 
         } catch (UnknownHostException e) {
