@@ -33,12 +33,13 @@ public class Client {
             System.out.println("Read " + bytesRead + " bytes.");
             current = bytesRead;
 
+            /*
             do {
                 bytesRead = in.read(bytes, current, (bytes.length - current));
                 //System.out.println("Read " + bytesRead + " bytes.");
                 if (bytesRead >= 0)
                     current += bytesRead;
-            } while (bytesRead > -1);
+            } while (bytesRead > -1);*/
 
             fileOutputStream.write(bytes, 0, bytes.length);
             fileOutputStream.flush();
