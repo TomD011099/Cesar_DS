@@ -66,12 +66,13 @@ public class Client {
             // Read the file from the socket
             do {
                 //TODO: with multiple reads without stopping Server, gets stuck here. Possible that in not ended correctly
+                // Never returns -1
                 bytesRead = in.read(bytes, current, (bytes.length - current));
                 current += bytesRead;
                 if (bytesRead != -1)
                     System.out.println("Read " + current + " bytes, Estimated " + in.available() + " bytes left");
                 System.out.println("\tCurrent = " + current + "\n\tbytesRead = " + bytesRead + "\n\tLength bytes = " + bytes.length);
-            } while (bytesRead >= 0);
+            } while (bytesRead > 0 && current < len);
             System.out.println("File received, downloading to " + localPath);
 
             // Create the local file with the data of the downloaded file
