@@ -35,7 +35,7 @@ public class Client {
         OutputStream out = null;
         BufferedReader reader = null;
         PrintWriter writer = null;
-        BufferedOutputStream fileOutputStream = null;
+        BufferedOutputStream fileOutputStream;
 
         try {
             // Create a socket to communicate
@@ -65,13 +65,13 @@ public class Client {
 
             // Read the file from the socket
             do {
-                //TODO: with multiple reads without stopping Server, gets stuck here. Possible that in not ended correctly
+                // TODO: with multiple reads without stopping Server, gets stuck here. Possible that in is not ended correctly in previous run
                 // Never returns -1
                 bytesRead = in.read(bytes, current, (bytes.length - current));
                 current += bytesRead;
                 if (bytesRead != -1)
-                    System.out.println("Read " + current + " bytes, Estimated " + in.available() + " bytes left");
-                System.out.println("\tCurrent = " + current + "\n\tbytesRead = " + bytesRead + "\n\tLength bytes = " + bytes.length);
+                    System.out.println("Read " + bytesRead + " bytes, estimated " + in.available() + " bytes left");
+                System.out.println("\tCurrent = " + current + "\n\tBytesRead = " + bytesRead + "\n\tLength bytes = " + bytes.length);
             } while (bytesRead > 0 && current < len);
             System.out.println("File received, downloading to " + localPath);
 
