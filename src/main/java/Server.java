@@ -70,7 +70,7 @@ public class Server {
 
                 // Send the bytes
                 System.out.println("Sending " + fileName + " (" + bytes.length + " bytes)");
-                out.write(bytes, 0, bytes.length);
+                out.write(bytes);
                 out.flush();
 
                 // Check if the client has sent the ACK
