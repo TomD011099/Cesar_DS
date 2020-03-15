@@ -30,20 +30,27 @@ public class Client {
         String hostPath = args[2];
         String localPath = args[3];
 
+        Socket socket = null;
+        InputStream in = null;
+        OutputStream out = null;
+        BufferedReader reader = null;
+        PrintWriter writer = null;
+        BufferedOutputStream fileOutputStream = null;
+
         try {
             // Create a socket to communicate
-            Socket socket = new Socket(host, port);
+            socket = new Socket(host, port);
 
             // Get the in- and outputstreams from the socket
-            InputStream in = socket.getInputStream();
-            OutputStream out = socket.getOutputStream();
+            in = socket.getInputStream();
+            out = socket.getOutputStream();
 
             // Create a reader and writer to read from and write to the socket
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            PrintWriter writer = new PrintWriter(out, true);
+            reader = new BufferedReader(new InputStreamReader(in));
+            writer = new PrintWriter(out, true);
 
             // Create an outputstream to write files to the socket
-            BufferedOutputStream fileOutputStream = new BufferedOutputStream(new FileOutputStream(localPath));
+            fileOutputStream = new BufferedOutputStream(new FileOutputStream(localPath));
 
             // Send the path of the file to be copied to the server
             writer.println(hostPath);
@@ -73,20 +80,30 @@ public class Client {
             // Let the server know you're done
             writer.println("Done.");
 
-            // Close all connections
-            fileOutputStream.close();
-            in.close();
-            reader.close();
-            out.close();
-            writer.close();
-            socket.close();
-
         } catch (UnknownHostException e) {
             System.err.println("Server not found at: " + host + ":" + port);
             e.printStackTrace();
         } catch (IOException e) {
             System.err.println("IO error: " + e.getMessage());
             e.printStackTrace();
+        } finally {
+            if (socket != null) {
+                try {
+                    // Close all connections
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                    in.close();
+                    reader.close();
+                    out.flush();
+                    out.close();
+                    writer.flush();
+                    writer.close();
+                    socket.close();
+                } catch (IOException | NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
     }
 }
