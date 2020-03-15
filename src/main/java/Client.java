@@ -69,7 +69,7 @@ public class Client {
                 bytesRead = in.read(bytes, current, (bytes.length - current));
                 current += bytesRead;
                 System.out.println("Read " + current + " bytes, Estimated " + in.available() + " bytes left");
-            } while (current < len || bytesRead > 0);
+            } while (current < len && bytesRead > 0);
             System.out.println("File received, downloading to " + localPath);
 
             // Create the local file with the data of the downloaded file
