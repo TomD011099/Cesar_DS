@@ -53,24 +53,16 @@ public class Client {
             byte[] bytes = new byte[len];
             System.out.println("Total amount of bytes to read: " + bytes.length);
 
-            // Read the file from the socket
-            int bytesRead = in.read(bytes, 0, bytes.length);
-            System.out.println("Read " + bytesRead + " bytes. Len = " + len);
+            int bytesRead;
+            int current = 0;
 
-            // If not everything is read, read the rest of the bytes
-            if (bytesRead != len) {
-                int current = bytesRead;
-                System.out.println("More reads");
-                System.out.println("Estimated " + in.available() + " bytes left");
-                do {
-                    //TODO: with multiple reads without stopping Server, gets stuck here
-                    bytesRead = in.read(bytes, current, (bytes.length - current));
-                    current += bytesRead;
-                    System.out.println("Read " + current + " bytes.");
-                    if (bytesRead == -1)
-                        break;
-                } while (current < len);
-            }
+            // Read the file from the socket
+            do {
+                //TODO: with multiple reads without stopping Server, gets stuck here. Maybe fixed
+                bytesRead = in.read(bytes, current, (bytes.length - current));
+                current += bytesRead;
+                System.out.println("Read " + current + " bytes, Estimated " + in.available() + " bytes left");
+            } while (current < len || bytesRead > 0);
             System.out.println("File received, downloading to " + localPath);
 
             // Create the local file with the data of the downloaded file
