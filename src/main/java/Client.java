@@ -1,42 +1,69 @@
 import java.io.*;
 import java.net.*;
 
+/*
+    Communication setup:
+
+        Client                      Server
+           |         filePath         |
+           |  --------------------->  |
+           |                          |
+           |         fileSize         |
+           |  <---------------------  |
+           |                          |
+           |           file           |
+           |  --------------------->  |
+           |                          |
+           |            ACK           |
+           |  <---------------------  |
+           |                          |
+ */
+
 public class Client {
     public static void main(String[] args) {
+        // Test for correct amount of inputs
         if (args.length != 4) return;
 
+        // Load inputs to variables
         String host = args[0];
         int port = Integer.parseInt(args[1]);
         String hostPath = args[2];
         String localPath = args[3];
 
-        int bytesRead;
-        int current;
-
         try {
+            // Create a socket to communicate
             Socket socket = new Socket(host, port);
 
+            // Get the in- and outputstreams from the socket
             InputStream in = socket.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             OutputStream out = socket.getOutputStream();
+
+            // Create a reader and writer to read from and write to the socket
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             PrintWriter writer = new PrintWriter(out, true);
+
+            // Create an outputstream to write files to the socket
             BufferedOutputStream fileOutputStream = new BufferedOutputStream(new FileOutputStream(localPath));
 
+            // Send the path of the file to be copied to the server
             writer.println(hostPath);
 
+            // Read the size of the requested file the server sent back and create a byte array of that size
             int len = Integer.parseInt(reader.readLine());
             byte[] bytes = new byte[len];
-
             System.out.println("Total amount of bytes to read: " + bytes.length);
 
-            bytesRead = in.read(bytes, 0, bytes.length);
+            // Read the file from the socket
+            int bytesRead = in.read(bytes, 0, bytes.length);
             System.out.println("Read " + bytesRead + " bytes. Len = " + len);
 
+            // If not everything is read, read the rest of the bytes
             if (bytesRead != len) {
-                current = bytesRead;
+                int current = bytesRead;
                 System.out.println("More reads");
+                System.out.println("Estimated " + in.available() + " bytes left");
                 do {
-                    //with multiple reads without stopping Server, gets stuck here
+                    //TODO: with multiple reads without stopping Server, gets stuck here
                     bytesRead = in.read(bytes, current, (bytes.length - current));
                     current += bytesRead;
                     System.out.println("Read " + current + " bytes.");
@@ -44,15 +71,17 @@ public class Client {
                         break;
                 } while (current < len);
             }
-
             System.out.println("File received, downloading to " + localPath);
 
+            // Create the local file with the data of the downloaded file
             fileOutputStream.write(bytes, 0, bytes.length);
             fileOutputStream.flush();
             System.out.println("File " + hostPath + " downloaded to " + localPath + " (" + bytes.length + ")");
 
+            // Let the server know you're done
             writer.println("Done.");
 
+            // Close all connections
             fileOutputStream.close();
             in.close();
             reader.close();
@@ -67,7 +96,5 @@ public class Client {
             System.err.println("IO error: " + e.getMessage());
             e.printStackTrace();
         }
-
-        return;
     }
 }
