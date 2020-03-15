@@ -70,8 +70,8 @@ public class Client {
                 current += bytesRead;
                 if (bytesRead != -1)
                     System.out.println("Read " + current + " bytes, Estimated " + in.available() + " bytes left");
-                System.out.println("\tCurrent = " + current+ "\n\tbytesRead = " + bytesRead + "\n\tLength bytes = " + bytes.length);
-            } while (current < len && bytesRead > 0);
+                System.out.println("\tCurrent = " + current + "\n\tbytesRead = " + bytesRead + "\n\tLength bytes = " + bytes.length);
+            } while (bytesRead > 0);
             System.out.println("File received, downloading to " + localPath);
 
             // Create the local file with the data of the downloaded file
