@@ -30,7 +30,7 @@ public class Server {
         try {
             // Create the serversocket
             ServerSocket serverSocket = new ServerSocket(port);
-            System.out.println("Server online on port " + port);
+            System.out.println("Server online on port " + port + "\n");
 
             byte[] bytes;
 
@@ -38,6 +38,7 @@ public class Server {
                 // Create a socket to talk to a client
                 Socket socket = serverSocket.accept();
                 System.out.println("New client connected");
+                System.out.println("--------------------");
 
                 // Get the in- and outputstreams from the socket
                 InputStream in = socket.getInputStream();
@@ -77,10 +78,6 @@ public class Server {
                     System.out.println("Done.\n");
 
                 // Close all connections
-                fileInputStream.close();
-                writer.close();
-                reader.close();
-                out.close();
                 socket.close();
             }
         } catch (IOException e) {

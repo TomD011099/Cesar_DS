@@ -65,10 +65,11 @@ public class Client {
 
             // Read the file from the socket
             do {
-                //TODO: with multiple reads without stopping Server, gets stuck here. Maybe fixed
+                //TODO: with multiple reads without stopping Server, gets stuck here. Possible that in not ended correctly
                 bytesRead = in.read(bytes, current, (bytes.length - current));
                 current += bytesRead;
-                System.out.println("Read " + current + " bytes, Estimated " + in.available() + " bytes left");
+                if (bytesRead != -1)
+                    System.out.println("Read " + current + " bytes, Estimated " + in.available() + " bytes left");
             } while (current < len && bytesRead > 0);
             System.out.println("File received, downloading to " + localPath);
 
@@ -90,8 +91,6 @@ public class Client {
             if (socket != null) {
                 try {
                     // Close all connections
-                    fileOutputStream.flush();
-                    fileOutputStream.close();
                     in.close();
                     reader.close();
                     out.flush();
@@ -99,6 +98,8 @@ public class Client {
                     writer.flush();
                     writer.close();
                     socket.close();
+
+                    System.out.println("Connections closed");
                 } catch (IOException | NullPointerException e) {
                     e.printStackTrace();
                 }
