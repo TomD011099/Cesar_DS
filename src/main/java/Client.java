@@ -29,6 +29,9 @@ public class Client {
         int port = Integer.parseInt(args[1]);
         String hostPath = args[2];
         String localPath = args[3];
+        System.out.println("Connecting to: " + host + ":" + port);
+        System.out.println("Copying " + hostPath);
+        System.out.println("To " + localPath);
 
         Socket socket = null;
         InputStream in = null;
@@ -49,9 +52,6 @@ public class Client {
             reader = new BufferedReader(new InputStreamReader(in));
             writer = new PrintWriter(out, true);
 
-            // Create an outputstream to write files to the socket
-            fileOutputStream = new BufferedOutputStream(new FileOutputStream(localPath));
-
             // Send the path of the file to be copied to the server
             writer.println(hostPath);
 
@@ -66,7 +66,7 @@ public class Client {
             // Read the file from the socket
             do {
                 // TODO: with multiple reads without stopping Server, gets stuck here. Possible that in is not ended correctly in previous run
-                // Never returns -1
+                // Never returns -1 -> Only on VMs
                 bytesRead = in.read(bytes, current, (bytes.length - current));
                 current += bytesRead;
                 if (bytesRead != -1)
@@ -74,6 +74,11 @@ public class Client {
                 System.out.println("\tCurrent = " + current + "\n\tBytesRead = " + bytesRead + "\n\tLength bytes = " + bytes.length);
             } while (bytesRead > 0 && current < len);
             System.out.println("File received, downloading to " + localPath);
+
+            // Create an outputstream to write files to the socket
+            //File file = new File(localPath);
+            //file.createNewFile();
+            fileOutputStream = new BufferedOutputStream(new FileOutputStream(localPath));
 
             // Create the local file with the data of the downloaded file
             fileOutputStream.write(bytes, 0, bytes.length);
@@ -88,6 +93,7 @@ public class Client {
             e.printStackTrace();
         } catch (IOException e) {
             System.err.println("IO error: " + e.getMessage());
+            System.out.println("Working Directory = " + System.getProperty("user.dir"));
             e.printStackTrace();
         } finally {
             if (socket != null) {

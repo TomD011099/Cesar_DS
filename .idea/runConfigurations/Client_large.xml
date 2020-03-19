@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Client large" type="Application" factoryName="Application" singleton="false">
+    <option name="MAIN_CLASS_NAME" value="Client" />
+    <module name="Cesar_DS" />
+    <option name="PROGRAM_PARAMETERS" value="127.0.0.1 5000 ./Test/large ./Test/test_l2" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
