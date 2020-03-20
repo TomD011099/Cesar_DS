@@ -28,10 +28,11 @@ public class Server {
         try {
             socket = new DatagramSocket(port);
         } catch (SocketException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             e.printStackTrace();
+            return;
         }
-        System.out.println("Server online on port " + port + "\n");
+        System.out.println("Server online on port " + socket.getPort() + "\n");
 
         while (socket != null) {
             try {
@@ -40,6 +41,7 @@ public class Server {
                 DatagramPacket fileNamePacket = new DatagramPacket(receive, receive.length);
                 socket.receive(fileNamePacket);
                 String fileName = new String(fileNamePacket.getData());
+                fileName = fileName.replaceAll("\\u0000", "");
                 System.out.println("File " + fileName + " requested.");
 
                 InetAddress clientAddr = fileNamePacket.getAddress();
@@ -49,6 +51,7 @@ public class Server {
                 File file = new File(fileName);
                 if (!file.exists()) {
                     System.err.println(fileName + " does not exist.");
+                    //TODO maybe let Client know sometghing went wrong
                     return;
                 } else
                     System.out.println("File " + fileName + " found, starting transfer.");
@@ -60,6 +63,7 @@ public class Server {
 
                 if (fileData.length > 65535) {
                     System.err.println("File size too big.");
+                    //TODO maybe let Client know sometghing went wrong
                     return;
                 }
 

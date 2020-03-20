@@ -2,7 +2,7 @@
   <configuration default="false" name="Server" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="Server" />
     <module name="Cesar_DS" />
-    <option name="PROGRAM_PARAMETERS" value="5000" />
+    <option name="PROGRAM_PARAMETERS" value="1234" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

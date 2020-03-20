@@ -26,7 +26,7 @@ public class Client {
         // Load inputs to variables
         InetAddress host = null;
         try {
-            host = InetAddress.getByAddress(args[0].replace(".", "").getBytes());
+            host = InetAddress.getByName(args[0]);
         } catch (UnknownHostException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
