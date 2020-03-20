@@ -51,7 +51,7 @@ public class Server {
                 File file = new File(fileName);
                 if (!file.exists()) {
                     System.err.println(fileName + " does not exist.");
-                    //TODO maybe let Client know sometghing went wrong
+                    //TODO maybe let Client know something went wrong
                     return;
                 } else
                     System.out.println("File " + fileName + " found, starting transfer.");
@@ -63,7 +63,7 @@ public class Server {
 
                 if (fileData.length > 65535) {
                     System.err.println("File size too big.");
-                    //TODO maybe let Client know sometghing went wrong
+                    //TODO maybe let Client know something went wrong
                     return;
                 }
 
