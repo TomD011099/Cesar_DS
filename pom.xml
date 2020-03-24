@@ -10,7 +10,7 @@
     <version>2.2.5.RELEASE</version>
   </parent>
 
-  <groupId>com.bank</groupId>
+  <groupId>com</groupId>
   <artifactId>bank-service</artifactId>
   <version>1.0-SNAPSHOT</version>
 
