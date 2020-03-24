@@ -7,7 +7,7 @@ public class Bank {
     private int id;
     private int balance;
 
-    public Bank(String name, int id) {
+    Bank(String name, int id) {
         this.name = name;
         this.id = id;
         this.balance = 0;
