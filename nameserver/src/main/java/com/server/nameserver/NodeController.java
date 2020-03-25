@@ -1,37 +1,37 @@
-package com.university.bank;
+package com.server.nameserver;
 
 import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-class CustomerController {
+class NodeController {
 
-    private final CustomerRepository repository;
+    private final NodeRepository repository;
 
-    CustomerController(CustomerRepository repository) {
+    NodeController(NodeRepository repository) {
         this.repository = repository;
     }
     
 
-    @GetMapping("/customers")
-    List<Customer> all() {
+    @GetMapping("/nodes")
+    List<Node> all() {
         return repository.findAll();
     }
 
-    @PostMapping(path = "/customers")
-    Customer newCostumer(@RequestBody Customer nCustomer) {
+    @PostMapping(path = "/nodes")
+    Node newCostumer(@RequestBody Node nCustomer) {
         return repository.save(nCustomer); 
     }
 
-    @GetMapping("/customers/{id}")
-    Customer one(@PathVariable Long id) {
+    @GetMapping("/nodes/{id}")
+    Node one(@PathVariable Long id) {
         return repository.findById(id)
-            .orElseThrow(() -> new CustomerNotFoundException(id));
+            .orElseThrow(() -> new NodeNotFoundException(id));
     }
 
-    @PutMapping("/customers/{id}")
-    Customer repCostumer(@RequestBody Customer nCustomer, @PathVariable Long id) {
+    @PutMapping("/nodes/{id}")
+    Node repCostumer(@RequestBody Node nCustomer, @PathVariable Long id) {
         return repository.findById(id)
             .map(costumer -> {
                 costumer.setName(nCustomer.getName());
@@ -44,7 +44,7 @@ class CustomerController {
             });
     }
 
-    @DeleteMapping("/customers/{id}")
+    @DeleteMapping("/nodes/{id}")
     void deleteCostumer(@PathVariable Long id) {
         repository.deleteById(id);
     }

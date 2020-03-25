@@ -1,13 +1,13 @@
-package com.university.bank;
+package com.server.nameserver;
 
-class CustomerNotFoundException extends RuntimeException {
+class NodeNotFoundException extends RuntimeException {
 
     /**
      *
      */
     private static final long serialVersionUID = 1L;
 
-    CustomerNotFoundException(Long id) {
+    NodeNotFoundException(Long id) {
         super("Could not find customer " + id);
     }
 }

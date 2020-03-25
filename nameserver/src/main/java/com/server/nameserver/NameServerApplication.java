@@ -1,12 +1,12 @@
-package com.university.bank;
+package com.server.nameserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BankApplication {
+public class NameServerApplication {
     
     public static void main(String[] args) {
-        SpringApplication.run(BankApplication.class, args);
+        SpringApplication.run(NameServerApplication.class, args);
     }
 }

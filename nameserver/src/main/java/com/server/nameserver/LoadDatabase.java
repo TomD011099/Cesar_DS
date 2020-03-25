@@ -1,4 +1,4 @@
-package com.university.bank;
+package com.server.nameserver;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Bean;
 class LoadDatabase {
     
     @Bean
-    CommandLineRunner initDatabase(final CustomerRepository repository) {
+    CommandLineRunner initDatabase(final NodeRepository repository) {
         return args -> {
-            log.info("Preloading " + repository.save(new Customer("Cedric Bammens", 500)));
+            log.info("Preloading " + repository.save(new Node("Cedric Bammens", 500)));
         };
     }
 }

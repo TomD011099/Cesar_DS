@@ -1,4 +1,4 @@
-package com.university.bank;
+package com.server.nameserver;
 
 import lombok.Data;
 
@@ -8,15 +8,15 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-class Customer {
+class Node {
 
     private @Id @GeneratedValue Long id;
     private String name;
     private int value;
 
-    Customer() {}
+    Node() {}
 
-    Customer(String name, int value) {
+    Node(String name, int value) {
         this.name = name;
         this.value = value;
     }
