@@ -7,7 +7,6 @@ public class Bank {
         //SpringApplication.run(App.class, args);
         ArrayList<Client> accounts = new ArrayList<Client>();
 
-        public int
 
     }
 }
