@@ -1,4 +1,4 @@
-package com.bank.bankservice;
+package com;
 
 public class bankController {
 }
