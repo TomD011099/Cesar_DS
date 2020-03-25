@@ -21,7 +21,7 @@ public class RestClient {
         this.rest = new RestTemplate();
         this.headers = new HttpHeaders();
         headers.add("Content-Type","application/json");
-        headers.add("Accept","*%*");
+        headers.add("Accept","*/*");
     }
 
     public String get(String uri) {
