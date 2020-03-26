@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
  */
 public class RestClient {
 
-    private String server = "http://143.129.39.106:30013"; // IP from server
+    private String server = "http://143.129.39.106:30013";
     private RestTemplate rest;
     private HttpHeaders headers;
     private HttpStatus status;
