@@ -1,7 +1,7 @@
-public class NodeName {
+public class CesarString {
     private String name;
 
-    public NodeName(String name) {
+    public CesarString(String name) {
         this.name = name;
     }
 
@@ -18,9 +18,9 @@ public class NodeName {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        NodeName nodeName = (NodeName) o;
+        CesarString cesarString = (CesarString) o;
 
-        return name.equals(nodeName.name);
+        return name.equals(cesarString.name);
     }
 
     @Override
