@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Map of nodes</comment>
+<entry key="14514">192.168.1.1</entry>
+<entry key="24000">192.168.1.2</entry>
+</properties>

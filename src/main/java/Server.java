@@ -1,22 +1,20 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class Server {
-    //TODO change to CesarMap when available
-    private Map<Integer, InetAddress> map;
+    private HashMap<Integer, InetAddress> map;
     private String mapPath;
 
-    public Server() {
+    public Server(String mapPath) {
+        this.mapPath = mapPath;
+        map = new HashMap<Integer, InetAddress>();
         loadMap();
     }
 
     public void registerNode(String name, InetAddress ip) {
-        // TODO CHA String name to custom NodeName
-        int id = name.hashCode();
+        int id = getId(name);
+
         if (map.containsKey(id)) {
             System.err.println("Node with name " + name + " already exists.");
             // TODO make sure Server returns error to node
@@ -27,33 +25,78 @@ public class Server {
     }
 
     public void unregisterNode(String name) {
-        // TODO CHA String name to custom NodeName
-        int id = name.hashCode();
+        int id = getId(name);
+
         if (map.containsKey(id)) {
             map.remove(id);
             saveMap();
         } else {
             System.err.println("Node with name " + name + " not found.");
+            // TODO make sure Server returns error to node
         }
     }
 
     private void saveMap() {
         try {
-            BufferedWriter fileWriter = new BufferedWriter(new FileWriter(mapPath));
+            Properties properties = new Properties();
 
-            Iterator<Map.Entry<Integer, InetAddress>> it = map.entrySet().iterator();
+            for (Map.Entry pair : map.entrySet()) {
+                String strIp = pair.getValue().toString();
+                properties.put(pair.getKey().toString(), strIp.substring(1, strIp.length()));
+            }
 
+            FileOutputStream fos = new FileOutputStream(mapPath);
+
+            properties.storeToXML(fos, "Map of nodes");
+
+            fos.close();
+        } catch (FileNotFoundException e) {
+            System.err.println(e.getMessage());
         } catch (IOException e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
+    }
+
+    public void loadMap() {
+        Properties properties = new Properties();
+
+        File file = new File(mapPath);
+
+        if (file.exists()) {
+            try {
+                properties.loadFromXML(new FileInputStream(mapPath));
+
+                Set<String> keys = properties.stringPropertyNames();
+                for (String key: keys) {
+                    int id = Integer.parseInt(key);
+                    InetAddress ip = InetAddress.getByName(properties.getProperty(key));
+                    map.put(id, ip);
+                }
+            } catch (FileNotFoundException e) {
+                System.err.println(e.getMessage());
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void newFile() {
 
     }
 
-    private void loadMap() {
+    public void lookupFile() {
 
     }
 
-    public void run() {
+    private int getId(String name) {
+        int id = new CesarString(name).hashCode();
+        System.out.println(name + "\t id = " + id);
+        return id;
+    }
 
+    public void clearMap() {
+        map.clear();
     }
 }
