@@ -35,4 +35,9 @@ public class CesarString {
         }
         return hash;
     }
+
+    @Override
+    public String toString(){
+        return name;
+    }
 }
