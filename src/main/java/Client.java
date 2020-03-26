@@ -65,8 +65,6 @@ public class Client {
 
             // Read the file from the socket
             do {
-                // TODO: with multiple reads without stopping Server, gets stuck here. Possible that in is not ended correctly in previous run
-                // Never returns -1 -> Only on VMs
                 bytesRead = in.read(bytes, current, (bytes.length - current));
                 current += bytesRead;
                 if (bytesRead != -1)
