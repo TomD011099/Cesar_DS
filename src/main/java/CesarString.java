@@ -1,16 +1,16 @@
 public class CesarString {
-    private String name;
+    private String string;
 
     public CesarString(String name) {
-        this.name = name;
+        this.string = name;
     }
 
-    public String getName() {
-        return name;
+    public String getString() {
+        return string;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setString(String name) {
+        this.string = name;
     }
 
     @Override
@@ -20,12 +20,12 @@ public class CesarString {
 
         CesarString cesarString = (CesarString) o;
 
-        return name.equals(cesarString.name);
+        return string.equals(cesarString.string);
     }
 
     @Override
     public int hashCode() {
-        int hash = name.hashCode();
+        int hash = string.hashCode();
         while ((hash < 0) || (hash > 32768)) {
             if (hash < 0) {
                 hash += 32768;
@@ -38,6 +38,14 @@ public class CesarString {
 
     @Override
     public String toString(){
-        return name;
+        return string;
+    }
+
+    public int length(){
+        return string.length();
+    }
+
+    public String subString(int beginIndex, int endIndex){
+        return string.substring(beginIndex, endIndex);
     }
 }
