@@ -12,7 +12,7 @@ public class Server {
         loadMap();
     }
 
-    public void registerNode(String name, InetAddress ip) {
+    private void registerNode(String name, InetAddress ip) {
         int id = getId(name);
 
         if (map.containsKey(id)) {
@@ -22,9 +22,11 @@ public class Server {
             map.put(id, ip);
             saveMap();
         }
+        // TODO make sure existing files are moved to correct node --> not yet
+        // TODO make replicas of new files on the new node
     }
 
-    public void unregisterNode(String name) {
+    private void unregisterNode(String name) {
         int id = getId(name);
 
         if (map.containsKey(id)) {
@@ -34,15 +36,16 @@ public class Server {
             System.err.println("Node with name " + name + " not found.");
             // TODO make sure Server returns error to node
         }
+        // TODO relocate hosted files that were on the node
     }
 
     private void saveMap() {
         try {
             Properties properties = new Properties();
 
-            for (Map.Entry pair : map.entrySet()) {
+            for (Map.Entry<Integer, InetAddress> pair : map.entrySet()) {
                 String strIp = pair.getValue().toString();
-                properties.put(pair.getKey().toString(), strIp.substring(1, strIp.length()));
+                properties.put(pair.getKey().toString(), strIp.substring(1));
             }
 
             FileOutputStream fos = new FileOutputStream(mapPath);
@@ -58,7 +61,7 @@ public class Server {
         }
     }
 
-    public void loadMap() {
+    private void loadMap() {
         Properties properties = new Properties();
 
         File file = new File(mapPath);
@@ -82,12 +85,21 @@ public class Server {
         }
     }
 
-    public void newFile() {
+    private InetAddress fileLocation(String fileName) {
+        int id = getId(fileName);
+        int closestId = Collections.max(map.keySet());
+        int closest = closestId - id;
 
-    }
+        for (Integer i : map.keySet()) {
+            if (id > i) {
+                if (id - i <= closest) {
+                    closest = id - i;
+                    closestId = i;
+                }
+            }
+        }
 
-    public void lookupFile() {
-
+        return map.get(closestId);
     }
 
     private int getId(String name) {
@@ -96,7 +108,15 @@ public class Server {
         return id;
     }
 
-    public void clearMap() {
+    private void clearMap() {
         map.clear();
+    }
+
+    public void run() {
+        boolean quit = false;
+
+        while (!quit) {
+
+        }
     }
 }
