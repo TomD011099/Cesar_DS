@@ -12,33 +12,33 @@ public class BankController {
 
     // POST: create a new bank account
     @PostMapping("/create")
-    public Bank createBank(@RequestParam String name) {
+    public int createBank(@RequestParam String name) {
         Bank bank = new Bank(name, counter.incrementAndGet());
         bankRepository.addBank(bank);
-        return bank;
+        return bank.getId();
     }
 
     // GET: show the current balance
     @GetMapping("/balance")
-    public String getBalance(@RequestParam int id) {
-        return "Balance: " + bankRepository.getBank(id).getBalance();
+    public int getBalance(@RequestParam int id) {
+        return bankRepository.getBank(id).getBalance();
     }
 
     // PUT: place a deposit
     @PutMapping("/deposit")
-    public String deposit(@RequestParam int id, @RequestParam int amount) {
-        return "Balance: " + bankRepository.getBank(id).deposit(amount);
+    public boolean deposit(@RequestParam int id, @RequestParam int amount) {
+        return bankRepository.getBank(id).deposit(amount);
     }
 
     // PUT: place a withdraw
     @PutMapping("/withdraw")
-    public String withdraw(@RequestParam int id, @RequestParam int amount) {
-        return "Balance: " + bankRepository.getBank(id).withdraw(amount);
+    public boolean withdraw(@RequestParam int id, @RequestParam int amount) {
+        return bankRepository.getBank(id).withdraw(amount);
     }
 
     // DELETE: delete a bank account
     @DeleteMapping("/delete")
-    public String delete(@RequestParam int id) {
-        return "Deleted: \n" + bankRepository.removeBank(id);
+    public boolean delete(@RequestParam int id) {
+        return bankRepository.removeBank(id);
     }
 }

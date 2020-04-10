@@ -32,19 +32,19 @@ public class Bank {
         this.id = id;
     }
 
-    public synchronized int withdraw(int amount) {
+    public synchronized boolean withdraw(int amount) {
         if (amount < 0 || amount > this.balance) {
-            return -1;
+            return false;
         }
         balance -= amount;
-        return balance;
+        return true;
     }
 
-    public synchronized int deposit(int amount) {
+    public synchronized boolean deposit(int amount) {
         if (amount < 0) {
-            return -1;
+            return false;
         }
         balance += amount;
-        return balance;
+        return true;
     }
 }

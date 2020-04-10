@@ -15,11 +15,17 @@ public class BankRepository {
         banks.put(bank.getId(), bank);
     }
 
-    public Bank removeBank(Integer id) {
-        return banks.remove(id);
+    public boolean removeBank(Integer id) {
+        if (banks.containsKey(id)) {
+            banks.remove(id);
+            return true;
+        }
+        return false;
     }
 
     public Bank getBank(Integer id) {
-        return banks.get(id);
+        if (banks.containsKey(id))
+            return banks.get(id);
+        return null;
     }
 }
