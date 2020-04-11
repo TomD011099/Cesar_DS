@@ -10,7 +10,7 @@ public class bankController {
 
     // POST: create a new bank account
     @PostMapping("/create")
-    public Bank createBank(@RequestParam String name) {
+    public Bank createBank(@RequestBody String name) {
         Bank bank = new Bank(name, counter.incrementAndGet());
         bankRepository.addBank(bank);
         return bank;
@@ -38,5 +38,11 @@ public class bankController {
     @DeleteMapping("/delete")
     public String delete(@RequestParam int id) {
         return "Deleted: \n" + bankRepository.removeBank(id-1);
+    }
+
+    // test
+    @RequestMapping("/")
+    public String index(@RequestParam String id){
+        return "ID: " + id;
     }
 }
