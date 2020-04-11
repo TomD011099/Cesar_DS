@@ -1,7 +1,5 @@
 package Bank.Controllers;
 
-import java.util.ArrayList;
-
 public class Bank {
     private String name;
     private int id;

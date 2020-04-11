@@ -1,7 +1,6 @@
 package Bank.Controllers;
 
 import java.util.concurrent.atomic.AtomicInteger;
-import Bank.Controllers.Bank;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

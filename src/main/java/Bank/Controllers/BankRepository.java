@@ -1,6 +1,4 @@
 package Bank.Controllers;
-import Bank.Controllers.Bank;
-import com.Bank;
 
 import java.util.ArrayList;
 public class BankRepository {
@@ -11,7 +9,7 @@ public class BankRepository {
         banks.add(bank);
     }
 
-    public void removeBank(int id){
+    public Bank removeBank(int id){
         return banks.remove(id);
     }
 
