@@ -7,25 +7,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52d632c4-9aba-44a7-891b-81cb9005855b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/bank_client_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bank-client.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../BankServer/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BankServer/bank-server.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Client/Client.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Client/Client.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BankServer/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BankServer/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bank-client.iml" beforeDir="false" afterPath="$PROJECT_DIR$/bank-client.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BankServer/.idea/artifacts/BankServer_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BankServer/.idea/artifacts/bank_server_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BankServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../BankServer/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BankServer/out/artifacts/BankServer_jar/BankServer.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../BankServer/out/artifacts/BankServer_jar/BankServer.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BankServer/src/main/java/Bank/Bank.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BankServer/src/main/java/Bank/Bank.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BankServer/src/main/java/Bank/BankController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BankServer/src/main/java/Bank/BankController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BankServer/src/main/java/Bank/BankRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../BankServer/src/main/java/Bank/BankRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BankServer/target/classes/Bank/Bank.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BankServer/target/classes/Bank/Bank.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BankServer/target/classes/Bank/BankController.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BankServer/target/classes/Bank/BankController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BankServer/target/classes/Bank/BankRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/../BankServer/target/classes/Bank/BankRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BankServer/BankServer.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BankServer/out/artifacts/BankServer_jar/BankServer.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BankServer/target/bank-server-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../BankServer/target/bank-server-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BankServer/target/bank-server-1.0-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/../BankServer/target/bank-server-1.0-SNAPSHOT.jar.original" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BankServer/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/../BankServer/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -39,14 +31,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Client/Client.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="49" column="63" lean-forward="true" selection-start-line="49" selection-start-column="63" selection-end-line="49" selection-end-column="63" />
-              <folding>
-                <element signature="e#2796#2797#0" expanded="true" />
-                <element signature="e#2875#2876#0" expanded="true" />
-                <element signature="e#2839#2840#0" expanded="true" />
-                <element signature="e#2881#2882#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="221">
+              <caret line="55" column="31" selection-start-line="55" selection-start-column="31" selection-end-line="55" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -54,11 +40,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Client/RestClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
+            <state relative-caret-position="731">
               <caret line="48" column="38" selection-start-line="48" selection-start-column="38" selection-end-line="48" selection-end-column="38" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1926#1934#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -67,8 +52,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
+            <state relative-caret-position="4">
               <caret line="14" column="35" selection-start-line="14" selection-start-column="35" selection-end-line="14" selection-end-column="35" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bank-client.iml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="1" column="39" selection-start-line="1" selection-start-column="39" selection-end-line="1" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -102,10 +96,9 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-80" />
-    <option name="y" value="-30" />
-    <option name="width" value="1940" />
-    <option name="height" value="1060" />
+    <option name="x" value="1058" />
+    <option name="width" value="870" />
+    <option name="height" value="1048" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -113,6 +106,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -120,12 +115,28 @@
               <item name="BankClient" type="b2602c69:ProjectViewProjectNode" />
               <item name="BankClient" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="BankClient" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BankClient" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="BankClient" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BankClient" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="BankClient" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BankClient" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -135,7 +146,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.importing" />
@@ -184,17 +195,18 @@
       <updated>1586345563389</updated>
       <workItem from="1586345567535" duration="2840000" />
       <workItem from="1586511265949" duration="4654000" />
+      <workItem from="1586680195853" duration="216000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7494000" />
+    <option name="totallyTimeSpent" value="7710000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25302014" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14228188" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -233,34 +245,37 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/main/java/Client/RestClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="731">
+          <caret line="48" column="38" selection-start-line="48" selection-start-column="38" selection-end-line="48" selection-end-column="38" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/META-INF/MANIFEST.MF">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
+        <state relative-caret-position="4">
           <caret line="14" column="35" selection-start-line="14" selection-start-column="35" selection-end-line="14" selection-end-column="35" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Client/RestClient.java">
+    <entry file="file://$PROJECT_DIR$/bank-client.iml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="48" column="38" selection-start-line="48" selection-start-column="38" selection-end-line="48" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1926#1934#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="17">
+          <caret line="1" column="39" selection-start-line="1" selection-start-column="39" selection-end-line="1" selection-end-column="39" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Client/Client.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="49" column="63" lean-forward="true" selection-start-line="49" selection-start-column="63" selection-end-line="49" selection-end-column="63" />
-          <folding>
-            <element signature="e#2796#2797#0" expanded="true" />
-            <element signature="e#2875#2876#0" expanded="true" />
-            <element signature="e#2839#2840#0" expanded="true" />
-            <element signature="e#2881#2882#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="221">
+          <caret line="55" column="31" selection-start-line="55" selection-start-column="31" selection-end-line="55" selection-end-column="31" />
         </state>
       </provider>
     </entry>
