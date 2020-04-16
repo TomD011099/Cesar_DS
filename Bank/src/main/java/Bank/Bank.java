@@ -4,14 +4,12 @@ import java.util.HashMap;
 
 public class Bank {
     private String name;
-    private String password;
     private int bankId;
     private int accountCounter;
     private HashMap<Integer, Account> accounts;
 
-    Bank(String name, String password, int bankId) {
+    Bank(String name, int bankId) {
         this.name = name;
-        this.password = password;
         this.bankId = bankId;
         this.accounts = new HashMap<>();
         this.accountCounter = 0;
@@ -31,10 +29,6 @@ public class Bank {
 
     public void setBankId(int bankId) {
         this.bankId = bankId;
-    }
-
-    public boolean checkPassword(String test) {
-        return test.equals(password);
     }
 
     public int addAccount(String name) {
