@@ -18,7 +18,7 @@ public class RestClient {
     private HttpStatus status;
 
     public RestClient(String server) {
-        this.server = "http://" + server + ":8080";
+        this.server = "http://" + server + ":8081";
         this.rest = new RestTemplate();
         this.headers = new HttpHeaders();
         headers.add("Content-Type","application/json");

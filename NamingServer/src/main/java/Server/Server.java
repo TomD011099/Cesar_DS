@@ -73,7 +73,7 @@ public class Server {
                 properties.loadFromXML(new FileInputStream(mapPath));
 
                 Set<String> keys = properties.stringPropertyNames();
-                for (String key: keys) {
+                for (String key : keys) {
                     int id = Integer.parseInt(key);
                     InetAddress ip = InetAddress.getByName(properties.getProperty(key));
                     map.put(id, ip);

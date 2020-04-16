@@ -39,15 +39,15 @@ public class CesarString {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return string;
     }
 
-    public int length(){
+    public int length() {
         return string.length();
     }
 
-    public String subString(int beginIndex, int endIndex){
+    public String subString(int beginIndex, int endIndex) {
         return string.substring(beginIndex, endIndex);
     }
 }
