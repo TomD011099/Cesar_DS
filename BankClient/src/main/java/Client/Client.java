@@ -34,25 +34,25 @@ public class Client {
                     break;
                 case "deposit":
                     System.out.println("Give account id:");
-                    id = sc.nextInt();
+                    id = Integer.parseInt(sc.nextLine());;
                     System.out.println("Give the amount you want to deposit:");
-                    amount = sc.nextInt();
+                    amount = Integer.parseInt(sc.nextLine());
                     deposit(id, amount);
                     break;
                 case "withdraw":
                     System.out.println("Give the account id:");
-                    id = sc.nextInt();
+                    id = Integer.parseInt(sc.nextLine());
                     System.out.println("Give the amount you want to withdraw:");
-                    amount = sc.nextInt();
+                    amount = Integer.parseInt(sc.nextLine());
                     withdraw(id, amount);
                     break;
                 case "balance":
                     System.out.println("Give the account id:");
-                    balance(sc.nextInt());
+                    balance(Integer.parseInt(sc.nextLine()));
                     break;
                 case "delete":
                     System.out.println("Give the account id to delete:");
-                    id = sc.nextInt();
+                    id = Integer.parseInt(sc.nextLine());
                     delete(id);
                     break;
                 case "x":
@@ -70,17 +70,21 @@ public class Client {
     }
 
     static private void deposit(int id, int amount) {
-        if (client.put("deposit?id=" + id + "&amount=" + amount, null).equals("true"))
+        if (amount < 0)
+            System.out.println("Invalid amount");
+        else {
+            client.put("deposit?id=" + id + "&amount=" + amount, null);
             System.out.println("€" +  amount + " deposited");
-        else
-            System.out.println("Invalid amount!");
+        }
     }
 
     static private void withdraw(int id, int amount) {
-        if (client.put("withdraw?id=" + id + "&amount=" + amount, null).equals("true"))
-            System.out.println("€" +  amount + " withdrawn");
-        else
+        if (amount < 0)
             System.out.println("Invalid amount!");
+        else{
+            client.put("withdraw?id=" + id + "&amount=" + amount, null);
+            System.out.println("€" +  amount + " withdrawn");
+        }
     }
 
     static private void balance(int id) {

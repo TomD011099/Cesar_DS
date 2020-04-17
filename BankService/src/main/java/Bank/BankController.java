@@ -26,14 +26,16 @@ public class BankController {
 
     // PUT: place a deposit
     @PutMapping("/deposit")
-    public boolean deposit(@RequestParam int id, @RequestParam int amount) {
-        return bankRepository.getBank(id).deposit(amount);
+    public void deposit(@RequestParam int id, @RequestParam int amount) {
+        Thread depositThread = new DepositThread(bankRepository.getBank(id), amount);
+        depositThread.start();
     }
 
     // PUT: place a withdraw
     @PutMapping("/withdraw")
-    public boolean withdraw(@RequestParam int id, @RequestParam int amount) {
-        return bankRepository.getBank(id).withdraw(amount);
+    public void withdraw(@RequestParam int id, @RequestParam int amount) {
+        Thread withdrawThread = new WithdrawThread(bankRepository.getBank(id), amount);
+        withdrawThread.start();
     }
 
     // DELETE: delete a bank account
