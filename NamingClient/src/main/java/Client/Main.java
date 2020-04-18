@@ -15,7 +15,13 @@ public class Main {
         String name = args[0];
         String ip = args[1];
         String serverIp = args[2];
-        Client client = new Client("./", "./","./", name, ip, serverIp);
+        Client client;
+        try {
+            client = new Client("./", "./", "./", name, ip, serverIp);
+        } catch (NodeNotRegisteredException e) {
+            System.err.println(e.getMessage());
+            return;
+        }
 
         Scanner sc = new Scanner(System.in);
         String input;

@@ -14,15 +14,15 @@ public class Server {
         loadMap();
     }
 
-    public String registerNode(String name, InetAddress ip) {
+    public int registerNode(String name, InetAddress ip) {
         int id = getId(name);
 
         if (map.containsKey(id)) {
-            return "Node with name " + name + " already exists.";
+            return -1;
         } else {
             map.put(id, ip);
             saveMap();
-            return "Node registered";
+            return 1;
         }
         // TODO make sure existing files are moved to correct node --> not yet
         // TODO make replicas of new files on the new node

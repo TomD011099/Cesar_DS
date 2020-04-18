@@ -7,26 +7,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="894c3f77-ec22-4c65-a043-74aaae37572e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/Cesar_DS.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../NamingServer/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../NamingServer/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../NamingServer/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Client/NodeNotRegisteredException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NamingClient.iml" beforeDir="false" afterPath="$PROJECT_DIR$/NamingClient.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Client/RestClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/RestClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Client/RestClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Client/RestClient.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingServer/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingServer/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Client/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../NamingServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingServer/NamingServer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/NamingServer.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingServer/src/main/java/Server/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/src/main/java/Server/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingServer/src/main/java/Server/CesarString.java" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/src/main/java/Server/CesarString.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../NamingServer/src/main/java/Server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/src/main/java/Server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingServer/target/classes/Server/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/target/classes/Server/App.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NamingServer/src/main/java/Server/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/src/main/java/Server/ServerController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +39,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectId" id="1acehV8uZEeZipei2b6FFSpWRcX" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -104,6 +93,8 @@
       <workItem from="1586765250494" duration="5672000" />
       <workItem from="1587039430544" duration="56000" />
       <workItem from="1587039534205" duration="621000" />
+      <workItem from="1587200185580" duration="401000" />
+      <workItem from="1587208761592" duration="2433000" />
     </task>
     <servers />
   </component>

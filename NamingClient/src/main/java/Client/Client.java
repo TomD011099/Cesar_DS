@@ -17,7 +17,7 @@ public class Client {
     private InetAddress serverIp;
     private RestClient restClient;
 
-    public Client(String localDir, String replicaDir, String requestDir, String name, String ip, String server) {
+    public Client(String localDir, String replicaDir, String requestDir, String name, String ip, String server) throws NodeNotRegisteredException {
         try {
             this.serverIp = InetAddress.getByName(server);
             this.ip = InetAddress.getByName(ip);
@@ -32,8 +32,18 @@ public class Client {
         register(this.name, this.ip.toString().substring(1));
     }
 
-    private void register(String name, String ip) {
-        System.out.println(restClient.post("register?name=" + name + "&ip=" + ip, null));
+    private void register(String name, String ip) throws NodeNotRegisteredException {
+        switch (Integer.parseInt(restClient.post("register?name=" + name + "&ip=" + ip, null))) {
+            case 1:
+                System.out.println("Node registered");
+                break;
+            case -1:
+                throw new NodeNotRegisteredException("Node with same hash already exists!");
+            case -2:
+                throw new NodeNotRegisteredException("Ip address of node not found!");
+            default:
+                break;
+        }
     }
 
     private void discovery() {
