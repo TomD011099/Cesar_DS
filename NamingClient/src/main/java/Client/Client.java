@@ -38,7 +38,7 @@ public class Client {
         register(this.name, this.ip.toString().substring(1));
 
         try {
-            serverThread = new ServerThread(12345);
+            serverThread = new ServerThread(12345, this);
             serverThread.start();
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -180,6 +180,22 @@ public class Client {
         return restClient.get("file?filename=" + filename);
     }
 
+    public void setPrevNode(InetAddress prevNode) {
+        this.prevNode = prevNode;
+    }
+
+    public void setNextNode(InetAddress nextNode) {
+        this.nextNode = nextNode;
+    }
+
+    public InetAddress getPrevNode() {
+        return prevNode;
+    }
+
+    public InetAddress getNextNode() {
+        return nextNode;
+    }
+
     private void updateNeighbor(boolean isDestNextNode) {
         try {
             String out;
@@ -219,18 +235,21 @@ public class Client {
         String input;
 
         while (!quit) {
-            String str = serverThread.getRead();
-            if (!str.equals(prevRead) && !str.equals("null")) {
-                String[] parsed = str.split(" ");
-                if (parsed[0].equals("prev")) {
-                    prevNode = InetAddress.getByName(parsed[1].substring(1));
-                    System.out.println("prevNode updated to: " + prevNode);
-                } else if (parsed[0].equals("next")) {
-                    nextNode = InetAddress.getByName(parsed[1].substring(1));
-                    System.out.println("nextNode updated to: " + nextNode);
-                }
-                prevRead = str;
-            }
+//            String str = serverThread.getRead();
+//            System.out.println(str + "\t" + prevRead);
+//            if (!str.equals(prevRead) && !str.equals("null")) {
+//                String[] parsed = str.split(" ");
+//                if (parsed[0].equals("prev")) {
+//                    prevNode = InetAddress.getByName(parsed[1].substring(1));
+//                    System.out.println("prevNode updated to: " + prevNode);
+//                } else if (parsed[0].equals("next")) {
+//                    nextNode = InetAddress.getByName(parsed[1].substring(1));
+//                    System.out.println("nextNode updated to: " + nextNode);
+//                }
+//                prevRead = str;
+//            }
+
+
 
             System.out.println("\n\nGive the file path you want to access: (press x to stop)");
             input = sc.nextLine();
