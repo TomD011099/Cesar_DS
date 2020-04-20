@@ -250,7 +250,6 @@ public class Client {
 //            }
 
 
-
             System.out.println("\n\nGive the file path you want to access: (press x to stop)");
             input = sc.nextLine();
             if (!input.isEmpty() && !input.equals("x")) {
