@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 public class Client {
     private String localDir;
@@ -16,11 +17,15 @@ public class Client {
     private String name;
     private InetAddress serverIp;
     private RestClient restClient;
+    private ServerThread serverThread;
 
-    public Client(String localDir, String replicaDir, String requestDir, String name, String ip, String server) throws NodeNotRegisteredException {
+    public Client(String localDir, String replicaDir, String requestDir, String name, String ip, String server, String nextNode, String prevNode) throws NodeNotRegisteredException {
         try {
             this.serverIp = InetAddress.getByName(server);
             this.ip = InetAddress.getByName(ip);
+            //temp
+            this.nextNode = InetAddress.getByName(nextNode);
+            this.prevNode = InetAddress.getByName(prevNode);
         } catch (UnknownHostException e) {
             System.err.println(e.getMessage());
         }
@@ -28,8 +33,17 @@ public class Client {
         this.localDir = localDir;
         this.replicaDir = replicaDir;
         this.requestDir = requestDir;
+
         restClient = new RestClient(serverIp.toString().substring(1));
         register(this.name, this.ip.toString().substring(1));
+
+        try {
+            serverThread = new ServerThread(12345, this);
+            serverThread.start();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void register(String name, String ip) throws NodeNotRegisteredException {
@@ -55,9 +69,10 @@ public class Client {
     }
 
     public void shutdown() {
+        updateNeighbor(true);
+        updateNeighbor(false);
         restClient.delete("unregister?name=" + name);
 
-        // TODO let others know to change their prevNode or nextNode
         // TODO relocate hosted files that were on the node
     }
 
@@ -165,17 +180,86 @@ public class Client {
         return restClient.get("file?filename=" + filename);
     }
 
-    public void run() {
+    public void setPrevNode(InetAddress prevNode) {
+        this.prevNode = prevNode;
+    }
+
+    public void setNextNode(InetAddress nextNode) {
+        this.nextNode = nextNode;
+    }
+
+    public InetAddress getPrevNode() {
+        return prevNode;
+    }
+
+    public InetAddress getNextNode() {
+        return nextNode;
+    }
+
+    private void updateNeighbor(boolean isDestNextNode) {
+        try {
+            String out;
+            InetAddress destIp;
+            if (isDestNextNode) {
+                out = "prev " + prevNode;
+                destIp = nextNode;
+            } else {
+                out = "next " + nextNode;
+                destIp = prevNode;
+            }
+
+            Socket socket = new Socket(destIp, 12345);
+
+            // Create a writer to write to the socket
+            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+
+            writer.println(out);
+            System.out.println("Data sent: " + out);
+
+            writer.close();
+            socket.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void run() throws UnknownHostException {
         discovery();
         bootstrap();
 
         boolean quit = false;
+        String prevRead = "null";
+        Scanner sc = new Scanner(System.in);
+        String input;
 
         while (!quit) {
+//            String str = serverThread.getRead();
+//            System.out.println(str + "\t" + prevRead);
+//            if (!str.equals(prevRead) && !str.equals("null")) {
+//                String[] parsed = str.split(" ");
+//                if (parsed[0].equals("prev")) {
+//                    prevNode = InetAddress.getByName(parsed[1].substring(1));
+//                    System.out.println("prevNode updated to: " + prevNode);
+//                } else if (parsed[0].equals("next")) {
+//                    nextNode = InetAddress.getByName(parsed[1].substring(1));
+//                    System.out.println("nextNode updated to: " + nextNode);
+//                }
+//                prevRead = str;
+//            }
+
+
+            System.out.println("\n\nGive the file path you want to access: (press x to stop)");
+            input = sc.nextLine();
+            if (!input.isEmpty() && !input.equals("x")) {
+                String location = requestFile(input);
+                System.out.println("Location: " + location);
+            } else if (input.equals("x")) {
+                quit = true;
+            }
 
         }
-
-
         shutdown();
     }
 }
