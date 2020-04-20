@@ -1,5 +1,6 @@
 package Client;
 
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class Main {
@@ -23,19 +24,25 @@ public class Main {
             return;
         }
 
-        Scanner sc = new Scanner(System.in);
-        String input;
+        try {
+            client.run();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
 
-        do {
-            System.out.println("\n\nGive the file path you want to access: (press x to stop)");
-            input = sc.nextLine();
-            if (!input.isEmpty() && !input.equals("x")) {
-                String location = client.requestFile(input);
-                System.out.println("Location: " + location);
-            }
-        } while (!input.equals("x"));
+//        Scanner sc = new Scanner(System.in);
+//        String input;
+//
+//        do {
+//            System.out.println("\n\nGive the file path you want to access: (press x to stop)");
+//            input = sc.nextLine();
+//            if (!input.isEmpty() && !input.equals("x")) {
+//                String location = client.requestFile(input);
+//                System.out.println("Location: " + location);
+//            }
+//        } while (!input.equals("x"));
 
-        System.out.println("Client stopped!");
-        client.shutdown();
+//        System.out.println("Client stopped!");
+//        client.shutdown();
     }
 }

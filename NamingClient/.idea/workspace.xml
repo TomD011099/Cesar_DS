@@ -7,8 +7,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="894c3f77-ec22-4c65-a043-74aaae37572e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../NamingServer/src/main/java/Server/MulticastReceiver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Client/ServerThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Client/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Client/RestClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/RestClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../NamingServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NamingServer/map.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/map.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NamingServer/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,11 +60,16 @@
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.importing" />
   </component>
-  <component name="RunManager">
-    <configuration name="Main" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="Client" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Test3">
+    <configuration name="Test2" type="Application" factoryName="Application" singleton="false" temporary="true">
       <option name="MAIN_CLASS_NAME" value="Client.Main" />
       <module name="NamingClient" />
-      <option name="PROGRAM_PARAMETERS" value="test1 127.0.0.1 127.0.0.1" />
+      <option name="PROGRAM_PARAMETERS" value="test2 127.0.0.1 127.0.0.1" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="Client.*" />
@@ -69,9 +80,27 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Test3" type="Application" factoryName="Application" singleton="false">
+      <option name="MAIN_CLASS_NAME" value="Client.Main" />
+      <module name="NamingClient" />
+      <option name="PROGRAM_PARAMETERS" value="test3 127.0.0.1 127.0.0.1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Client.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.Test3" />
+      <item itemvalue="Application.Test2" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Test2" />
       </list>
     </recent_temporary>
   </component>
@@ -90,7 +119,7 @@
       <workItem from="1587039534205" duration="621000" />
       <workItem from="1587200185580" duration="401000" />
       <workItem from="1587208761592" duration="3583000" />
-      <workItem from="1587366082204" duration="241000" />
+      <workItem from="1587366082204" duration="5563000" />
     </task>
     <servers />
   </component>
@@ -98,30 +127,34 @@
     <option name="version" value="2" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="761" y="118" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1587213001416">
+    <state x="624" y="143" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1587370650602">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="761" y="118" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587213001416" />
+    <state x="624" y="143" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587370650602" />
+    <state x="765" y="221" key="#com.intellij.ide.util.MemberChooser" timestamp="1587369278094">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="765" y="221" key="#com.intellij.ide.util.MemberChooser/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587369278094" />
     <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1587039492253">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="275" key="FileChooserDialogImpl/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587039492253" />
-    <state width="1877" height="371" key="GridCell.Tab.0.bottom" timestamp="1587212859996">
+    <state width="1877" height="243" key="GridCell.Tab.0.bottom" timestamp="1587372050790">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="371" key="GridCell.Tab.0.bottom/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587212859996" />
-    <state width="1877" height="371" key="GridCell.Tab.0.center" timestamp="1587212859996">
+    <state width="1877" height="243" key="GridCell.Tab.0.bottom/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587372050790" />
+    <state width="1877" height="243" key="GridCell.Tab.0.center" timestamp="1587372050789">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="371" key="GridCell.Tab.0.center/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587212859996" />
-    <state width="1877" height="371" key="GridCell.Tab.0.left" timestamp="1587212859995">
+    <state width="1877" height="243" key="GridCell.Tab.0.center/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587372050789" />
+    <state width="1877" height="243" key="GridCell.Tab.0.left" timestamp="1587372050789">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="371" key="GridCell.Tab.0.left/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587212859995" />
-    <state width="1877" height="371" key="GridCell.Tab.0.right" timestamp="1587212859996">
+    <state width="1877" height="243" key="GridCell.Tab.0.left/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587372050789" />
+    <state width="1877" height="243" key="GridCell.Tab.0.right" timestamp="1587372050789">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="371" key="GridCell.Tab.0.right/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587212859996" />
+    <state width="1877" height="243" key="GridCell.Tab.0.right/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587372050789" />
   </component>
   <component name="masterDetails">
     <states>
