@@ -7,14 +7,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="894c3f77-ec22-4c65-a043-74aaae37572e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/Client/ServerThread.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Client/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Client/RestClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/RestClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../NamingServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingServer/map.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/map.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingServer/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,6 +116,7 @@
       <workItem from="1587200185580" duration="401000" />
       <workItem from="1587208761592" duration="3583000" />
       <workItem from="1587366082204" duration="5563000" />
+      <workItem from="1587372681615" duration="1722000" />
     </task>
     <servers />
   </component>

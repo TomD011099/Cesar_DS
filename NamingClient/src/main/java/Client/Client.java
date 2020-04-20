@@ -19,10 +19,13 @@ public class Client {
     private RestClient restClient;
     private ServerThread serverThread;
 
-    public Client(String localDir, String replicaDir, String requestDir, String name, String ip, String server) throws NodeNotRegisteredException {
+    public Client(String localDir, String replicaDir, String requestDir, String name, String ip, String server, String nextNode, String prevNode) throws NodeNotRegisteredException {
         try {
             this.serverIp = InetAddress.getByName(server);
             this.ip = InetAddress.getByName(ip);
+            //temp
+            this.nextNode = InetAddress.getByName(nextNode);
+            this.prevNode = InetAddress.getByName(prevNode);
         } catch (UnknownHostException e) {
             System.err.println(e.getMessage());
         }
@@ -30,6 +33,7 @@ public class Client {
         this.localDir = localDir;
         this.replicaDir = replicaDir;
         this.requestDir = requestDir;
+
         restClient = new RestClient(serverIp.toString().substring(1));
         register(this.name, this.ip.toString().substring(1));
 
