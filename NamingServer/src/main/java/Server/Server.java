@@ -7,11 +7,21 @@ import java.util.*;
 public class Server {
     private HashMap<Integer, InetAddress> map;
     private String mapPath;
+    private MulticastReceiver multicastReceiver;
+    private Thread receiverThread;
 
-    public Server(String mapPath) {
+    Server(String mapPath) {
+        multicastReceiver = new MulticastReceiver();
+        receiverThread = new Thread(multicastReceiver);
+        multicast();
         this.mapPath = mapPath;
         map = new HashMap<Integer, InetAddress>();
         loadMap();
+    }
+
+    private void multicast() {
+        if (receiverThread.isAlive())
+            receiverThread.start();
     }
 
     public int registerNode(String name, InetAddress ip) {

@@ -29,7 +29,8 @@ public class Client {
         this.replicaDir = replicaDir;
         this.requestDir = requestDir;
         restClient = new RestClient(serverIp.toString().substring(1));
-        register(this.name, this.ip.toString().substring(1));
+        discovery();
+        register(this.name, this.ip.toString().substring(1));               // TODO valt weg door boostrap?!
     }
 
     private void register(String name, String ip) throws NodeNotRegisteredException {
@@ -46,12 +47,20 @@ public class Client {
         }
     }
 
+    /* Send name to all nodes using multicast
+    *  ip-address can be extracted from message */
     private void discovery() {
-
+        MulticastPublisher publisher = new MulticastPublisher();
+        try {
+            publisher.multicast(name);
+            publisher.multicast("end");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void bootstrap() {
-        // TODO ask server where to put files
+
     }
 
     public void shutdown() {
