@@ -2,28 +2,24 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="NamingServer:jar" />
+      <artifact name="naming-server:jar" />
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b7a054a7-515d-4b5d-beb9-198cb540d7ea" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingClient/.idea/artifacts/NamingClient_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingClient/.idea/artifacts/naming_client_jar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingClient/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingClient/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../NamingClient/src/main/java/Client/BootstrapThread.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../NamingClient/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingClient/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingClient/out/artifacts/NamingClient_jar/NamingClient.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NamingClient/out/artifacts/naming_client_jar/naming-client.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingClient/out/artifacts/naming_client_jar/naming-client.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../NamingClient/src/main/java/Client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingClient/src/main/java/Client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingClient/src/main/java/Client/MulticastPublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingClient/src/main/java/Client/MulticastPublisher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../NamingClient/target/classes/Client/Client.class" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingClient/target/classes/Client/Client.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/NamingServer_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/naming_server_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/map.xml" beforeDir="false" afterPath="$PROJECT_DIR$/map.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Server/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NamingServer_jar/NamingServer.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/NamingServer_jar/map.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Server/MulticastReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server/MulticastReceiver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Server/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Server/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Server/ServerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Server/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Server/App.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Server/ServerController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Server/ServerController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Server/MulticastReceiver.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Server/MulticastReceiver.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Server/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Server/Server.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -47,8 +43,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Server/ServerController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="25" column="36" lean-forward="true" selection-start-line="25" selection-start-column="27" selection-end-line="25" selection-end-column="36" />
+            <state relative-caret-position="136">
+              <caret line="23" column="17" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -56,8 +52,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Server/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="23" column="35" lean-forward="true" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
+            <state relative-caret-position="238">
+              <caret line="16" column="31" lean-forward="true" selection-start-line="16" selection-start-column="31" selection-end-line="16" selection-end-column="31" />
+              <folding>
+                <element signature="e#3602#3603#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -65,10 +64,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Server/MulticastReceiver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="17" column="67" lean-forward="true" selection-start-line="17" selection-start-column="67" selection-end-line="17" selection-end-column="67" />
+            <state relative-caret-position="307">
+              <caret line="32" column="22" lean-forward="true" selection-start-line="32" selection-start-column="22" selection-end-line="32" selection-end-column="22" />
               <folding>
-                <element signature="e#1719#1720#0" expanded="true" />
+                <element signature="e#468#469#0" expanded="true" />
+                <element signature="e#504#505#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -87,6 +87,8 @@
     <findStrings>
       <find>running</find>
       <find>CesarString</find>
+      <find>tr</find>
+      <find>true</find>
     </findStrings>
     <replaceStrings>
       <replace>received</replace>
@@ -100,9 +102,9 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/main/java/Server/ServerController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Server/MulticastReceiver.java" />
         <option value="$PROJECT_DIR$/src/main/java/Server/App.java" />
         <option value="$PROJECT_DIR$/src/main/java/Server/Server.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Server/MulticastReceiver.java" />
         <option value="$PROJECT_DIR$/map.xml" />
       </list>
     </option>
@@ -174,7 +176,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1587373481743" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1587378999261" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -247,12 +249,12 @@
       <workItem from="1587039494388" duration="698000" />
       <workItem from="1587200118214" duration="463000" />
       <workItem from="1587211366020" duration="2263000" />
-      <workItem from="1587367917076" duration="4977000" />
+      <workItem from="1587367917076" duration="10553000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4977000" />
+    <option name="totallyTimeSpent" value="10553000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -264,10 +266,10 @@
       <window_info id="UI Designer" />
       <window_info id="Favorites" side_tool="true" />
       <window_info id="Web" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24966443" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24966443" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Spring" />
-      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Terminal" weight="0.3286119" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Messages" />
@@ -276,7 +278,7 @@
       <window_info anchor="bottom" id="Version Control" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3286119" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.29461756" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39943343" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -379,13 +381,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Server/ServerController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="25" column="36" lean-forward="true" selection-start-line="25" selection-start-column="27" selection-end-line="25" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/map.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -393,20 +388,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/out/artifacts/naming_server_jar/map.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="13" lean-forward="true" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Server/ServerController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="23" column="17" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Server/MulticastReceiver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="17" column="67" lean-forward="true" selection-start-line="17" selection-start-column="67" selection-end-line="17" selection-end-column="67" />
+        <state relative-caret-position="307">
+          <caret line="32" column="22" lean-forward="true" selection-start-line="32" selection-start-column="22" selection-end-line="32" selection-end-column="22" />
           <folding>
-            <element signature="e#1719#1720#0" expanded="true" />
+            <element signature="e#468#469#0" expanded="true" />
+            <element signature="e#504#505#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Server/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="23" column="35" lean-forward="true" selection-start-line="23" selection-start-column="35" selection-end-line="23" selection-end-column="35" />
+        <state relative-caret-position="238">
+          <caret line="16" column="31" lean-forward="true" selection-start-line="16" selection-start-column="31" selection-end-line="16" selection-end-column="31" />
+          <folding>
+            <element signature="e#3602#3603#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -416,7 +429,7 @@
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
           <artifact-editor />
-          <last-edited>NamingServer:jar</last-edited>
+          <last-edited>naming-server:jar</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -464,7 +477,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>NamingServer</last-edited>
+          <last-edited>naming-server</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

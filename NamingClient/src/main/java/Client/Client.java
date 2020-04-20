@@ -30,7 +30,6 @@ public class Client {
         this.requestDir = requestDir;
         restClient = new RestClient(serverIp.toString().substring(1));
         discovery();
-        register(this.name, this.ip.toString().substring(1));               // TODO valt weg door boostrap?!
     }
 
     private void register(String name, String ip) throws NodeNotRegisteredException {
@@ -53,7 +52,6 @@ public class Client {
         MulticastPublisher publisher = new MulticastPublisher();
         try {
             publisher.multicast(name);
-            publisher.multicast("end");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -11,7 +11,7 @@ public class Server {
     private Thread receiverThread;
 
     Server(String mapPath) {
-        multicastReceiver = new MulticastReceiver();
+        multicastReceiver = new MulticastReceiver(this);
         receiverThread = new Thread(multicastReceiver);
         multicast();
         this.mapPath = mapPath;
@@ -20,7 +20,7 @@ public class Server {
     }
 
     private void multicast() {
-        if (receiverThread.isAlive())
+        if (!receiverThread.isAlive())
             receiverThread.start();
     }
 
