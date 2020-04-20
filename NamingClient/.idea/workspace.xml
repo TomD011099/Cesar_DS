@@ -7,11 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="894c3f77-ec22-4c65-a043-74aaae37572e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/NamingClient_jar/NamingClient.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/NamingClient_jar/NamingClient.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Client/RestClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/RestClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../NamingServer/src/main/java/Server/MulticastReceiver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../NamingServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingServer/out/artifacts/NamingServer_jar/NamingServer.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/out/artifacts/NamingServer_jar/NamingServer.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,6 +90,7 @@
       <workItem from="1587039534205" duration="621000" />
       <workItem from="1587200185580" duration="401000" />
       <workItem from="1587208761592" duration="3583000" />
+      <workItem from="1587366082204" duration="241000" />
     </task>
     <servers />
   </component>
