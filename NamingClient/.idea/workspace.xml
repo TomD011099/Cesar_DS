@@ -7,9 +7,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="894c3f77-ec22-4c65-a043-74aaae37572e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/Client/FileTransfer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Client/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Client/ServerThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/ServerThread.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../NamingServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/.idea/workspace.xml" afterDir="false" />
     </list>
@@ -129,10 +129,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="624" y="143" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587375679013" />
-    <state x="765" y="221" key="#com.intellij.ide.util.MemberChooser" timestamp="1587377943093">
+    <state x="765" y="221" key="#com.intellij.ide.util.MemberChooser" timestamp="1587570224530">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="765" y="221" key="#com.intellij.ide.util.MemberChooser/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587377943093" />
+    <state x="765" y="221" key="#com.intellij.ide.util.MemberChooser/1920.3.1368.892/0.0.1920.1040@0.0.1920.1040" timestamp="1587570224530" />
     <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1587039492253">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
