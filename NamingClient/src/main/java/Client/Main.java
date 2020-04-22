@@ -24,11 +24,6 @@ public class Main {
             System.err.println(e.getMessage());
             return;
         }
-
-        try {
-            client.run();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        client.run();
     }
 }

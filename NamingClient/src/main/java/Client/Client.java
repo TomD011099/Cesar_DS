@@ -8,15 +8,15 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class Client {
-    private String localDir;
-    private String replicaDir;
-    private String requestDir;
+    private final String localDir;
+    private final String replicaDir;
+    private final String requestDir;
+    private final RestClient restClient;
+    private final String name;
     private InetAddress ip;
     private InetAddress prevNode;
     private InetAddress nextNode;
-    private String name;
     private InetAddress serverIp;
-    private RestClient restClient;
     private ServerThread serverThread;
 
     public Client(String localDir, String replicaDir, String requestDir, String name, String ip, String server, String nextNode, String prevNode) throws NodeNotRegisteredException {
@@ -76,10 +76,8 @@ public class Client {
         // TODO relocate hosted files that were on the node
     }
 
-    private void failure() {
+    public void failure() {
 
-
-        shutdown();
     }
 
     private void sendFile(InetAddress dest, String fileName, boolean local) {
@@ -220,36 +218,21 @@ public class Client {
             socket.close();
 
         } catch (Exception e) {
+            failure();
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
     }
 
-    public void run() throws UnknownHostException {
+    public void run() {
         discovery();
         bootstrap();
 
         boolean quit = false;
-        String prevRead = "null";
         Scanner sc = new Scanner(System.in);
         String input;
 
         while (!quit) {
-//            String str = serverThread.getRead();
-//            System.out.println(str + "\t" + prevRead);
-//            if (!str.equals(prevRead) && !str.equals("null")) {
-//                String[] parsed = str.split(" ");
-//                if (parsed[0].equals("prev")) {
-//                    prevNode = InetAddress.getByName(parsed[1].substring(1));
-//                    System.out.println("prevNode updated to: " + prevNode);
-//                } else if (parsed[0].equals("next")) {
-//                    nextNode = InetAddress.getByName(parsed[1].substring(1));
-//                    System.out.println("nextNode updated to: " + nextNode);
-//                }
-//                prevRead = str;
-//            }
-
-
             System.out.println("\n\nGive the file path you want to access: (press x to stop)");
             input = sc.nextLine();
             if (!input.isEmpty() && !input.equals("x")) {
