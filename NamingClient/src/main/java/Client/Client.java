@@ -11,7 +11,7 @@ public class Client {
     private String localDir;
     private String replicaDir;
     private String requestDir;
-    private InetAddress ip;
+    private InetAddress currentIP;
     private InetAddress prevNode;
     private InetAddress nextNode;
     private String name;
@@ -24,7 +24,7 @@ public class Client {
 
     public Client(String localDir, String replicaDir, String requestDir, String name, String ip) throws NodeNotRegisteredException {
         try {
-            this.ip = InetAddress.getByName(ip);
+            this.currentIP = InetAddress.getByName(ip);
         } catch (Exception e) {
             e.getMessage();
         }
@@ -97,8 +97,8 @@ public class Client {
         restClient = new RestClient(serverIp.toString().substring(1));
         if (numberOfNodes < 1) {
             // We are the only node in the network
-            prevNode = ip;
-            nextNode = ip;
+            prevNode = currentIP;
+            nextNode = currentIP;
             prevID = currentID;
             nextID = currentID;
             System.out.println("We are the only node!");
@@ -118,7 +118,7 @@ public class Client {
             nextNode = ip;
             nextID = hash;
             // Send we are previous node
-            sendString(11111, name);
+            sendString(11111, name, ip);
             System.out.println("We are previous node");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
@@ -126,7 +126,7 @@ public class Client {
             prevNode = ip;
             prevID = hash;
             // Send we are next node
-            sendString(56789, name);
+            sendString(56789, name, ip);
             System.out.println("We are next node");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
@@ -136,15 +136,15 @@ public class Client {
             nextNode = ip;
             prevID = hash;
             nextID = hash;
-            sendString(11111, name);
-            sendString(56789, name);
+            sendString(11111, name, ip);
+            sendString(56789, name, ip);
             System.out.println("One friend");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
         }
     }
 
-    private void sendString(int port, String string) {
+    private void sendString(int port, String string, InetAddress ip) {
         try {
             Socket socket = new Socket(ip, port);
 
