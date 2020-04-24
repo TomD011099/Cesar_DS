@@ -166,6 +166,7 @@ public class Client {
     public void setNext(String nodeName, InetAddress nextNode) {
         nextID = new CesarString(nodeName).hashCode();
         this.nextNode = nextNode;
+        System.out.println("setNext");
         System.out.println("prevNode: " + this.prevNode);
         System.out.println("nextNode: " + this.nextNode);
     }
@@ -173,6 +174,7 @@ public class Client {
     public void setPrev(String nodeName, InetAddress prevNode) {
         prevID = new CesarString(nodeName).hashCode();
         this.prevNode = prevNode;
+        System.out.println("setPrev");
         System.out.println("prevNode: " + this.prevNode);
         System.out.println("nextNode: " + this.nextNode);
     }
