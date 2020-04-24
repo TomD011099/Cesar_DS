@@ -111,6 +111,9 @@ public class Client {
 
     public void handleMulticastMessage(String nodeName, InetAddress ip) {
         int hash = new CesarString(nodeName).hashCode();
+        System.out.println("Multicast received!");
+        System.out.println("nodeName received: " + nodeName);
+        System.out.println("ip received: " + ip);
         if ((currentID < hash) && (hash < nextID)) {
             nextNode = ip;
             nextID = hash;
