@@ -1,5 +1,7 @@
 package Client;
 
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -114,6 +116,10 @@ public class Client {
         System.out.println("Multicast received!");
         System.out.println("nodeName received: " + nodeName);
         System.out.println("ip received: " + ip);
+        System.out.println("currentID: " + currentID);
+        System.out.println("nextID " + nextID);
+        System.out.println("prevID " + prevID);
+        System.out.println("hash: " + hash);
         if ((currentID < hash) && (hash < nextID)) {
             nextNode = ip;
             nextID = hash;

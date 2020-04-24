@@ -6,7 +6,10 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b7a054a7-515d-4b5d-beb9-198cb540d7ea" name="Default Changelist" comment="" />
+    <list default="true" id="b7a054a7-515d-4b5d-beb9-198cb540d7ea" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../NamingClient/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingClient/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NamingClient/src/main/java/Client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingClient/src/main/java/Client/Client.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -187,7 +190,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1587723718029" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1587724561128" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../NamingClient" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
