@@ -7,9 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="894c3f77-ec22-4c65-a043-74aaae37572e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NamingServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../NamingServer/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -33,14 +31,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Client/Client.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="135" column="51" lean-forward="true" selection-start-line="135" selection-start-column="51" selection-end-line="135" selection-end-column="51" />
+            <state relative-caret-position="87">
+              <caret line="122" column="123" lean-forward="true" selection-start-line="122" selection-start-column="123" selection-end-line="122" selection-end-column="123" />
               <folding>
-                <element signature="e#10255#10256#0" expanded="true" />
-                <element signature="e#10348#10349#0" expanded="true" />
-                <element signature="e#10441#10442#0" expanded="true" />
-                <element signature="e#10512#10513#0" expanded="true" />
-                <element signature="e#10583#10584#0" expanded="true" />
+                <element signature="e#10303#10304#0" expanded="true" />
+                <element signature="e#10396#10397#0" expanded="true" />
+                <element signature="e#10489#10490#0" expanded="true" />
+                <element signature="e#10560#10561#0" expanded="true" />
+                <element signature="e#10631#10632#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -188,7 +186,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1587971509046" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1587972474660" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -271,12 +269,12 @@
       <workItem from="1587366082204" duration="241000" />
       <workItem from="1587367908471" duration="7232000" />
       <workItem from="1587563678599" duration="1319000" />
-      <workItem from="1587970260290" duration="1461000" />
+      <workItem from="1587970260290" duration="1862000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16155000" />
+    <option name="totallyTimeSpent" value="16556000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -481,14 +479,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Client/Client.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="135" column="51" lean-forward="true" selection-start-line="135" selection-start-column="51" selection-end-line="135" selection-end-column="51" />
+        <state relative-caret-position="87">
+          <caret line="122" column="123" lean-forward="true" selection-start-line="122" selection-start-column="123" selection-end-line="122" selection-end-column="123" />
           <folding>
-            <element signature="e#10255#10256#0" expanded="true" />
-            <element signature="e#10348#10349#0" expanded="true" />
-            <element signature="e#10441#10442#0" expanded="true" />
-            <element signature="e#10512#10513#0" expanded="true" />
-            <element signature="e#10583#10584#0" expanded="true" />
+            <element signature="e#10303#10304#0" expanded="true" />
+            <element signature="e#10396#10397#0" expanded="true" />
+            <element signature="e#10489#10490#0" expanded="true" />
+            <element signature="e#10560#10561#0" expanded="true" />
+            <element signature="e#10631#10632#0" expanded="true" />
           </folding>
         </state>
       </provider>
