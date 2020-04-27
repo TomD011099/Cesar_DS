@@ -37,6 +37,10 @@ public class Client {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+
+        // TODO put this in the right place
+        UpdateThread updateThread = new UpdateThread(this, localDir);
+        updateThread.start();
     }
 
     private void register(String name, String ip) throws NodeNotRegisteredException {
@@ -235,6 +239,21 @@ public class Client {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void localFileCreated(String filename) {
+        // TODO handle this
+        System.out.println(filename);
+    }
+
+    public void localFileDeleted(String filename) {
+        // TODO handle this
+        System.out.println(filename);
+    }
+
+    public void localFileModified(String filename) {
+        // TODO handle this
+        System.out.println(filename);
     }
 
     public void run() throws UnknownHostException {
