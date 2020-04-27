@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 @SpringBootApplication
 public class App {
     public static void main(String[] args) {
-        // Start running REST server
+        // Component scan and enable configuration
         SpringApplication.run(App.class, args);
     }
 }

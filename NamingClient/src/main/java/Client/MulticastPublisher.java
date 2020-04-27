@@ -10,10 +10,11 @@ public class MulticastPublisher {
     private InetAddress group;
     private byte[] buf;
 
-    public void multicast(String message) throws IOException {
+    public void multicast(CesarString message) throws IOException{
         socket = new DatagramSocket();
         group = InetAddress.getByName("230.0.0.0");
-        buf = message.getBytes();
+        String strMessage = message.getString();
+        buf = strMessage.getBytes();
         DatagramPacket packet = new DatagramPacket(buf, buf.length, group, 4446);
         socket.send(packet);
         socket.close();

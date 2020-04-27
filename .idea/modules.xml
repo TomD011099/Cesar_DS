@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Cesar_DS.iml" filepath="$PROJECT_DIR$/.idea/Cesar_DS.iml" />
-      <module fileurl="file://$PROJECT_DIR$/NamingClient/naming-client.iml" filepath="$PROJECT_DIR$/NamingClient/naming-client.iml" />
-      <module fileurl="file://$PROJECT_DIR$/NamingServer/naming-server.iml" filepath="$PROJECT_DIR$/NamingServer/naming-server.iml" />
     </modules>
   </component>
 </project>

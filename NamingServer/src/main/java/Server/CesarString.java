@@ -27,10 +27,7 @@ public class CesarString {
 
     @Override
     public int hashCode() {
-        int hash = 0;
-        for (int i = 0; i < string.length(); i++) {
-            hash = hash + (int) Math.pow(string.charAt(i), i);
-        }
+        int hash = string.hashCode();
         while ((hash < 0) || (hash > 32768)) {
             if (hash < 0) {
                 hash += 32768;

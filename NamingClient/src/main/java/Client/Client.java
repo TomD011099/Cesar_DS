@@ -1,7 +1,5 @@
 package Client;
 
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
-
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -17,25 +15,22 @@ public class Client {
     private InetAddress nextNode;
     private InetAddress serverIp;
     private ServerThread serverThread;
-    private int currentID;
-    private int prevID;
-    private int nextID;
 
-    public Client(String localDir, String replicaDir, String requestDir, String name, String ip) throws NodeNotRegisteredException {
+    public Client(String localDir, String replicaDir, String requestDir, String name, String ip, String server, String nextNode, String prevNode) throws NodeNotRegisteredException {
         try {
-            this.currentIP = InetAddress.getByName(ip);
-        } catch (Exception e) {
-            e.getMessage();
+            this.serverIp = InetAddress.getByName(server);
+            this.ip = InetAddress.getByName(ip);
+            //temp
+            this.nextNode = InetAddress.getByName(nextNode);
+            this.prevNode = InetAddress.getByName(prevNode);
+        } catch (UnknownHostException e) {
+            System.err.println(e.getMessage());
         }
-
         this.name = name;
-
-        this.fileTransfer = new FileTransfer(localDir, replicaDir, requestDir);
-
-        restClient = new RestClient(serverIp.toString().substring(1));
-        register(this.name, this.ip.toString().substring(1));
-
         this.currentID = new CesarString(this.name).hashCode();
+        this.localDir = localDir;
+        this.replicaDir = replicaDir;
+        this.requestDir = requestDir;
         try {
             serverThread = new ServerThread(12345, this);
             Thread t1 = new Thread(serverThread, "T1");
@@ -60,30 +55,12 @@ public class Client {
         }
     }
 
-    /* Send name to all nodes using multicast
-    *  ip-address can be extracted from message */
     private void discovery() {
-        MulticastPublisher publisher = new MulticastPublisher();
-        try {
-            publisher.multicast(name);
-            // Receiving the number of nodes from the server
-            DiscoveryThread discoveryThread = new DiscoveryThread(this);
-            // Receiving previous and next node from other nodes (if they exist)
-            BootstrapThread bootstrapThreadNext = new BootstrapThread(true, this);
-            BootstrapThread bootstrapThreadPrev = new BootstrapThread(false, this);
 
-            System.out.println("send multicast with name");
-
-            discoveryThread.start();
-            bootstrapThreadNext.start();
-            bootstrapThreadPrev.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void bootstrap() {
-
+        // TODO ask server where to put files
     }
 
     public void shutdown() {
@@ -94,7 +71,7 @@ public class Client {
         // TODO relocate hosted files that were on the node
     }
 
-    private void failure() {
+    public void failure() {
 
     }
 
@@ -155,11 +132,7 @@ public class Client {
 
     public void run() throws UnknownHostException {
         discovery();
-        // Create a multicast receiver for client
-        MulticastReceiver multicastReceiver = new MulticastReceiver(this);
-        Thread receiverThread = new Thread(multicastReceiver);
-        receiverThread.start();
-        System.out.println("receiverThread started!");
+        bootstrap();
 
         boolean quit = false;
         Scanner sc = new Scanner(System.in);
