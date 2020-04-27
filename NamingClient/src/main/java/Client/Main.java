@@ -17,10 +17,12 @@ public class Main {
         Client client;
         try {
             client = new Client("./", "./", "./", name, ip);
+            client.run();
         } catch (NodeNotRegisteredException e) {
             System.err.println(e.getMessage());
             return;
+        } catch (UnknownHostException e) {
+            System.err.println(e.getMessage());
         }
-        client.run();
     }
 }
