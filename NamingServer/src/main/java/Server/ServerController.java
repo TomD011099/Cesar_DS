@@ -10,6 +10,7 @@ public class ServerController {
 
     private Server server = new Server("map.xml");
 
+    // TODO can be removed because of discovery
     /**
      * POST: register the node
      *

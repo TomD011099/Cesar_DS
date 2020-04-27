@@ -27,7 +27,10 @@ public class CesarString {
 
     @Override
     public int hashCode() {
-        int hash = string.hashCode();
+        int hash = 0;
+        for (int i = 0; i < string.length(); i++) {
+            hash = hash + (int) Math.pow(string.charAt(i), i);
+        }
         while ((hash < 0) || (hash > 32768)) {
             if (hash < 0) {
                 hash += 32768;
@@ -39,15 +42,15 @@ public class CesarString {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return string;
     }
 
-    public int length(){
+    public int length() {
         return string.length();
     }
 
-    public String subString(int beginIndex, int endIndex){
+    public String subString(int beginIndex, int endIndex) {
         return string.substring(beginIndex, endIndex);
     }
 }

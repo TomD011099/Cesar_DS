@@ -2,13 +2,19 @@ package Server;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.util.*;
 
 public class Server {
     private HashMap<Integer, InetAddress> map;
     private String mapPath;
+    private MulticastReceiver multicastReceiver;
+    private Thread receiverThread;
 
-    public Server(String mapPath) {
+    Server(String mapPath) {
+        multicastReceiver = new MulticastReceiver(this);
+        receiverThread = new Thread(multicastReceiver);
+        receiverThread.start();
         this.mapPath = mapPath;
         map = new HashMap<Integer, InetAddress>();
         loadMap();
@@ -28,6 +34,32 @@ public class Server {
         // TODO make replicas of new files on the new node
     }
 
+    public void handleMulticastMessage(String nodeName, InetAddress ip) {
+        // Reply with the number of nodes in the network
+        sendNumberOfNodes(ip);
+
+        // Register the node
+        registerNode(nodeName, ip);
+    }
+
+    private void sendNumberOfNodes(InetAddress ip) {
+        try {
+            Socket socket = new Socket(ip, 54321);
+
+            // Create a writer to write to the socket
+            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+
+            writer.println(map.size());
+            System.out.println("Data sent: " + map.size());
+
+            writer.close();
+            socket.close();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void unregisterNode(String name) {
         int id = getId(name);
 
@@ -41,7 +73,7 @@ public class Server {
         // TODO relocate hosted files that were on the node
     }
 
-    public void saveMap() {
+    private void saveMap() {
         try {
             Properties properties = new Properties();
 
@@ -63,7 +95,7 @@ public class Server {
         }
     }
 
-    public void loadMap() {
+    private void loadMap() {
         Properties properties = new Properties();
 
         File file = new File(mapPath);
@@ -104,7 +136,7 @@ public class Server {
         return map.get(closestId);
     }
 
-    public int getId(String name) {
+    private int getId(String name) {
         int id = new CesarString(name).hashCode();
         System.out.println(name + "\t id = " + id);
         return id;

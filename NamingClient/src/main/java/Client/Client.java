@@ -1,5 +1,7 @@
 package Client;
 
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -8,35 +10,30 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class Client {
-    private final String localDir;
-    private final String replicaDir;
-    private final String requestDir;
-    private final RestClient restClient;
-    private final String name;
-    private InetAddress ip;
+    private String localDir;
+    private String replicaDir;
+    private String requestDir;
+    private InetAddress currentIP;
     private InetAddress prevNode;
     private InetAddress nextNode;
     private InetAddress serverIp;
     private ServerThread serverThread;
+    private int currentID;
+    private int prevID;
+    private int nextID;
 
-    public Client(String localDir, String replicaDir, String requestDir, String name, String ip, String server, String nextNode, String prevNode) throws NodeNotRegisteredException {
+    public Client(String localDir, String replicaDir, String requestDir, String name, String ip) throws NodeNotRegisteredException {
         try {
-            this.serverIp = InetAddress.getByName(server);
-            this.ip = InetAddress.getByName(ip);
-            //temp
-            this.nextNode = InetAddress.getByName(nextNode);
-            this.prevNode = InetAddress.getByName(prevNode);
-        } catch (UnknownHostException e) {
-            System.err.println(e.getMessage());
+            this.currentIP = InetAddress.getByName(ip);
+        } catch (Exception e) {
+            e.getMessage();
         }
+
         this.name = name;
+        this.currentID = new CesarString(this.name).hashCode();
         this.localDir = localDir;
         this.replicaDir = replicaDir;
         this.requestDir = requestDir;
-
-        restClient = new RestClient(serverIp.toString().substring(1));
-        register(this.name, this.ip.toString().substring(1));
-
         try {
             serverThread = new ServerThread(12345, this);
             serverThread.start();
@@ -60,12 +57,30 @@ public class Client {
         }
     }
 
+    /* Send name to all nodes using multicast
+    *  ip-address can be extracted from message */
     private void discovery() {
+        MulticastPublisher publisher = new MulticastPublisher();
+        try {
+            publisher.multicast(name);
+            // Receiving the number of nodes from the server
+            DiscoveryThread discoveryThread = new DiscoveryThread(this);
+            // Receiving previous and next node from other nodes (if they exist)
+            BootstrapThread bootstrapThreadNext = new BootstrapThread(true, this);
+            BootstrapThread bootstrapThreadPrev = new BootstrapThread(false, this);
 
+            System.out.println("send multicast with name");
+
+            discoveryThread.start();
+            bootstrapThreadNext.start();
+            bootstrapThreadPrev.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void bootstrap() {
-        // TODO ask server where to put files
+
     }
 
     public void shutdown() {
@@ -76,7 +91,7 @@ public class Client {
         // TODO relocate hosted files that were on the node
     }
 
-    public void failure() {
+    private void failure() {
 
     }
 
@@ -226,7 +241,11 @@ public class Client {
 
     public void run() {
         discovery();
-        bootstrap();
+        // Create a multicast receiver for client
+        MulticastReceiver multicastReceiver = new MulticastReceiver(this);
+        Thread receiverThread = new Thread(multicastReceiver);
+        receiverThread.start();
+        System.out.println("receiverThread started!");
 
         boolean quit = false;
         Scanner sc = new Scanner(System.in);
