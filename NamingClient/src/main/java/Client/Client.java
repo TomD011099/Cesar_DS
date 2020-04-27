@@ -29,7 +29,6 @@ public class Client {
         this.name = name;
         this.currentID = new CesarString(this.name).hashCode();
         this.fileTransfer = new FileTransfer(localDir, replicaDir, requestDir);
-        restClient = new RestClient(serverIp.toString().substring(1));
         try {
             serverThread = new ServerThread(12345, this);
             Thread t1 = new Thread(serverThread, "T1");
