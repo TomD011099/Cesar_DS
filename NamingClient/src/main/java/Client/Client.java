@@ -18,6 +18,7 @@ public class Client {
     private int currentID;
     private int prevID;
     private int nextID;
+    private MulticastReceiver multicastReceiver;
 
     public Client(String localDir, String replicaDir, String requestDir, String name, String ip) throws NodeNotRegisteredException {
         try {
@@ -37,6 +38,12 @@ public class Client {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+
+        // Create a multicast receiver for client
+        multicastReceiver = new MulticastReceiver(this);
+        Thread receiverThread = new Thread(multicastReceiver);
+        receiverThread.start();
+        System.out.println("receiverThread started!");
     }
 
     private void register(String name, String ip) throws NodeNotRegisteredException {
@@ -239,11 +246,7 @@ public class Client {
 
     public void run() throws UnknownHostException {
         discovery();
-        // Create a multicast receiver for client
-        MulticastReceiver multicastReceiver = new MulticastReceiver(this);
-        Thread receiverThread = new Thread(multicastReceiver);
-        receiverThread.start();
-        System.out.println("receiverThread started!");
+
 
         boolean quit = false;
         Scanner sc = new Scanner(System.in);
