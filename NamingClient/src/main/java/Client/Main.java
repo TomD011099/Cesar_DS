@@ -17,11 +17,12 @@ public class Main {
         String prevIp = args[4];
         Client client;
         try {
-            client = new Client("./", "./", "./", name, ip, serverIp, nextIp, prevIp);
+            client = new Client("./", "./", "./", name, ip);
         } catch (NodeNotRegisteredException e) {
             System.err.println(e.getMessage());
             return;
+        } catch (UnknownHostException e) {
+            System.err.println(e.getMessage());
         }
-        client.run();
     }
 }
