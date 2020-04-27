@@ -1,7 +1,5 @@
 package Client;
 
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
-
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -10,8 +8,9 @@ import java.util.Scanner;
 
 public class Client {
     private final FileTransfer fileTransfer;
-    private final RestClient restClient;
+    private RestClient restClient;
     private final String name;
+    private InetAddress currentIP;
     private InetAddress prevNode;
     private InetAddress nextNode;
     private InetAddress serverIp;
@@ -107,6 +106,25 @@ public class Client {
         }
     }
 
+    private void sendString(int port, String string, InetAddress ip) {
+        try {
+            Socket socket = new Socket(ip, port);
+
+            // Create a writer to write to the socket
+            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+
+            // Send your name
+            writer.println(string);
+            System.out.println("Data sent: " + string);
+
+            writer.close();
+            socket.close();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void handleMulticastMessage(String nodeName, InetAddress ip) {
         int hash = new CesarString(nodeName).hashCode();
         System.out.println("Multicast received!");
@@ -195,7 +213,6 @@ public class Client {
             socket.close();
 
         } catch (Exception e) {
-            failure();
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
