@@ -35,7 +35,8 @@ public class Client {
 
         try {
             serverThread = new ServerThread(12345, this);
-            serverThread.start();
+            Thread t1 = new Thread(serverThread, "T1");
+            t1.start();
         } catch (IOException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
@@ -155,5 +156,6 @@ public class Client {
 
         }
         shutdown();
+        serverThread.stop();
     }
 }

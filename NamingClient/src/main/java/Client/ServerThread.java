@@ -3,18 +3,20 @@ package Client;
 import java.io.*;
 import java.net.*;
 
-public class ServerThread extends Thread {
+public class ServerThread implements Runnable {
     private final ServerSocket serverSocket;
     private final Client client;
+    private volatile boolean stop;
 
     public ServerThread(int port, Client client) throws IOException {
         serverSocket = new ServerSocket(port);
         this.client = client;
+        this.stop = false;
     }
 
     public void run() {
         try {
-            while (true) {
+            while (!stop) {
                 Socket socket = serverSocket.accept();
 
                 // Create a reader to read from the socket
@@ -47,5 +49,9 @@ public class ServerThread extends Thread {
         } catch (IOException ioException) {
             client.failure();
         }
+    }
+
+    public void stop() {
+        stop = true;
     }
 }
