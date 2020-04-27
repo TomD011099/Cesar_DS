@@ -20,7 +20,8 @@ public class Main {
         } catch (NodeNotRegisteredException e) {
             System.err.println(e.getMessage());
             return;
+        } catch (UnknownHostException e) {
+            System.err.println(e.getMessage());
         }
-        client.run();
     }
 }
