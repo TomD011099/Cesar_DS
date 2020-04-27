@@ -165,6 +165,7 @@ public class Client {
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
         }
+        //TODO add else for if new node is not a neighbour
     }
 
     public String requestFileLocation(String filename) {
