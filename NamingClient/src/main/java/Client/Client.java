@@ -4,7 +4,9 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.file.*;
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class Client {
     private final FileTransfer fileTransfer;
@@ -18,6 +20,7 @@ public class Client {
     private int currentID;
     private int prevID;
     private int nextID;
+    private String replicaDir;
 
     public Client(String localDir, String replicaDir, String requestDir, String name, String ip) throws NodeNotRegisteredException {
         try {
@@ -28,7 +31,8 @@ public class Client {
 
         this.name = name;
         this.currentID = new CesarString(this.name).hashCode();
-        this.fileTransfer = new FileTransfer(localDir, replicaDir, requestDir);
+        this.replicaDir = replicaDir;
+        this.fileTransfer = new FileTransfer(localDir, replicaDir, requestDir, prevNode);
         try {
             serverThread = new ServerThread(12345, this);
             Thread t1 = new Thread(serverThread, "T1");
@@ -54,7 +58,7 @@ public class Client {
     }
 
     /* Send name to all nodes using multicast
-    *  ip-address can be extracted from message */
+     *  ip-address can be extracted from message */
     private void discovery() {
         MulticastPublisher publisher = new MulticastPublisher();
         try {
@@ -80,6 +84,15 @@ public class Client {
     }
 
     public void shutdown() {
+        //Replication part of shutdown
+        File dir = new File(replicaDir);
+        File[] directoryListing = dir.listFiles();
+        if (directoryListing != null){
+            for (File child : directoryListing){
+                fileTransfer.sendOnShutdown(child.getName());
+            }
+        }
+        //Discovery part of shutdown
         updateNeighbor(true);
         updateNeighbor(false);
         restClient.delete("unregister?name=" + name);
@@ -255,7 +268,7 @@ public class Client {
             if (!input.isEmpty() && !input.equals("x")) {
                 String location = requestFileLocation(input);
                 fileTransfer.requestFile(InetAddress.getByName(location.substring(1)), input);
-                
+
                 System.out.println("Location: " + location);
             } else if (input.equals("x")) {
                 quit = true;
