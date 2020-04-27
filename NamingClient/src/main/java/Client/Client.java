@@ -120,7 +120,7 @@ public class Client {
         System.out.println("nextID " + nextID);
         System.out.println("prevID " + prevID);
         System.out.println("hash: " + hash);
-        if ((currentID < hash) && (hash < nextID)) {
+        if (((currentID < hash) && (hash < nextID)) || ((nextID < currentID) && (hash < nextID))) {
             nextNode = ip;
             nextID = hash;
             // Send we are previous node
@@ -128,7 +128,7 @@ public class Client {
             System.out.println("We are previous node");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
-        } else if ((prevID < hash) && (hash < currentID)) {
+        } else if (((prevID < hash) && (hash < currentID)) || ((currentID < prevID) && (prevID < hash))) {
             prevNode = ip;
             prevID = hash;
             // Send we are next node
