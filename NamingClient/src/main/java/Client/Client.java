@@ -19,6 +19,7 @@ public class Client {
     private int prevID;
     private int nextID;
     private MulticastReceiver multicastReceiver;
+    private final String localDir;
 
     public Client(String localDir, String replicaDir, String requestDir, String name, String ip) throws NodeNotRegisteredException {
         try {
@@ -30,6 +31,8 @@ public class Client {
         this.name = name;
         this.currentID = new CesarString(this.name).hashCode();
         this.fileTransfer = new FileTransfer(localDir, replicaDir, requestDir);
+        this.localDir = localDir;
+
         try {
             serverThread = new ServerThread(12345, this);
             Thread t1 = new Thread(serverThread, "T1");
@@ -44,6 +47,8 @@ public class Client {
         Thread receiverThread = new Thread(multicastReceiver);
         receiverThread.start();
         System.out.println("receiverThread started!");
+
+        replicateFiles();
     }
 
     private void register(String name, String ip) throws NodeNotRegisteredException {
@@ -61,7 +66,7 @@ public class Client {
     }
 
     /* Send name to all nodes using multicast
-    *  ip-address can be extracted from message */
+     *  ip-address can be extracted from message */
     private void discovery() {
         MulticastPublisher publisher = new MulticastPublisher();
         try {
@@ -214,6 +219,21 @@ public class Client {
         return fileTransfer;
     }
 
+    private void replicateFiles() {
+        //TODO log files, maybe use global path
+        File[] files = new File(localDir).listFiles();
+        if (files != null) {
+            for (File file : files) {
+                try {
+                    String fileName = file.getPath().replaceAll(localDir, "");
+                    fileTransfer.sendReplication(InetAddress.getByName(requestFileLocation(fileName).substring(1)), fileName);
+                } catch (UnknownHostException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        }
+    }
+
     private void updateNeighbor(boolean isDestNextNode) {
         try {
             String out;
@@ -258,7 +278,7 @@ public class Client {
             if (!input.isEmpty() && !input.equals("x")) {
                 String location = requestFileLocation(input);
                 fileTransfer.requestFile(InetAddress.getByName(location.substring(1)), input);
-                
+
                 System.out.println("Location: " + location);
             } else if (input.equals("x")) {
                 quit = true;
