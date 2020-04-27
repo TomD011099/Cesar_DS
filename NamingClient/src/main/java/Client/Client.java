@@ -265,7 +265,9 @@ public class Client {
 
         }
         shutdown();
+        Thread.getAllStackTraces().keySet().forEach((t) -> System.out.println(t.getName() + "\nIs Daemon " + t.isDaemon() + "\nIs Alive " + t.isAlive()));
         serverThread.stop();
         multicastReceiver.stop();
+        Thread.getAllStackTraces().keySet().forEach((t) -> System.out.println(t.getName() + "\nIs Daemon " + t.isDaemon() + "\nIs Alive " + t.isAlive()));
     }
 }
