@@ -6,5 +6,3 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
-../NamingClient/.idea/workspace.xml
-../NamingServer/.idea/workspace.xml
