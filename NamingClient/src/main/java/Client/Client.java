@@ -266,5 +266,6 @@ public class Client {
         }
         shutdown();
         serverThread.stop();
+        multicastReceiver.stop();
     }
 }
