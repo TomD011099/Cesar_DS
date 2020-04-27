@@ -88,6 +88,10 @@ public class Client {
         // TODO relocate hosted files that were on the node
     }
 
+    public void failure() {
+
+    }
+
     public void discoveryResponse(int numberOfNodes, InetAddress ipServer) {
         // Make a new restClient since the server ip is known, also set the server IP
         serverIp = ipServer;
@@ -174,6 +178,22 @@ public class Client {
 
     public void setNextNode(InetAddress nextNode) {
         this.nextNode = nextNode;
+    }
+
+    public void setNext(String nodeName, InetAddress nextNode) {
+        nextID = new CesarString(nodeName).hashCode();
+        this.nextNode = nextNode;
+        System.out.println("setNext");
+        System.out.println("prevNode: " + this.prevNode);
+        System.out.println("nextNode: " + this.nextNode);
+    }
+
+    public void setPrev(String nodeName, InetAddress prevNode) {
+        prevID = new CesarString(nodeName).hashCode();
+        this.prevNode = prevNode;
+        System.out.println("setPrev");
+        System.out.println("prevNode: " + this.prevNode);
+        System.out.println("nextNode: " + this.nextNode);
     }
 
     public InetAddress getPrevNode() {
