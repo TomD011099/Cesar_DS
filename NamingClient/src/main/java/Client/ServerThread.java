@@ -37,10 +37,10 @@ public class ServerThread implements Runnable {
                         }
                         break;
                     case "File_replicate":
-                        client.getFileTransfer().sendFile(socket, false);
+                        client.getFileTransfer().receiveReplication(socket);
                         break;
                     case "File_request":
-                        client.getFileTransfer().sendFile(socket, true);
+                        client.getFileTransfer().sendRequestedFile(socket);
                 }
 
                 // Close all connections

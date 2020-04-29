@@ -178,6 +178,7 @@ public class Client {
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
         }
+        //TODO add else for if new node is not a neighbour
     }
 
     public String requestFileLocation(String filename) {
@@ -309,20 +310,18 @@ public class Client {
             input = sc.nextLine();
             if (!input.isEmpty() && !input.equals("x")) {
                 String location = requestFileLocation(input);
-
-                //Temp
-                fileTransfer.receiveFile(InetAddress.getByName(location.substring(1)), true, "test.txt");
-
+                fileTransfer.requestFile(InetAddress.getByName(location.substring(1)), input);
+                
                 System.out.println("Location: " + location);
             } else if (input.equals("x")) {
                 quit = true;
             }
-
         }
         shutdown();
-        Thread.getAllStackTraces().keySet().forEach((t) -> System.out.println(t.getName() + "\nIs Daemon " + t.isDaemon() + "\nIs Alive " + t.isAlive()));
         serverThread.stop();
         multicastReceiver.stop();
-        Thread.getAllStackTraces().keySet().forEach((t) -> System.out.println(t.getName() + "\nIs Daemon " + t.isDaemon() + "\nIs Alive " + t.isAlive()));
+        //TODO client doesn't stop
+        //test
+        return;
     }
 }

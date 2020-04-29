@@ -18,10 +18,7 @@ public class Main {
         try {
             client = new Client("./local", "./", "./", name, ip);
             client.run();
-        } catch (NodeNotRegisteredException e) {
-            System.err.println(e.getMessage());
-            return;
-        } catch (UnknownHostException e) {
+        } catch (NodeNotRegisteredException | UnknownHostException e) {
             System.err.println(e.getMessage());
         }
     }
