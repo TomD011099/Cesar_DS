@@ -1,9 +1,18 @@
 package Client;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Client {
@@ -58,7 +67,7 @@ public class Client {
     }
 
     /* Send name to all nodes using multicast
-    *  ip-address can be extracted from message */
+     *  ip-address can be extracted from message */
     private void discovery() {
         MulticastPublisher publisher = new MulticastPublisher();
         try {
@@ -242,8 +251,35 @@ public class Client {
     }
 
     public void localFileCreated(String filename) {
-        // TODO handle this
-        System.out.println(filename);
+        try {
+            // Request the location where the file should be replicated
+            InetAddress location = InetAddress.getByName(requestFileLocation(filename));
+
+            // Make the log-file
+            String logFilename = makeLogFile(filename);
+
+            // Send the log-file and other file to the destination
+
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+    }
+
+    private String makeLogFile(String filename) {
+        String logFilename = "Log_" + filename + ".txt";
+
+        // Check if the file itself is not a log file to avoid recursion
+        if (!filename.startsWith("Log_")) {
+            try {
+                List<String> lines = Arrays.asList(currentIP.toString(), "false");
+                Path file = Paths.get("./local/" + logFilename);
+                Files.write(file, lines, StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return logFilename;
     }
 
     public void localFileDeleted(String filename) {
@@ -276,7 +312,7 @@ public class Client {
 
                 //Temp
                 fileTransfer.receiveFile(InetAddress.getByName(location.substring(1)), true, "test.txt");
-                
+
                 System.out.println("Location: " + location);
             } else if (input.equals("x")) {
                 quit = true;
