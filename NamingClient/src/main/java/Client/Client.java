@@ -4,7 +4,9 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Objects;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 public class Client {
     private final FileTransfer fileTransfer;
@@ -18,6 +20,8 @@ public class Client {
     private int currentID;
     private int prevID;
     private int nextID;
+    private MulticastReceiver multicastReceiver;
+    private final String localDir;
 
     public Client(String localDir, String replicaDir, String requestDir, String name, String ip) throws NodeNotRegisteredException {
         try {
@@ -29,6 +33,8 @@ public class Client {
         this.name = name;
         this.currentID = new CesarString(this.name).hashCode();
         this.fileTransfer = new FileTransfer(localDir, replicaDir, requestDir);
+        this.localDir = localDir;
+
         try {
             serverThread = new ServerThread(12345, this);
             Thread t1 = new Thread(serverThread, "T1");
@@ -37,6 +43,14 @@ public class Client {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+
+        // Create a multicast receiver for client
+        multicastReceiver = new MulticastReceiver(this);
+        Thread receiverThread = new Thread(multicastReceiver);
+        receiverThread.start();
+        System.out.println("receiverThread started!");
+
+        initReplicateFiles();
     }
 
     private void register(String name, String ip) throws NodeNotRegisteredException {
@@ -54,7 +68,7 @@ public class Client {
     }
 
     /* Send name to all nodes using multicast
-    *  ip-address can be extracted from message */
+     *  ip-address can be extracted from message */
     private void discovery() {
         MulticastPublisher publisher = new MulticastPublisher();
         try {
@@ -208,6 +222,29 @@ public class Client {
         return fileTransfer;
     }
 
+    private void initReplicateFiles() {
+        File dir = new File(localDir);
+        fetchFiles(dir, file -> {
+            try {
+                String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
+                System.out.println(fileName);
+                fileTransfer.sendReplication(InetAddress.getByName(requestFileLocation(fileName).substring(1)), fileName);
+            } catch (UnknownHostException e) {
+                System.err.println(e.getMessage());
+            }
+        });
+    }
+
+    private void fetchFiles(File dir, Consumer<File> fileConsumer) {
+        if (dir.isDirectory()) {
+            for (File file1 : Objects.requireNonNull(dir.listFiles())) {
+                fetchFiles(file1, fileConsumer);
+            }
+        } else {
+            fileConsumer.accept(dir);
+        }
+    }
+
     private void updateNeighbor(boolean isDestNextNode) {
         try {
             String out;
@@ -240,11 +277,6 @@ public class Client {
 
     public void run() throws UnknownHostException {
         discovery();
-        // Create a multicast receiver for client
-        MulticastReceiver multicastReceiver = new MulticastReceiver(this);
-        Thread receiverThread = new Thread(multicastReceiver);
-        receiverThread.start();
-        System.out.println("receiverThread started!");
 
         boolean quit = false;
         Scanner sc = new Scanner(System.in);
@@ -256,7 +288,7 @@ public class Client {
             if (!input.isEmpty() && !input.equals("x")) {
                 String location = requestFileLocation(input);
                 fileTransfer.requestFile(InetAddress.getByName(location.substring(1)), input);
-                
+
                 System.out.println("Location: " + location);
             } else if (input.equals("x")) {
                 quit = true;
@@ -266,7 +298,5 @@ public class Client {
         serverThread.stop();
         multicastReceiver.stop();
         //TODO client doesn't stop
-        //test
-        return;
     }
 }
