@@ -252,45 +252,67 @@ public class Client {
     }
 
     public void localFileCreated(String filename) {
-        try {
-            // Request the location where the file should be replicated
-            InetAddress location = InetAddress.getByName(requestFileLocation(filename));
-
-            // Make the log-file
-            String logFilename = makeLogFile(filename);
-
-            // Send the log-file and other file to the destination
-
-
-        } catch (Exception e) {
-            e.getMessage();
-        }
-    }
-
-    private String makeLogFile(String filename) {
-        String logFilename = "Log_" + filename + ".txt";
-
         // Check if the file itself is not a log file to avoid recursion
         if (!filename.startsWith("Log_")) {
             try {
-                List<String> lines = Arrays.asList(currentIP.toString(), "false");
-                Path file = Paths.get("./local/" + logFilename);
-                Files.write(file, lines, StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                e.printStackTrace();
+                // Request the location where the file should be replicated
+                InetAddress location = InetAddress.getByName(requestFileLocation(filename));
+
+                // Make the log-file
+                String logFilename = makeLogFile(filename);
+
+                // Send the log-file and other file to the destination
+                fileTransfer.sendReplication(location, filename);
+                fileTransfer.sendReplication(location, logFilename);
+
+            } catch (Exception e) {
+                e.getMessage();
             }
         }
-        return logFilename;
     }
 
     public void localFileDeleted(String filename) {
-        // TODO handle this
+        // Check if the file itself is not a log file to avoid recursion
+        if (!filename.startsWith("Log_")) {
+            try {
+                // Request the location where the file is stored
+                InetAddress location = InetAddress.getByName(requestFileLocation(filename));
+
+                // Send unicast message to delete file
+                Socket socket = new Socket(location, 12345);
+
+                OutputStream out = socket.getOutputStream();
+                PrintWriter writer = new PrintWriter(out, true);
+                writer.println("Delete_file");
+                writer.println(filename);
+
+                socket.close();
+                writer.close();
+
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        }
         System.out.println(filename);
     }
 
     public void localFileModified(String filename) {
-        // TODO handle this
+        // TODO Check what to do with the log file
+        localFileDeleted(filename);
+        localFileCreated(filename);
         System.out.println(filename);
+    }
+
+    private String makeLogFile(String filename) {
+        String logFilename = "Log_" + filename + ".txt";
+        try {
+            List<String> lines = Arrays.asList(currentIP.toString(), "false");
+            Path file = Paths.get("./local/" + logFilename);
+            Files.write(file, lines, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return logFilename;
     }
 
     public void run() throws UnknownHostException {
@@ -311,7 +333,7 @@ public class Client {
             if (!input.isEmpty() && !input.equals("x")) {
                 String location = requestFileLocation(input);
                 fileTransfer.requestFile(InetAddress.getByName(location.substring(1)), input);
-                
+
                 System.out.println("Location: " + location);
             } else if (input.equals("x")) {
                 quit = true;

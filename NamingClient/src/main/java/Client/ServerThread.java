@@ -41,6 +41,16 @@ public class ServerThread implements Runnable {
                         break;
                     case "File_request":
                         client.getFileTransfer().sendRequestedFile(socket);
+                        break;
+
+                    case "Delete_file":
+                        String filename = reader.readLine();
+                        String logFilename = "Log_" + filename + ".txt";
+                        File file = new File("./remote/" + filename);
+                        File logFile = new File("./remote/" + logFilename);
+                        deleteFile(file);
+                        deleteFile(logFile);
+                        break;
                 }
 
                 // Close all connections
@@ -49,6 +59,13 @@ public class ServerThread implements Runnable {
         } catch (IOException ioException) {
             client.failure();
         }
+    }
+
+    private void deleteFile(File file) {
+        if (file.delete())
+            System.out.println(file.getName() + " deleted successfully!");
+        else
+            System.out.println("Could not delete file: " + file.getName());
     }
 
     public void stop() {
