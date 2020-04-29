@@ -4,7 +4,9 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Objects;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 public class Client {
     private final FileTransfer fileTransfer;
@@ -32,7 +34,7 @@ public class Client {
         this.currentID = new CesarString(this.name).hashCode();
         this.fileTransfer = new FileTransfer(localDir, replicaDir, requestDir);
         this.localDir = localDir;
-
+/*
         try {
             serverThread = new ServerThread(12345, this);
             Thread t1 = new Thread(serverThread, "T1");
@@ -47,8 +49,8 @@ public class Client {
         Thread receiverThread = new Thread(multicastReceiver);
         receiverThread.start();
         System.out.println("receiverThread started!");
-
-        replicateFiles();
+*/
+        initReplicateFiles();
     }
 
     private void register(String name, String ip) throws NodeNotRegisteredException {
@@ -219,18 +221,27 @@ public class Client {
         return fileTransfer;
     }
 
-    private void replicateFiles() {
-        //TODO log files, maybe use global path
-        File[] files = new File(localDir).listFiles();
-        if (files != null) {
-            for (File file : files) {
-                try {
-                    String fileName = file.getPath().replaceAll(localDir, "");
-                    fileTransfer.sendReplication(InetAddress.getByName(requestFileLocation(fileName).substring(1)), fileName);
-                } catch (UnknownHostException e) {
-                    System.err.println(e.getMessage());
-                }
+    private void initReplicateFiles() {
+        File dir = new File(localDir);
+        fetchFiles(dir, file -> {
+            //try {
+                String fileName = file.getAbsolutePath().replaceAll(localDir, "");
+                fileName = fileName.replace('\\', '/').replaceAll(localDir, "");
+                System.out.println(fileName);
+            //    fileTransfer.sendReplication(InetAddress.getByName(requestFileLocation(fileName).substring(1)), fileName);
+            //} catch (UnknownHostException e) {
+            //    System.err.println(e.getMessage());
+            //}
+        });
+    }
+
+    private void fetchFiles(File dir, Consumer<File> fileConsumer) {
+        if (dir.isDirectory()) {
+            for (File file1 : Objects.requireNonNull(dir.listFiles())) {
+                fetchFiles(file1, fileConsumer);
             }
+        } else {
+            fileConsumer.accept(dir);
         }
     }
 

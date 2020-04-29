@@ -16,9 +16,9 @@ public class Main {
         String ip = args[1];
         Client client;
         try {
-            client = new Client("./", "./", "./", name, ip);
-            client.run();
-        } catch (NodeNotRegisteredException | UnknownHostException e) {
+            client = new Client("C:/Users/tomde/OneDrive - uantwerpen/School/Erasmus", "./", "./", name, ip);
+            //client.run();
+        } catch (NodeNotRegisteredException/* | UnknownHostException*/ e) {
             System.err.println(e.getMessage());
         }
     }
