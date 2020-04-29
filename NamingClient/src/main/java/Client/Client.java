@@ -4,9 +4,9 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.file.*;
+import java.util.Objects;
 import java.util.Scanner;
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 public class Client {
     private final FileTransfer fileTransfer;
@@ -21,6 +21,7 @@ public class Client {
     private int prevID;
     private int nextID;
     private String replicaDir;
+    private String localDir;
 
     public Client(String localDir, String replicaDir, String requestDir, String name, String ip) throws NodeNotRegisteredException {
         try {
@@ -32,6 +33,7 @@ public class Client {
         this.name = name;
         this.currentID = new CesarString(this.name).hashCode();
         this.replicaDir = replicaDir;
+        this.localDir = localDir;
         this.fileTransfer = new FileTransfer(localDir, replicaDir, requestDir, prevNode);
         try {
             serverThread = new ServerThread(12345, this);
@@ -86,12 +88,21 @@ public class Client {
     public void shutdown() {
         //Replication part of shutdown
         File dir = new File(replicaDir);
-        File[] directoryListing = dir.listFiles();
-        if (directoryListing != null){
-            for (File child : directoryListing){
-                fileTransfer.sendOnShutdown(child.getName());
+        fetchFiles(dir, file -> {
+            String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
+            fileTransfer.sendOnShutdown(fileName);
+        });
+        dir = new File(localDir);
+        fetchFiles(dir, file -> {
+            String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
+            try {
+                InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName).substring(1));
+                sendString(12345, "Shutdown:" + fileName, replicaIP);
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
             }
-        }
+        });
+
         //Discovery part of shutdown
         updateNeighbor(true);
         updateNeighbor(false);
@@ -99,6 +110,17 @@ public class Client {
 
         // TODO relocate hosted files that were on the node
     }
+
+    private void fetchFiles(File dir, Consumer<File> fileConsumer) {
+        if (dir.isDirectory()) {
+            for (File file : Objects.requireNonNull(dir.listFiles())) {
+                fetchFiles(file, fileConsumer);
+            }
+        } else {
+            fileConsumer.accept(dir);
+        }
+    }
+
 
     public void failure() {
 
@@ -248,6 +270,29 @@ public class Client {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void ownerShutdown(String fileName) {
+        File dir = new File(replicaDir);
+        fetchFiles(dir, file -> {
+            String tempName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
+            if (tempName.contains("log_" + fileName)) {
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(file));
+                    br.readLine();
+                    boolean downloaded = Boolean.parseBoolean(br.readLine());
+                    if (!downloaded) {
+                        file.delete();
+                        int splitPoint = tempName.lastIndexOf(".");
+                        File replicatedFile = new File(replicaDir + tempName.split("_", 2)[1].substring(0, splitPoint));
+                        replicatedFile.delete();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                fileTransfer.sendOnShutdown(fileName);
+            }
+        });
     }
 
     public void run() throws UnknownHostException {

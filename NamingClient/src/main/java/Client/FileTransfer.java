@@ -72,7 +72,7 @@ public class FileTransfer {
 
             PrintWriter writer = new PrintWriter(out, true);
 
-            writer.println("File_replicate");
+            writer.println("File_replicate_on_shutdown: ");
             writer.println(fileName);
 
             // Make an array of bytes and store the file in said array
@@ -126,7 +126,7 @@ public class FileTransfer {
             // Create the local file with the data of the downloaded file
             fileOutputStream.write(bytes, 0, bytes.length);
             fileOutputStream.flush();
-            if (localFiles.contains(fileName)) {
+            if (localFiles.contains(fileName) || (fileName.startsWith("log_") && localFiles.contains(fileName.substring(4)))) {
                 sendOnShutdown(fileName);
                 File file = new File(replicaDir + fileName);
                 file.delete();
