@@ -34,7 +34,7 @@ public class Client {
         this.currentID = new CesarString(this.name).hashCode();
         this.fileTransfer = new FileTransfer(localDir, replicaDir, requestDir);
         this.localDir = localDir;
-/*
+
         try {
             serverThread = new ServerThread(12345, this);
             Thread t1 = new Thread(serverThread, "T1");
@@ -49,7 +49,7 @@ public class Client {
         Thread receiverThread = new Thread(multicastReceiver);
         receiverThread.start();
         System.out.println("receiverThread started!");
-*/
+
         initReplicateFiles();
     }
 
@@ -224,14 +224,13 @@ public class Client {
     private void initReplicateFiles() {
         File dir = new File(localDir);
         fetchFiles(dir, file -> {
-            //try {
-                String fileName = file.getAbsolutePath().replaceAll(localDir, "");
-                fileName = fileName.replace('\\', '/').replaceAll(localDir, "");
+            try {
+                String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
                 System.out.println(fileName);
-            //    fileTransfer.sendReplication(InetAddress.getByName(requestFileLocation(fileName).substring(1)), fileName);
-            //} catch (UnknownHostException e) {
-            //    System.err.println(e.getMessage());
-            //}
+                fileTransfer.sendReplication(InetAddress.getByName(requestFileLocation(fileName).substring(1)), fileName);
+            } catch (UnknownHostException e) {
+                System.err.println(e.getMessage());
+            }
         });
     }
 
@@ -278,7 +277,6 @@ public class Client {
     public void run() throws UnknownHostException {
         discovery();
 
-
         boolean quit = false;
         Scanner sc = new Scanner(System.in);
         String input;
@@ -299,7 +297,5 @@ public class Client {
         serverThread.stop();
         multicastReceiver.stop();
         //TODO client doesn't stop
-        //test
-        return;
     }
 }

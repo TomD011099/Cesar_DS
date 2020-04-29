@@ -17,8 +17,8 @@ public class Main {
         Client client;
         try {
             client = new Client("C:/Users/tomde/OneDrive - uantwerpen/School/Erasmus", "./", "./", name, ip);
-            //client.run();
-        } catch (NodeNotRegisteredException/* | UnknownHostException*/ e) {
+            client.run();
+        } catch (NodeNotRegisteredException | UnknownHostException e) {
             System.err.println(e.getMessage());
         }
     }
