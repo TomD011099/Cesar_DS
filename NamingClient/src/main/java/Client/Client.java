@@ -273,7 +273,7 @@ public class Client {
             try {
                 String fileName = file.getAbsolutePath();
                 fileName = fileName.replace('\\', '/').replaceAll(localDir, "");
-                InetAddress location = InetAddress.getByName(requestFileLocation(fileName));
+                InetAddress location = InetAddress.getByName(requestFileLocation(fileName).replaceAll("/", ""));
                 System.out.println("location: " + location);
                 fileTransfer.sendReplication(location, fileName);
             } catch (UnknownHostException e) {
