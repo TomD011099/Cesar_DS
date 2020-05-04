@@ -23,8 +23,9 @@ public class ServerThread implements Runnable {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                 String command = reader.readLine();
+                String[] array = command.split(":");
 
-                switch (command) {
+                switch (array[0]) {
                     case "Update":
                         String in = reader.readLine();
                         String[] parsed = in.split(" ");
@@ -38,6 +39,9 @@ public class ServerThread implements Runnable {
                         break;
                     case "File_replicate":
                         client.getFileTransfer().receiveReplication(socket);
+                        break;
+                    case "Shutdown":
+                        client.ownerShutdown(array[1]);
                         break;
                     case "File_request":
                         client.getFileTransfer().sendRequestedFile(socket);
