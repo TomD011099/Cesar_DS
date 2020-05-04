@@ -227,6 +227,7 @@ public class Client {
     }
 
     public String requestFileLocation(String filename) {
+        System.out.println("Filename request: " + filename);
         return restClient.get("file?filename=" + filename);
     }
 
@@ -270,7 +271,10 @@ public class Client {
         File files[] = new File(localDir).listFiles();
         for (File file : files) {
             try {
-                String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
+                String fileName = file.getAbsolutePath();
+                System.out.println("init filename: " + fileName);
+                fileName = fileName.replace('\\', '/').replaceAll(localDir, "");
+                System.out.println("filename replace: " + fileName);
                 fileTransfer.sendReplication(InetAddress.getByName(requestFileLocation(fileName).substring(1)), fileName);
             } catch (UnknownHostException e) {
                 System.err.println(e.getMessage());
