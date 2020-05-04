@@ -25,7 +25,7 @@ public class ServerThread implements Runnable {
                 String command = reader.readLine();
                 String[] array = command.split(":");
 
-                switch (array[0]) {
+                switch (command) {
                     case "Update":
                         String in = reader.readLine();
                         String[] parsed = in.split(" ");
@@ -54,12 +54,14 @@ public class ServerThread implements Runnable {
                         File logFile = new File("./remote/" + logFilename);
                         deleteFile(file);
                         deleteFile(logFile);
+                        System.out.println("File delete: " + filename);
                         break;
 
                     case "Update_file":
                         String updateFilename = reader.readLine();
                         File updateFile = new File("./remote" + updateFilename);
                         deleteFile(updateFile);
+                        System.out.println("File update: " + updateFilename);
                         break;
                 }
 
