@@ -1,9 +1,18 @@
 package Client;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.function.Consumer;
@@ -44,6 +53,10 @@ public class Client {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+
+        // TODO put this in the right place
+        UpdateThread updateThread = new UpdateThread(this, localDir);
+        updateThread.start();
 
         // Create a multicast receiver for client
         multicastReceiver = new MulticastReceiver(this);
@@ -292,6 +305,88 @@ public class Client {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void localFileCreated(String filename) {
+        // Check if the file itself is not a log file to avoid recursion
+        if (!filename.startsWith("Log_")) {
+            try {
+                // Request the location where the file should be replicated
+                InetAddress location = InetAddress.getByName(requestFileLocation(filename));
+
+                // Make the log-file
+                String logFilename = makeLogFile(filename);
+
+                // Send the log-file and other file to the destination
+                fileTransfer.sendReplication(location, filename);
+                fileTransfer.sendReplication(location, logFilename);
+
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        }
+    }
+
+    public void localFileDeleted(String filename) {
+        // Check if the file itself is not a log file to avoid recursion
+        if (!filename.startsWith("Log_")) {
+            try {
+                // Request the location where the file is stored
+                InetAddress location = InetAddress.getByName(requestFileLocation(filename));
+
+                // Send unicast message to delete file
+                Socket socket = new Socket(location, 12345);
+
+                OutputStream out = socket.getOutputStream();
+                PrintWriter writer = new PrintWriter(out, true);
+                writer.println("Delete_file");
+                writer.println(filename);
+
+                socket.close();
+                writer.close();
+
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        }
+    }
+
+    public void localFileModified(String filename) {
+        // Send only the updated file and don't change the log-file
+        try {
+            Socket socket = new Socket(serverIp, 12345);
+
+            // Request the location where the file should be replicated
+            InetAddress location = InetAddress.getByName(requestFileLocation(filename));
+
+            OutputStream out = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(out, true);
+
+            // This will only delete the file on the replication node and not the log-file
+            writer.println("Update_file");
+            writer.println(filename);
+
+            socket.close();
+            writer.close();
+
+            // Send the updated file
+            fileTransfer.sendReplication(location, filename);
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+    }
+
+    private String makeLogFile(String filename) {
+        String logFilename = "Log_" + filename + ".txt";
+        try {
+            List<String> lines = Arrays.asList(currentIP.toString(), "false");
+            Path file = Paths.get("./local/" + logFilename);
+            Files.write(file, lines, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return logFilename;
     }
 
     public void ownerShutdown(String fileName) {
