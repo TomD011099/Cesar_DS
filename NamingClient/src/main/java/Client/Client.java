@@ -108,7 +108,7 @@ public class Client {
     public void shutdown() {
         //Replication part of shutdown
 
-        File files[] = new File(replicaDir).listFiles();
+        /*File files[] = new File(replicaDir).listFiles();
 
         for (File file : files) {
             String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
@@ -125,7 +125,7 @@ public class Client {
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
         /*File dir = new File(replicaDir);
         fetchFiles(dir, file -> {
