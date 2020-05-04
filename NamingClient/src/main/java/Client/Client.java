@@ -107,7 +107,27 @@ public class Client {
 
     public void shutdown() {
         //Replication part of shutdown
-        File dir = new File(replicaDir);
+
+        File files[] = new File(replicaDir).listFiles();
+
+        for (File file : files) {
+            String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
+            fileTransfer.sendOnShutdown(fileName);
+        }
+
+        File localFiles[] = new File(localDir).listFiles();
+
+        for (File file : localFiles) {
+            String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
+            try {
+                InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName).substring(1));
+                sendString(12345, "Shutdown:" + fileName, replicaIP);
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /*File dir = new File(replicaDir);
         fetchFiles(dir, file -> {
             String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
             fileTransfer.sendOnShutdown(fileName);
@@ -121,7 +141,7 @@ public class Client {
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
-        });
+        });*/
 
         //Discovery part of shutdown
         if (currentID != nextID && currentID != prevID) {
@@ -449,6 +469,7 @@ public class Client {
                 quit = true;
             }
         }
+        System.out.println("Shutdown");
         shutdown();
         serverThread.stop();
         multicastReceiver.stop();
