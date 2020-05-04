@@ -294,7 +294,7 @@ public class Client {
                 String fileName = file.getAbsolutePath();
                 fileName = fileName.replace('\\', '/').replaceAll(localDir, "");
                 InetAddress location = InetAddress.getByName(requestFileLocation(fileName).replaceAll("/", ""));
-                System.out.println("location: " + location);
+                System.out.println("Filename van tom: " + fileName);
                 fileTransfer.sendReplication(location, fileName);
             } catch (UnknownHostException e) {
                 System.err.println(e.getMessage());
@@ -346,11 +346,15 @@ public class Client {
     }
 
     public void localFileCreated(String filename) {
+
+        System.out.println("Filename van ons: " + filename);
+
         // Check if the file itself is not a log file to avoid recursion
         if (!filename.startsWith("log_")) {
             try {
                 // Request the location where the file should be replicated
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
+                System.out.println("location new created: " + location);
 
                 // Make the log-file
                 String logFilename = makeLogFile(filename);
