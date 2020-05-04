@@ -360,8 +360,8 @@ public class Client {
                 String logFilename = makeLogFile(filename);
 
                 // Send the log-file and other file to the destination
-                fileTransfer.sendReplication(location, filename);
-                fileTransfer.sendReplication(location, logFilename);
+                //fileTransfer.sendReplication(location, filename);
+                //fileTransfer.sendReplication(location, logFilename);
 
                 System.out.println("File created: " + filename);
 
@@ -383,11 +383,12 @@ public class Client {
 
                 OutputStream out = socket.getOutputStream();
                 PrintWriter writer = new PrintWriter(out, true);
-                writer.println("Delete_file");
-                writer.println(filename);
+                //writer.println("Delete_file");
+                //writer.println(filename);
 
                 socket.close();
                 writer.close();
+                out.close();
 
                 System.out.println("File deleted: " + filename);
 
@@ -409,11 +410,12 @@ public class Client {
             PrintWriter writer = new PrintWriter(out, true);
 
             // This will only delete the file on the replication node and not the log-file
-            writer.println("Update_file");
-            writer.println(filename);
+            //writer.println("Update_file");
+            //writer.println(filename);
 
             socket.close();
             writer.close();
+            out.close();
 
             // Send the updated file
             fileTransfer.sendReplication(location, filename);
