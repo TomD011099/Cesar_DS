@@ -63,8 +63,6 @@ public class Client {
         Thread receiverThread = new Thread(multicastReceiver);
         receiverThread.start();
         System.out.println("receiverThread started!");
-
-        initReplicateFiles();
     }
 
     private void register(String name, String ip) throws NodeNotRegisteredException {
@@ -432,6 +430,8 @@ public class Client {
 
     public void run() throws UnknownHostException {
         discovery();
+
+        initReplicateFiles();
 
         boolean quit = false;
         Scanner sc = new Scanner(System.in);
