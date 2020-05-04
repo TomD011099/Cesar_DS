@@ -267,6 +267,18 @@ public class Client {
     }
 
     private void initReplicateFiles() {
+        File files[] = new File(localDir).listFiles();
+        for (File file : files) {
+            try {
+                String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
+                fileTransfer.sendReplication(InetAddress.getByName(requestFileLocation(fileName).substring(1)), fileName);
+            } catch (UnknownHostException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+
+        //For subfolders
+        /*
         File dir = new File(localDir);
         fetchFiles(dir, file -> {
             try {
@@ -276,7 +288,7 @@ public class Client {
             } catch (UnknownHostException e) {
                 System.err.println(e.getMessage());
             }
-        });
+        });*/
     }
 
     private void updateNeighbor(boolean isDestNextNode) {
