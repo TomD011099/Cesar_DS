@@ -109,6 +109,7 @@ public class FileTransfer {
 
             // Read the size of the requested file the server sent back and create a byte array of that size
             int len = Integer.parseInt(reader.readLine());
+            System.out.println("Lengte file: " + len);
             byte[] bytes = new byte[len];
 
             int bytesRead;
