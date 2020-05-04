@@ -126,8 +126,10 @@ public class Client {
         });
 
         //Discovery part of shutdown
-        updateNeighbor(true);
-        updateNeighbor(false);
+        if (currentID != nextID && currentID != prevID) {
+            updateNeighbor(true);
+            updateNeighbor(false);
+        }
         restClient.delete("unregister?name=" + name);
 
         // TODO relocate hosted files that were on the node
