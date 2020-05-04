@@ -23,7 +23,7 @@ public class ServerThread implements Runnable {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                 String command = reader.readLine();
-                String[] array = command.split(":");
+                //String[] array = command.split(":");
 
                 switch (command) {
                     case "Update":
@@ -41,7 +41,7 @@ public class ServerThread implements Runnable {
                         client.getFileTransfer().receiveReplication(socket);
                         break;
                     case "Shutdown":
-                        client.ownerShutdown(array[1]);
+                        //client.ownerShutdown(array[1]);
                         break;
                     case "File_request":
                         client.getFileTransfer().sendRequestedFile(socket);
@@ -66,7 +66,7 @@ public class ServerThread implements Runnable {
                 }
 
                 // Close all connections
-                socket.close();
+                //socket.close();
             }
         } catch (IOException ioException) {
             client.failure();
