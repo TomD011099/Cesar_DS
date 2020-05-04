@@ -265,16 +265,6 @@ public class Client {
         });
     }
 
-    private void fetchFiles(File dir, Consumer<File> fileConsumer) {
-        if (dir.isDirectory()) {
-            for (File file1 : Objects.requireNonNull(dir.listFiles())) {
-                fetchFiles(file1, fileConsumer);
-            }
-        } else {
-            fileConsumer.accept(dir);
-        }
-    }
-
     private void updateNeighbor(boolean isDestNextNode) {
         try {
             String out;
