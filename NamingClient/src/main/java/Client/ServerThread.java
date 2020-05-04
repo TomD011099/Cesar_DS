@@ -49,7 +49,7 @@ public class ServerThread implements Runnable {
 
                     case "Delete_file":
                         String filename = reader.readLine();
-                        String logFilename = "Log_" + filename + ".txt";
+                        String logFilename = "log_" + filename + ".txt";
                         File file = new File("./remote/" + filename);
                         File logFile = new File("./remote/" + logFilename);
                         deleteFile(file);

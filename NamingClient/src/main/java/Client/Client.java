@@ -309,7 +309,7 @@ public class Client {
 
     public void localFileCreated(String filename) {
         // Check if the file itself is not a log file to avoid recursion
-        if (!filename.startsWith("Log_")) {
+        if (!filename.startsWith("log_")) {
             try {
                 // Request the location where the file should be replicated
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
@@ -329,7 +329,7 @@ public class Client {
 
     public void localFileDeleted(String filename) {
         // Check if the file itself is not a log file to avoid recursion
-        if (!filename.startsWith("Log_")) {
+        if (!filename.startsWith("log_")) {
             try {
                 // Request the location where the file is stored
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
@@ -378,10 +378,10 @@ public class Client {
     }
 
     private String makeLogFile(String filename) {
-        String logFilename = "Log_" + filename + ".txt";
+        String logFilename = "log_" + filename + ".txt";
         try {
             List<String> lines = Arrays.asList(currentIP.toString(), "false");
-            Path file = Paths.get("./local/" + logFilename);
+            Path file = Paths.get(localDir + logFilename);
             Files.write(file, lines, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
