@@ -16,7 +16,7 @@ public class Main {
         String ip = args[1];
         Client client;
         try {
-            client = new Client("/home/pi/local", "/home/pi/remote", "/home/pi/request", name, ip);
+            client = new Client("/home/pi/local/", "/home/pi/remote/", "/home/pi/request/", name, ip);
             client.run();
         } catch (NodeNotRegisteredException | UnknownHostException e) {
             System.err.println(e.getMessage());
