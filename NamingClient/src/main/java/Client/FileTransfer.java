@@ -89,6 +89,9 @@ public class FileTransfer {
             out.flush();
 
             socket.close();
+            out.close();
+            writer.close();
+            fileInputStream.close();
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -134,6 +137,10 @@ public class FileTransfer {
             } else {
                 replicatedFiles.add(fileName);
             }*/
+
+            in.close();
+            out.close();
+            fileOutputStream.close();
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
