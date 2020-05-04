@@ -55,8 +55,8 @@ public class Client {
         }
 
         // TODO put this in the right place
-        UpdateThread updateThread = new UpdateThread(this, localDir);
-        updateThread.start();
+        //UpdateThread updateThread = new UpdateThread(this, localDir);
+        //updateThread.start();
 
         // Create a multicast receiver for client
         multicastReceiver = new MulticastReceiver(this);
@@ -64,7 +64,7 @@ public class Client {
         receiverThread.start();
         System.out.println("receiverThread started!");
 
-        initReplicateFiles();
+        //initReplicateFiles();
     }
 
     private void register(String name, String ip) throws NodeNotRegisteredException {
@@ -109,7 +109,7 @@ public class Client {
 
     public void shutdown() {
         //Replication part of shutdown
-        File dir = new File(replicaDir);
+        /*File dir = new File(replicaDir);
         fetchFiles(dir, file -> {
             String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
             fileTransfer.sendOnShutdown(fileName);
@@ -123,11 +123,13 @@ public class Client {
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
-        });
+        });*/
 
         //Discovery part of shutdown
-        updateNeighbor(true);
-        updateNeighbor(false);
+        if ((currentID != prevID) && (currentID != nextID)) {
+            updateNeighbor(true);
+            updateNeighbor(false);
+        }
         restClient.delete("unregister?name=" + name);
 
         // TODO relocate hosted files that were on the node
