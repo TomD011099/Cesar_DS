@@ -164,6 +164,8 @@ public class Client {
         } else {
             System.out.println("I've more friends (naming server, you're my best friend)");
         }
+
+        initReplicateFiles();
     }
 
     private void sendString(int port, String string, InetAddress ip) {
@@ -430,8 +432,6 @@ public class Client {
 
     public void run() throws UnknownHostException {
         discovery();
-
-        initReplicateFiles();
 
         boolean quit = false;
         Scanner sc = new Scanner(System.in);
