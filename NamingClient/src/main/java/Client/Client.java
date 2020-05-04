@@ -359,6 +359,8 @@ public class Client {
                 fileTransfer.sendReplication(location, filename);
                 fileTransfer.sendReplication(location, logFilename);
 
+                System.out.println("File created: " + filename);
+
             } catch (Exception e) {
                 e.getMessage();
             }
@@ -382,6 +384,8 @@ public class Client {
 
                 socket.close();
                 writer.close();
+
+                System.out.println("File deleted: " + filename);
 
             } catch (Exception e) {
                 e.getMessage();
@@ -409,6 +413,8 @@ public class Client {
 
             // Send the updated file
             fileTransfer.sendReplication(location, filename);
+
+            System.out.println("File modified: " + filename);
 
         } catch (Exception e) {
             e.getMessage();
