@@ -293,14 +293,32 @@ public class Client {
                 e.getMessage();
             }
         }
-        System.out.println(filename);
     }
 
     public void localFileModified(String filename) {
-        // TODO Check what to do with the log file
-        localFileDeleted(filename);
-        localFileCreated(filename);
-        System.out.println(filename);
+        // Send only the updated file and don't change the log-file
+        try {
+            Socket socket = new Socket(serverIp, 12345);
+
+            // Request the location where the file should be replicated
+            InetAddress location = InetAddress.getByName(requestFileLocation(filename));
+
+            OutputStream out = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(out, true);
+
+            // This will only delete the file on the replication node and not the log-file
+            writer.println("Update_file");
+            writer.println(filename);
+
+            socket.close();
+            writer.close();
+
+            // Send the updated file
+            fileTransfer.sendReplication(location, filename);
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
     }
 
     private String makeLogFile(String filename) {

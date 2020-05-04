@@ -51,6 +51,12 @@ public class ServerThread implements Runnable {
                         deleteFile(file);
                         deleteFile(logFile);
                         break;
+
+                    case "Update_file":
+                        String updateFilename = reader.readLine();
+                        File updateFile = new File("./remote" + updateFilename);
+                        deleteFile(updateFile);
+                        break;
                 }
 
                 // Close all connections
