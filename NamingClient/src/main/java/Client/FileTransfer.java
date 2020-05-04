@@ -65,7 +65,7 @@ public class FileTransfer {
     public void sendOnShutdown(String fileName) {
         try {
             // Create a socket to communicate
-            Socket socket = new Socket(prevNode, 12345);
+            Socket socket = new Socket(prevNode, 20202);
 
             // Get the outputstream from the socket
             OutputStream out = socket.getOutputStream();
@@ -126,13 +126,13 @@ public class FileTransfer {
             // Create the local file with the data of the downloaded file
             fileOutputStream.write(bytes, 0, bytes.length);
             fileOutputStream.flush();
-            if (localFiles.contains(fileName) || (fileName.startsWith("log_") && localFiles.contains(fileName.substring(4)))) {
+            /*if (localFiles.contains(fileName) || (fileName.startsWith("log_") && localFiles.contains(fileName.substring(4)))) {
                 sendOnShutdown(fileName);
                 File file = new File(replicaDir + fileName);
                 file.delete();
             } else {
                 replicatedFiles.add(fileName);
-            }
+            }*/
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
