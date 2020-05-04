@@ -272,10 +272,10 @@ public class Client {
         for (File file : files) {
             try {
                 String fileName = file.getAbsolutePath();
-                System.out.println("init filename: " + fileName);
                 fileName = fileName.replace('\\', '/').replaceAll(localDir, "");
-                System.out.println("filename replace: " + fileName);
-                fileTransfer.sendReplication(InetAddress.getByName(requestFileLocation(fileName).substring(1)), fileName);
+                InetAddress location = InetAddress.getByName(requestFileLocation(fileName).substring(1));
+                System.out.println("location: " + location);
+                fileTransfer.sendReplication(location, fileName);
             } catch (UnknownHostException e) {
                 System.err.println(e.getMessage());
             }
