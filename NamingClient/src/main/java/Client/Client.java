@@ -197,7 +197,7 @@ public class Client {
             System.out.println("We are next node");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
-        } else {
+        } else if (nextID == currentID && prevID == currentID){
             // There are two nodes in the network
             prevNode = ip;
             nextNode = ip;
@@ -209,7 +209,6 @@ public class Client {
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
         }
-        //TODO add else for if new node is not a neighbour
     }
 
     public String requestFileLocation(String filename) {
