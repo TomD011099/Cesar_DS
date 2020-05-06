@@ -57,12 +57,6 @@ public class Client {
         // TODO put this in the right place
         UpdateThread updateThread = new UpdateThread(this, localDir);
         updateThread.start();
-
-        // Create a multicast receiver for client
-        multicastReceiver = new MulticastReceiver(this);
-        Thread receiverThread = new Thread(multicastReceiver);
-        receiverThread.start();
-        System.out.println("receiverThread started!");
     }
 
     private void register(String name, String ip) throws NodeNotRegisteredException {
@@ -466,6 +460,12 @@ public class Client {
 
     public void run() throws UnknownHostException {
         discovery();
+
+        // Create a multicast receiver for client
+        multicastReceiver = new MulticastReceiver(this);
+        Thread receiverThread = new Thread(multicastReceiver);
+        receiverThread.start();
+        System.out.println("receiverThread started!");
 
         boolean quit = false;
         Scanner sc = new Scanner(System.in);
