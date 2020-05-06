@@ -401,7 +401,7 @@ public class Client {
     public void localFileModified(String filename) {
         // Send only the updated file and don't change the log-file
         try {
-            Socket socket = new Socket(serverIp, 12345);
+            /*Socket socket = new Socket(serverIp, 12345);
 
             // Request the location where the file should be replicated
             InetAddress location = InetAddress.getByName(requestFileLocation(filename));
@@ -418,7 +418,7 @@ public class Client {
             out.close();
 
             // Send the updated file
-            fileTransfer.sendReplication(location, filename);
+            fileTransfer.sendReplication(location, filename);*/
 
             System.out.println("File modified: " + filename);
 
