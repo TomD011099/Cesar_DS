@@ -1,9 +1,8 @@
 package Client;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import Client.Threads.*;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -11,76 +10,73 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
-import java.util.function.Consumer;
+import java.util.*;
 
 public class Client {
-    private final FileTransfer fileTransfer;
     private RestClient restClient;
     private final String name;
     private InetAddress currentIP;
     private InetAddress prevNode;
     private InetAddress nextNode;
     private InetAddress serverIp;
-    private ServerThread serverThread;
-    private int currentID;
+    private TCPControl tcpControl;
+    private final int currentID;
     private int prevID;
     private int nextID;
-    private MulticastReceiver multicastReceiver;
-    private String replicaDir;
-    private String localDir;
+    private final String replicaDir;
+    private final String localDir;
+    private final String requestDir;
+    private final HashSet<String> localFileSet;
 
-    public Client(String localDir, String replicaDir, String requestDir, String name, String ip) throws NodeNotRegisteredException {
+    public String getReplicaDir() {
+        return replicaDir;
+    }
+
+    public String getLocalDir() {
+        return localDir;
+    }
+
+    public HashSet<String> getLocalFileSet() {
+        return localFileSet;
+    }
+
+    public Client(String localDir, String replicaDir, String requestDir, String name, String ip) {
         try {
             this.currentIP = InetAddress.getByName(ip);
-        } catch (Exception e) {
+        } catch (UnknownHostException e) {
             e.getMessage();
         }
 
         this.name = name;
         this.currentID = new CesarString(this.name).hashCode();
-        this.fileTransfer = new FileTransfer(localDir, replicaDir, requestDir, prevNode);
         this.replicaDir = replicaDir;
         this.localDir = localDir;
+        this.requestDir = requestDir;
+
+        localFileSet = new HashSet<>();
+        File[] files = new File(localDir).listFiles();
+        for (File file : Objects.requireNonNull(files)) {
+            String tempName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
+            localFileSet.add(tempName);
+        }
+
         try {
-            serverThread = new ServerThread(12345, this);
-            Thread t1 = new Thread(serverThread, "T1");
+            tcpControl = new TCPControl(12345, this);
+            Thread t1 = new Thread(tcpControl, "TCPControl");
             t1.start();
         } catch (IOException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
 
-        // TODO put this in the right place
         UpdateThread updateThread = new UpdateThread(this, localDir);
         updateThread.start();
-
-        // Create a multicast receiver for client
-        multicastReceiver = new MulticastReceiver(this);
-        Thread receiverThread = new Thread(multicastReceiver);
-        receiverThread.start();
-        System.out.println("receiverThread started!");
     }
 
-    private void register(String name, String ip) throws NodeNotRegisteredException {
-        switch (Integer.parseInt(restClient.post("register?name=" + name + "&ip=" + ip, null))) {
-            case 1:
-                System.out.println("Node registered");
-                break;
-            case -1:
-                throw new NodeNotRegisteredException("Node with same hash already exists!");
-            case -2:
-                throw new NodeNotRegisteredException("Ip address of node not found!");
-            default:
-                break;
-        }
-    }
-
-    /* Send name to all nodes using multicast
-     *  ip-address can be extracted from message */
+    /**
+     * Send name to all nodes using multicast
+     * ip-address can be extracted from message
+     */
     private void discovery() {
         MulticastPublisher publisher = new MulticastPublisher();
         try {
@@ -101,47 +97,28 @@ public class Client {
         }
     }
 
-    private void bootstrap() {
-
-    }
-
     public void shutdown() {
         //Replication part of shutdown
 
-        /*File files[] = new File(replicaDir).listFiles();
+        File[] files = new File(replicaDir).listFiles();
 
-        for (File file : files) {
+        for (File file : Objects.requireNonNull(files)) {
             String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
-            fileTransfer.sendOnShutdown(fileName);
+            Thread sendReplicateThread = new SendReplicateFileThread(prevNode, replicaDir, fileName);
+            sendReplicateThread.start();
         }
 
-        File localFiles[] = new File(localDir).listFiles();
+        File[] localFiles = new File(localDir).listFiles();
 
-        for (File file : localFiles) {
+        for (File file : Objects.requireNonNull(localFiles)) {
             String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
             try {
                 InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName).substring(1));
-                sendString(12345, "Shutdown:" + fileName, replicaIP);
+                sendString(12345, fileName, replicaIP, "LocalShutdown");
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
-        }*/
-
-        /*File dir = new File(replicaDir);
-        fetchFiles(dir, file -> {
-            String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
-            fileTransfer.sendOnShutdown(fileName);
-        });
-        dir = new File(localDir);
-        fetchFiles(dir, file -> {
-            String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
-            try {
-                InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName).substring(1));
-                sendString(12345, "Shutdown:" + fileName, replicaIP);
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
-        });*/
+        }
 
         //Discovery part of shutdown
         if (currentID != nextID && currentID != prevID) {
@@ -149,20 +126,7 @@ public class Client {
             updateNeighbor(false);
         }
         restClient.delete("unregister?name=" + name);
-
-        // TODO relocate hosted files that were on the node
     }
-
-    private void fetchFiles(File dir, Consumer<File> fileConsumer) {
-        if (dir.isDirectory()) {
-            for (File file : Objects.requireNonNull(dir.listFiles())) {
-                fetchFiles(file, fileConsumer);
-            }
-        } else {
-            fileConsumer.accept(dir);
-        }
-    }
-
 
     public void failure() {
 
@@ -188,7 +152,7 @@ public class Client {
         initReplicateFiles();
     }
 
-    private void sendString(int port, String string, InetAddress ip) {
+    private void sendString(int port, String string, InetAddress ip, String command) {
         try {
             Socket socket = new Socket(ip, port);
 
@@ -196,6 +160,9 @@ public class Client {
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
 
             // Send your name
+            if (!command.equals("")) {
+                writer.println(command);
+            }
             writer.println(string);
             System.out.println("Data sent: " + string);
 
@@ -205,6 +172,10 @@ public class Client {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private void sendString(int port, String string, InetAddress ip) {
+        sendString(port, string, ip, "");
     }
 
     public void handleMulticastMessage(String nodeName, InetAddress ip) {
@@ -232,7 +203,7 @@ public class Client {
             System.out.println("We are next node");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
-        } else if (nextID == currentID && prevID == currentID){
+        } else if (nextID == currentID && prevID == currentID) {
             // There are two nodes in the network
             prevNode = ip;
             nextNode = ip;
@@ -283,36 +254,20 @@ public class Client {
         return nextNode;
     }
 
-    public FileTransfer getFileTransfer() {
-        return fileTransfer;
-    }
-
     private void initReplicateFiles() {
-        File files[] = new File(localDir).listFiles();
-        for (File file : files) {
+        File[] files = new File(localDir).listFiles();
+        for (File file : Objects.requireNonNull(files)) {
             try {
                 String fileName = file.getAbsolutePath();
                 fileName = fileName.replace('\\', '/').replaceAll(localDir, "");
                 InetAddress location = InetAddress.getByName(requestFileLocation(fileName).replaceAll("/", ""));
                 System.out.println("location: " + location);
-                fileTransfer.sendReplication(location, fileName);
+                Thread send = new SendReplicateFileThread(location, localDir, fileName);
+                send.start();
             } catch (UnknownHostException e) {
                 System.err.println(e.getMessage());
             }
         }
-
-        //For subfolders
-        /*
-        File dir = new File(localDir);
-        fetchFiles(dir, file -> {
-            try {
-                String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
-                System.out.println(fileName);
-                fileTransfer.sendReplication(InetAddress.getByName(requestFileLocation(fileName).substring(1)), fileName);
-            } catch (UnknownHostException e) {
-                System.err.println(e.getMessage());
-            }
-        });*/
     }
 
     private void updateNeighbor(boolean isDestNextNode) {
@@ -349,6 +304,8 @@ public class Client {
         // Check if the file itself is not a log file to avoid recursion
         if (!filename.startsWith("log_")) {
             try {
+                localFileSet.add(filename);
+
                 // Request the location where the file should be replicated
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
 
@@ -356,11 +313,13 @@ public class Client {
                 String logFilename = makeLogFile(filename);
 
                 // Send the log-file and other file to the destination
-                fileTransfer.sendReplication(location, filename);
-                fileTransfer.sendReplication(location, logFilename);
-
-            } catch (Exception e) {
-                e.getMessage();
+                Thread send = new SendReplicateFileThread(location, localDir, filename);
+                send.start();
+                Thread sendLog = new SendReplicateFileThread(location, localDir, logFilename);
+                sendLog.start();
+            } catch (UnknownHostException e) {
+                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
         }
     }
@@ -369,6 +328,8 @@ public class Client {
         // Check if the file itself is not a log file to avoid recursion
         if (!filename.startsWith("log_")) {
             try {
+                localFileSet.remove(filename);
+
                 // Request the location where the file is stored
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
 
@@ -383,8 +344,9 @@ public class Client {
                 socket.close();
                 writer.close();
 
-            } catch (Exception e) {
-                e.getMessage();
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+                e.printStackTrace();
             }
         }
     }
@@ -408,10 +370,12 @@ public class Client {
             writer.close();
 
             // Send the updated file
-            fileTransfer.sendReplication(location, filename);
+            Thread send = new SendReplicateFileThread(location, localDir, filename);
+            send.start();
 
-        } catch (Exception e) {
-            e.getMessage();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -428,8 +392,9 @@ public class Client {
     }
 
     public void ownerShutdown(String fileName) {
-        File dir = new File(replicaDir);
-        fetchFiles(dir, file -> {
+        File[] files = new File(replicaDir).listFiles();
+
+        for (File file : Objects.requireNonNull(files)) {
             String tempName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
             if (tempName.contains("log_" + fileName)) {
                 try {
@@ -437,21 +402,32 @@ public class Client {
                     br.readLine();
                     boolean downloaded = Boolean.parseBoolean(br.readLine());
                     if (!downloaded) {
-                        file.delete();
-                        int splitPoint = tempName.lastIndexOf(".");
-                        File replicatedFile = new File(replicaDir + tempName.split("_", 2)[1].substring(0, splitPoint));
-                        replicatedFile.delete();
+                        if (!file.delete()) {
+                            System.err.println("ERR: File " + file.getAbsolutePath() + " not deleted");
+                        }
+                        String replicatedFileName = replicaDir + tempName.split("_", 2)[1];
+                        int splitPoint = replicatedFileName.lastIndexOf(".");
+                        replicatedFileName = replicatedFileName.substring(0, splitPoint);
+                        File replicatedFile = new File(replicatedFileName);
+                        if (!replicatedFile.delete()) {
+                            System.err.println("ERR: File " + file.getAbsolutePath() + " not deleted");
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                fileTransfer.sendOnShutdown(fileName);
             }
-        });
+        }
     }
 
     public void run() throws UnknownHostException {
         discovery();
+
+        // Create a multicast receiver for client
+        MulticastReceiver multicastReceiver = new MulticastReceiver(this);
+        Thread receiverThread = new Thread(multicastReceiver);
+        receiverThread.start();
+        System.out.println("receiverThread started!");
 
         boolean quit = false;
         Scanner sc = new Scanner(System.in);
@@ -462,7 +438,9 @@ public class Client {
             input = sc.nextLine();
             if (!input.isEmpty() && !input.equals("x")) {
                 String location = requestFileLocation(input);
-                fileTransfer.requestFile(InetAddress.getByName(location.substring(1)), input);
+
+                Thread requestFileThread = new RequestFileThread(InetAddress.getByName(location.substring(1)), input, requestDir);
+                requestFileThread.start();
 
                 System.out.println("Location: " + location);
             } else if (input.equals("x")) {
@@ -471,7 +449,7 @@ public class Client {
         }
         System.out.println("Shutdown");
         shutdown();
-        serverThread.stop();
+        tcpControl.stop();
         multicastReceiver.stop();
         //TODO client doesn't stop
     }

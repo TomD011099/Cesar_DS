@@ -1,4 +1,6 @@
-package Client;
+package Client.Threads;
+
+import Client.Client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +13,7 @@ public class DiscoveryThread extends Thread {
     private Client client;
     private ServerSocket serverSocket;
 
-    DiscoveryThread(Client client) throws IOException {
+    public DiscoveryThread(Client client) throws IOException {
         serverSocket = new ServerSocket(54321);
         this.client = client;
     }
