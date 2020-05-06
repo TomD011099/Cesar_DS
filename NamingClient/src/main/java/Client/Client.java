@@ -351,7 +351,8 @@ public class Client {
 
         // Check if the file itself is not a log file to avoid recursion
         if (!filename.startsWith("log_")) {
-            try {
+            System.out.println("File created: " + filename);
+            /*try {
                 // Request the location where the file should be replicated
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
                 System.out.println("location new created: " + location);
@@ -367,14 +368,15 @@ public class Client {
 
             } catch (Exception e) {
                 e.getMessage();
-            }
+            }*/
         }
     }
 
     public void localFileDeleted(String filename) {
         // Check if the file itself is not a log file to avoid recursion
         if (!filename.startsWith("log_")) {
-            try {
+            System.out.println("File deleted: " + filename);
+            /*try {
                 // Request the location where the file is stored
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
 
@@ -394,7 +396,7 @@ public class Client {
 
             } catch (Exception e) {
                 e.getMessage();
-            }
+            }*/
         }
     }
 
