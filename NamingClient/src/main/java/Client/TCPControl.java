@@ -42,6 +42,8 @@ public class TCPControl implements Runnable {
                 //Read the command
                 String command = reader.readLine();
 
+                reader.close();
+
                 switch (command) {
                     case "Update":
                         //One of your neighbors have stopped and want to let you know who your new neighbor will be
@@ -85,8 +87,6 @@ public class TCPControl implements Runnable {
                         System.err.println("Received unknown command: " + command);
                         socket.close();
                 }
-
-                reader.close();
             }
         } catch (IOException ioException) {
             client.failure();
