@@ -12,39 +12,67 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
+/**
+ * The main client class
+ */
 public class Client {
-    private RestClient restClient;
-    private final String name;
-    private InetAddress currentIP;
-    private InetAddress prevNode;
-    private InetAddress nextNode;
-    private InetAddress serverIp;
-    private TCPControl tcpControl;
-    private final int currentID;
-    private int prevID;
-    private int nextID;
-    private final String replicaDir;
-    private final String localDir;
-    private final String requestDir;
-    private final HashSet<String> localFileSet;
+    private RestClient restClient;              //A RESTclient for REST communication
+    private final String name;                  //The name of the client
+    private InetAddress currentIP;              //The ip address of the node
+    private InetAddress prevNode;               //The ip address of the previous node
+    private InetAddress nextNode;               //The ip address of the next node
+    private InetAddress serverIp;               //The ip address of the server
+    private TCPControl tcpControl;              //The TCPController
+    private final int currentID;                //The ID of the node
+    private int prevID;                         //The ID of the previous node
+    private int nextID;                         //The ID of the next node
+    private final String replicaDir;            //The directory where the replicated files are stored   [absolute path]
+    private final String localDir;              //The directory from where we'll replicate the files    [absolute path]
+    private final String requestDir;            //The 'Download' directory                              [absolute path]
+    private final HashSet<String> localFileSet; //A set of all local files
 
+    /**
+     * Get the replica directory
+     *
+     * @return The replica directory [absolute path]
+     */
     public String getReplicaDir() {
         return replicaDir;
     }
 
+    /**
+     * Get the local directory
+     *
+     * @return The local directory [absolute path]
+     */
     public String getLocalDir() {
         return localDir;
     }
 
+    /**
+     * Get the set of all local files
+     *
+     * @return The set of all local files [relative to localDir]
+     */
     public HashSet<String> getLocalFileSet() {
         return localFileSet;
     }
 
+    /**
+     * The constructor for client
+     *
+     * @param localDir The directory from where we'll replicate the files [absolute path]
+     * @param replicaDir The directory where the replicated files are stored [absolute path]
+     * @param requestDir The 'Download' directory [absolute path]
+     * @param name The name of the client
+     * @param ip The ip adres of the client
+     */
     public Client(String localDir, String replicaDir, String requestDir, String name, String ip) {
         try {
             this.currentIP = InetAddress.getByName(ip);
         } catch (UnknownHostException e) {
-            e.getMessage();
+            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
         this.name = name;
@@ -53,6 +81,7 @@ public class Client {
         this.localDir = localDir;
         this.requestDir = requestDir;
 
+        //Initialize localFileSet and add the files
         localFileSet = new HashSet<>();
         File[] files = new File(localDir).listFiles();
         for (File file : Objects.requireNonNull(files)) {
@@ -60,6 +89,7 @@ public class Client {
             localFileSet.add(tempName);
         }
 
+        //Initialize TCPControl
         try {
             tcpControl = new TCPControl(12345, this);
             Thread t1 = new Thread(tcpControl, "TCPControl");
@@ -74,15 +104,16 @@ public class Client {
     }
 
     /**
-     * Send name to all nodes using multicast
-     * ip-address can be extracted from message
+     * Send name to all nodes using multicast ip-address can be extracted from message
      */
     private void discovery() {
         MulticastPublisher publisher = new MulticastPublisher();
         try {
             publisher.multicast(name);
+
             // Receiving the number of nodes from the server
             DiscoveryThread discoveryThread = new DiscoveryThread(this);
+
             // Receiving previous and next node from other nodes (if they exist)
             BootstrapThread bootstrapThreadNext = new BootstrapThread(true, this);
             BootstrapThread bootstrapThreadPrev = new BootstrapThread(false, this);
@@ -90,6 +121,7 @@ public class Client {
             System.out.println("send multicast with name");
 
             discoveryThread.start();
+
             bootstrapThreadNext.start();
             bootstrapThreadPrev.start();
         } catch (IOException e) {
@@ -97,19 +129,27 @@ public class Client {
         }
     }
 
+    /**
+     * End the node correctly
+     */
     public void shutdown() {
         //Replication part of shutdown
 
+
+        //Get all files in replicaDir
         File[] files = new File(replicaDir).listFiles();
 
+        //Send each file to the previous node
         for (File file : Objects.requireNonNull(files)) {
             String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
             Thread sendReplicateThread = new SendReplicateFileThread(prevNode, replicaDir, fileName);
             sendReplicateThread.start();
         }
 
+        //Get all localfiles
         File[] localFiles = new File(localDir).listFiles();
 
+        //Let each node that has one of your local files
         for (File file : Objects.requireNonNull(localFiles)) {
             String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
             try {
@@ -120,7 +160,7 @@ public class Client {
             }
         }
 
-        //Discovery part of shutdown
+        //Discovery part of shutdown, let your neighbors know who their new neighbors will be
         if (currentID != nextID && currentID != prevID) {
             updateNeighbor(true);
             updateNeighbor(false);
@@ -128,6 +168,9 @@ public class Client {
         restClient.delete("unregister?name=" + name);
     }
 
+    /**
+     * TODO
+     */
     public void failure() {
 
     }
@@ -359,7 +402,7 @@ public class Client {
     public void localFileModified(String filename) {
         // Send only the updated file and don't change the log-file
         try {
-            /*Socket socket = new Socket(serverIp, 12345);
+            Socket socket = new Socket(serverIp, 12345);
 
             // Request the location where the file should be replicated
             InetAddress location = InetAddress.getByName(requestFileLocation(filename));
