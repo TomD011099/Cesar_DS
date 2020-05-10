@@ -175,6 +175,12 @@ public class Client {
 
     }
 
+    /**
+     * Method is invoked in DiscoveryThread when an answer to the multicast is received
+     *
+     * @param numberOfNodes Amount of nodes in the network
+     * @param ipServer The ip address of the server
+     */
     public void discoveryResponse(int numberOfNodes, InetAddress ipServer) {
         // Make a new restClient since the server ip is known, also set the server IP
         serverIp = ipServer;
