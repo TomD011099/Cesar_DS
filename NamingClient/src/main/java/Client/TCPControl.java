@@ -2,13 +2,14 @@ package Client;
 
 import java.io.*;
 import java.net.*;
+import Client.Threads.*;
 
-public class ServerThread implements Runnable {
+public class TCPControl implements Runnable {
     private final ServerSocket serverSocket;
     private final Client client;
     private volatile boolean stop;
 
-    public ServerThread(int port, Client client) throws IOException {
+    public TCPControl(int port, Client client) throws IOException {
         serverSocket = new ServerSocket(port);
         this.client = client;
         this.stop = false;
@@ -23,30 +24,25 @@ public class ServerThread implements Runnable {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                 String command = reader.readLine();
-                //String[] array = command.split(":");
 
                 switch (command) {
                     case "Update":
-                        String in = reader.readLine();
-                        String[] parsed = in.split(" ");
-                        if (parsed[0].equals("prev")) {
-                            client.setPrevNode(InetAddress.getByName(parsed[1].substring(1)));
-                            System.out.println("prevNode updated to: " + client.getPrevNode());
-                        } else if (parsed[0].equals("next")) {
-                            client.setNextNode(InetAddress.getByName(parsed[1].substring(1)));
-                            System.out.println("nextNode updated to: " + client.getNextNode());
-                        }
+                        Thread updateNeighborsThread = new UpdateNeighborsThread(socket, client);
+                        updateNeighborsThread.start();
                         break;
                     case "File_replicate":
-                        client.getFileTransfer().receiveReplication(socket);
+                        Thread receiveReplicationFileTread = new ReceiveReplicateFileThread(socket, client.getReplicaDir(), client.getLocalFileSet(), client.getPrevNode());
+                        receiveReplicationFileTread.start();
                         break;
-                    case "Shutdown":
-                        //client.ownerShutdown(array[1]);
+                    case "localShutdown":
+                        String fileName = reader.readLine();
+                        socket.close();
+                        client.ownerShutdown(fileName);
                         break;
                     case "File_request":
-                        client.getFileTransfer().sendRequestedFile(socket);
+                        Thread sendRequestedFileThread = new SendRequestedFileThread(socket, client.getLocalDir());
+                        sendRequestedFileThread.start();
                         break;
-
                     case "Delete_file":
                         String filename = reader.readLine();
                         String logFilename = "log_" + filename + ".txt";
@@ -54,19 +50,18 @@ public class ServerThread implements Runnable {
                         File logFile = new File("./remote/" + logFilename);
                         deleteFile(file);
                         deleteFile(logFile);
-                        System.out.println("File delete: " + filename);
                         break;
-
                     case "Update_file":
                         String updateFilename = reader.readLine();
                         File updateFile = new File("./remote" + updateFilename);
                         deleteFile(updateFile);
-                        System.out.println("File update: " + updateFilename);
                         break;
+                    default:
+                        System.err.println("Received unknown command: " + command);
+                        socket.close();
                 }
 
-                // Close all connections
-                //socket.close();
+                reader.close();
             }
         } catch (IOException ioException) {
             client.failure();

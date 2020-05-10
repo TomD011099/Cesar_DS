@@ -1,4 +1,6 @@
-package Client;
+package Client.Threads;
+
+import Client.Client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +15,7 @@ public class BootstrapThread extends Thread {
     private Client client;
     private ServerSocket serverSocket;
 
-    BootstrapThread(boolean concernsNext, Client client) throws IOException {
+    public BootstrapThread(boolean concernsNext, Client client) throws IOException {
         this.client = client;
         this.concernsNext = concernsNext;
         if (this.concernsNext)

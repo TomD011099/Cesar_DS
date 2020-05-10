@@ -1,4 +1,6 @@
-package Client;
+package Client.Threads;
+
+import Client.Client;
 
 import java.nio.file.*;
 import java.util.*;
@@ -8,7 +10,7 @@ public class UpdateThread extends Thread {
     private Path localPath;
     private Client client;
 
-    UpdateThread(Client client, String localPath) {
+    public UpdateThread(Client client, String localPath) {
         this.client = client;
         this.localPath = Paths.get(localPath);
     }
