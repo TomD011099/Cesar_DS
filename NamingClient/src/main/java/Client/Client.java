@@ -478,6 +478,11 @@ public class Client {
     public void run() throws UnknownHostException {
         discovery();
 
+        // TODO start agent here
+        Agent synchAgent = new SynchAgent();
+        Thread synchAgentThread = new Thread(synchAgent);
+        synchAgentThread.start();
+
         // Create a multicast receiver for client
         MulticastReceiver multicastReceiver = new MulticastReceiver(this);
         Thread receiverThread = new Thread(multicastReceiver);
