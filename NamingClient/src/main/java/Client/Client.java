@@ -134,6 +134,10 @@ public class Client {
      * End the node correctly
      */
     public void shutdown() {
+
+        RestClient hello = new RestClient(nextNode.toString().substring(1));
+        System.out.println(hello.get("/hello?name=" + name));
+
         //Replication part of shutdown
 
 
@@ -197,8 +201,6 @@ public class Client {
             System.out.println("My prevNode: " + prevNode);
         } else {
             System.out.println("I've more friends");
-            RestClient hello = new RestClient(nextNode.toString().substring(1));
-            System.out.println(hello.get("/hello?name=" + name));
         }
 
         initReplicateFiles();
