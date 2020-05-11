@@ -7,3 +7,6 @@ NamingServer/.idea/compiler.xml
 
 NamingClient/.idea/artifacts/NamingClient_jar.xml
 NamingServer/.idea/artifacts/NamingServer_jar.xml
+NamingClient/META-INF/
+
+NamingClient/target/
