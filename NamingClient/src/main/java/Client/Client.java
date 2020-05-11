@@ -197,8 +197,8 @@ public class Client {
             System.out.println("My prevNode: " + prevNode);
         } else {
             System.out.println("I've more friends");
-            //RestClient hello = new RestClient(nextNode.toString().substring(1));
-            //System.out.println(hello.get("/hello?name=" + name));
+            RestClient hello = new RestClient(nextNode.toString().substring(1));
+            System.out.println(hello.get("/hello?name=" + name));
         }
 
         initReplicateFiles();
