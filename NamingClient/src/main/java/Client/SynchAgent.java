@@ -1,6 +1,25 @@
 package Client;
 
-import jade.core.AID;
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class SynchAgent implements Runnable, Serializable {
+
+    // List of: filename, lock (bool), owner (bool)
+    private ArrayList<ArrayList<String>> list;
+
+    SynchAgent() {
+        list = new ArrayList<>();
+    }
+
+    @Override
+    public void run() {
+
+    }
+}
+
+
+/*import jade.core.AID;
 import jade.core.Agent;
 import java.io.Serializable;
 
@@ -17,4 +36,4 @@ public class SynchAgent extends Agent implements Serializable, Runnable {
     protected void setup(){
         System.out.println("Hello! Buyer-agent "+getAID().getName()+ "is ready.");
     }
-}
+}*/

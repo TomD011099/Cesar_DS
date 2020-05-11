@@ -1,6 +1,7 @@
 package Client;
 
 import Client.Threads.*;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -195,7 +196,9 @@ public class Client {
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
         } else {
-            System.out.println("I've more friends (naming server, you're my best friend)");
+            System.out.println("I've more friends");
+            RestClient hello = new RestClient(nextNode.toString().substring(1));
+            System.out.println(hello.get("/hello?name=" + name));
         }
 
         initReplicateFiles();
@@ -479,7 +482,7 @@ public class Client {
         discovery();
 
         // TODO start agent here
-        SynchAgent synchAgent = new SynchAgent(name);
+        // SynchAgent synchAgent = new SynchAgent(name);
 
         // Create a multicast receiver for client
         MulticastReceiver multicastReceiver = new MulticastReceiver(this);
