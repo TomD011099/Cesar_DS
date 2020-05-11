@@ -20,7 +20,7 @@ public class ReceiveReplicateFileThread extends Thread {
         this.localFileSet = localFileSet;
         this.prevNode = prevNode;
         try {
-            this.in = socket.getInputStream();
+            this.in = this.socket.getInputStream();
         } catch (IOException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
@@ -30,10 +30,10 @@ public class ReceiveReplicateFileThread extends Thread {
     @Override
     public void run() {
         try {
-            System.out.println("Socket in thread " + socket.toString());
+            System.out.println("Socket in thread " + socket.toString() + " " + socket.isClosed());
 
             // Get the in- and outputstreams from the socket
-            //InputStream in = socket.getInputStream();
+            // InputStream in = socket.getInputStream();
 
             // Create a reader to read from the socket
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
