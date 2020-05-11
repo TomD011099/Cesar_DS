@@ -479,9 +479,7 @@ public class Client {
         discovery();
 
         // TODO start agent here
-        Agent synchAgent = new SynchAgent();
-        Thread synchAgentThread = new Thread(synchAgent);
-        synchAgentThread.start();
+        SynchAgent synchAgent = new SynchAgent(name);
 
         // Create a multicast receiver for client
         MulticastReceiver multicastReceiver = new MulticastReceiver(this);
