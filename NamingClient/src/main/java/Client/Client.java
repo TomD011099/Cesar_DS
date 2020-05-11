@@ -30,6 +30,7 @@ public class Client {
     private final String localDir;              //The directory from where we'll replicate the files    [absolute path]
     private final String requestDir;            //The 'Download' directory                              [absolute path]
     private final HashSet<String> localFileSet; //A set of all local files
+    private MulticastReceiver multicastReceiver;//Thread for receiving multicast messages
 
     /**
      * Get the replica directory
@@ -507,5 +508,20 @@ public class Client {
         tcpControl.stop();
         multicastReceiver.stop();
         //TODO client doesn't stop
+    }
+
+    public void runGraphic() throws UnknownHostException{
+        discovery();
+        // Create a multicast receiver for client
+        multicastReceiver = new MulticastReceiver(this);
+        Thread receiverThread = new Thread(multicastReceiver);
+        receiverThread.start();
+        System.out.println("receiverThread started!");
+    }
+
+    public void stopGraphic(){
+        shutdown();
+        tcpControl.stop();
+        multicastReceiver.stop();
     }
 }
