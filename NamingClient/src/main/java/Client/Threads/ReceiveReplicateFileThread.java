@@ -10,21 +10,14 @@ public class ReceiveReplicateFileThread extends Thread {
     private final String dir;
     private HashSet<String> localFileSet;
     private InetAddress prevNode;
-    private InputStream in;
 
     public ReceiveReplicateFileThread(Socket socket, String dir, HashSet<String> localFileSet, InetAddress prevNode) {
-        System.out.println("Socket in thread constructor var" + socket.toString());
+        System.out.println("Socket in thread constructor var" + socket.toString() + " " + socket.isClosed());
         this.socket = socket;
-        System.out.println("Socket in thread constructor local" + this.socket.toString());
+        System.out.println("Socket in thread constructor local" + this.socket.toString() + " " + socket.isClosed());
         this.dir = dir;
         this.localFileSet = localFileSet;
         this.prevNode = prevNode;
-        try {
-            this.in = this.socket.getInputStream();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -33,7 +26,7 @@ public class ReceiveReplicateFileThread extends Thread {
             System.out.println("Socket in thread " + socket.toString() + " " + socket.isClosed());
 
             // Get the in- and outputstreams from the socket
-            // InputStream in = socket.getInputStream();
+            InputStream in = socket.getInputStream();
 
             // Create a reader to read from the socket
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
