@@ -25,6 +25,8 @@ public class SendReplicateFileThread extends Thread {
     @Override
     public void run() {
         try {
+            System.out.println("Replication for " + fileName + " started.");
+
             // Create a socket to communicate
             Socket socket = new Socket(dest, 12345);
 

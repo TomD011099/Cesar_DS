@@ -17,6 +17,7 @@ public class Main {
         Client client;
         try {
             client = new Client("/home/pi/local/","/home/pi/remote/", "/home/pi/request/", name, ip);
+            //client = new Client("C:/Users/tomde/OneDrive - uantwerpen/School/6 Distributed Systems/Pract/local","C:/Users/tomde/OneDrive - uantwerpen/School/6 Distributed Systems/Pract/remote", "C:/Users/tomde/OneDrive - uantwerpen/School/6 Distributed Systems/Pract/request", name, ip);
             client.run();
         } catch (UnknownHostException e) {
             System.err.println(e.getMessage());
