@@ -60,13 +60,22 @@ public class Client {
     }
 
     /**
+     * Get the requested files directory
+     *
+     * @return The requested file directory [absolute]
+     */
+    public String getRequestDir() {
+        return requestDir;
+    }
+
+    /**
      * The constructor for client
      *
-     * @param localDir The directory from where we'll replicate the files [absolute path]
+     * @param localDir   The directory from where we'll replicate the files [absolute path]
      * @param replicaDir The directory where the replicated files are stored [absolute path]
      * @param requestDir The 'Download' directory [absolute path]
-     * @param name The name of the client
-     * @param ip The ip adres of the client
+     * @param name       The name of the client
+     * @param ip         The ip adres of the client
      */
     public Client(String localDir, String replicaDir, String requestDir, String name, String ip) {
         try {
@@ -180,7 +189,7 @@ public class Client {
      * Method is invoked in DiscoveryThread when an answer to the multicast is received
      *
      * @param numberOfNodes Amount of nodes in the network
-     * @param ipServer The ip address of the server
+     * @param ipServer      The ip address of the server
      */
     public void discoveryResponse(int numberOfNodes, InetAddress ipServer) {
         // Make a new restClient since the server ip is known, also set the server IP
@@ -510,7 +519,7 @@ public class Client {
         //TODO client doesn't stop
     }
 
-    public void runGraphic() throws UnknownHostException{
+    public void runGraphic() throws UnknownHostException {
         discovery();
         // Create a multicast receiver for client
         multicastReceiver = new MulticastReceiver(this);
@@ -519,7 +528,7 @@ public class Client {
         System.out.println("receiverThread started!");
     }
 
-    public void stopGraphic(){
+    public void stopGraphic() {
         shutdown();
         tcpControl.stop();
         multicastReceiver.stop();

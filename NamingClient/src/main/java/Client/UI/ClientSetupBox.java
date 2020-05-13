@@ -61,7 +61,7 @@ public class ClientSetupBox {
         Button confirmButton = new Button("Ok");
         confirmButton.setOnAction(e -> {
             if (isValid(nameField.getText(), ipField.getText(), localFilesField.getText(), replicatedFilesField.getText(), requestedFilesField.getText())) {
-                client = new Client(localFilesField.getText().replace('\\', '/'), replicatedFilesField.getText().replace('\\', '/'), replicatedFilesField.getText().replace('\\', '/'), nameField.getText(), ipField.getText());
+                client = new Client(localFilesField.getText().replace('\\', '/')+'/', replicatedFilesField.getText().replace('\\', '/')+'/', replicatedFilesField.getText().replace('\\', '/')+'/', nameField.getText(), ipField.getText());
                 window.close();
             } else {
                 AlertBox.display("Error", "One or more of the given parameters are not valid");
@@ -136,5 +136,4 @@ public class ClientSetupBox {
         }
         return answer;
     }
-
 }

@@ -1,13 +1,20 @@
 package Client.UI;
 
 import Client.Client;
+import Client.Threads.RequestFileThread;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.*;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 
 
@@ -67,13 +74,55 @@ public class ClientUI extends Application {
         });
 
         layout.setTop(menuBar);
-        HashSet<String> testSet = new HashSet<>();
-        for (int i = 0; i < 6; i++) {
-            testSet.add("File" + (i + 1));
-        }
-        FileTreePane localFiles = new FileTreePane("Local Files", testSet);
+        FileTreePane localFiles = new FileTreePane("Local Files", client.getLocalFileSet());
         layout.setLeft(localFiles.getPane());
+        HashSet<String> downloadedFiles = new HashSet<>();
+        FileTreePane requestedFiles = new FileTreePane("Downloaded files", downloadedFiles);
+        layout.setCenter(requestedFiles.getPane());
+        HashSet<String> replicatedFilesSet = new HashSet<>();
+        FileTreePane replicatedFiles = new FileTreePane("Replicated files", replicatedFilesSet);
+        layout.setRight(replicatedFiles.getPane());
+
         //TODO File request buttons and other stuff
+        BorderPane buttonPane = new BorderPane();
+        Button addFileButton = new Button("Add local file");
+        addFileButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            File source = fileChooser.showOpenDialog(primaryStage);
+            if (source != null) {
+                File dest = new File(client.getLocalDir() + source.getName());
+                try {
+                    Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+        });
+        buttonPane.setLeft(addFileButton);
+        BorderPane requestBox = new BorderPane();
+        TextField fileNameField = new TextField();
+        fileNameField.setOnKeyPressed(ke -> {
+            if (ke.getCode().equals(KeyCode.ENTER)) {
+                String fileToRequest = fileNameField.getText();
+                if (fileToRequest == null) {
+                    AlertBox.display("Error", "Insert a filename");
+                } else {
+                    try {
+                        String location = client.requestFileLocation(fileToRequest);
+                        Thread requestFileThread = new RequestFileThread(InetAddress.getByName(location.substring(1)), fileToRequest, client.getRequestDir());
+                        requestFileThread.start();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        Label requestFile = new Label();
+        requestFile.setText("Request file: ");
+        requestBox.setLeft(requestFile);
+        requestBox.setRight(fileNameField);
+        buttonPane.setCenter(requestBox);
+        layout.setBottom(buttonPane);
 
         Scene scene = new Scene(layout, 1600, 900);
         window.setScene(scene);
