@@ -327,6 +327,7 @@ public class Client {
         }
     }
 
+    //TODO use REST
     private void updateNeighbor(boolean isDestNextNode) {
         try {
             String out;
@@ -343,11 +344,14 @@ public class Client {
 
             // Create a writer to write to the socket
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             writer.println("Update");
+            reader.readLine();
             writer.println(out);
             System.out.println("Data sent: " + out);
 
+            reader.close();
             writer.close();
             socket.close();
 

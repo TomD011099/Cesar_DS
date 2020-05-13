@@ -5,6 +5,7 @@ import Client.Client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -22,6 +23,9 @@ public class UpdateNeighborsThread extends Thread {
         try {
             // Create a reader to read from the socket
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter writer = new PrintWriter(socket.getOutputStream());
+
+            writer.println("OK");
 
             String in = reader.readLine();
             String[] parsed = in.split(" ");
@@ -33,6 +37,7 @@ public class UpdateNeighborsThread extends Thread {
                 System.out.println("nextNode updated to: " + client.getNextNode());
             }
 
+            writer.close();
             reader.close();
             socket.close();
         } catch (IOException e) {

@@ -23,6 +23,8 @@ public class SendRequestedFileThread extends Thread{
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             PrintWriter writer = new PrintWriter(out, true);
 
+            writer.println("OK");
+
             String fileName = reader.readLine();
 
             // Make an array of bytes and store the file in said array

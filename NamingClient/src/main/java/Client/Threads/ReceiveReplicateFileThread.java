@@ -30,6 +30,9 @@ public class ReceiveReplicateFileThread extends Thread {
 
             // Create a reader to read from the socket
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            PrintWriter writer = new PrintWriter(socket.getOutputStream());
+
+            writer.println("OK");
 
             String fileName = reader.readLine();
 
@@ -60,6 +63,7 @@ public class ReceiveReplicateFileThread extends Thread {
                 file.delete();
             }
 
+            writer.close();
             reader.close();
             fileOutputStream.close();
             in.close();
