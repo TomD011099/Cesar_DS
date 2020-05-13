@@ -349,7 +349,7 @@ public class Client {
             writer.println("Update");
 
             String ack = reader.readLine();
-            while (!ack.equals("OK")) {
+            while (ack == null) {
                 ack = reader.readLine();
             }
 

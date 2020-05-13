@@ -41,7 +41,7 @@ public class SendReplicateFileThread extends Thread {
             System.out.println("\nSocket after command " + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
 
             String ack = reader.readLine();
-            while (!ack.equals("OK")) {
+            while (ack == null) {
                 ack = reader.readLine();
             }
 

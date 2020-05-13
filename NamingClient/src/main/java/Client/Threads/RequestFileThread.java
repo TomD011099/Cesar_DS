@@ -33,7 +33,7 @@ public class RequestFileThread extends Thread{
             writer.println("File_request");
 
             String ack = reader.readLine();
-            while (!ack.equals("OK")) {
+            while (ack == null) {
                 ack = reader.readLine();
             }
 
