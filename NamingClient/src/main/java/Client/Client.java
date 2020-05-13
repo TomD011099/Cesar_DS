@@ -135,8 +135,8 @@ public class Client {
      */
     public void shutdown() {
 
-        RestClient hello = new RestClient(nextNode.toString().substring(1));
-        System.out.println(hello.get("/hello?name=" + name));
+        RestClient synchRest = new RestClient(nextNode.toString().substring(1));
+        System.out.println(synchRest.get("/synchList"));
 
         //Replication part of shutdown
 

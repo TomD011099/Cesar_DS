@@ -1,39 +1,44 @@
 package Client;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class SynchAgent implements Runnable, Serializable {
 
-    // List of: filename, lock (bool), owner (bool)
+    // List of: filename, lock (bool), owner (name)
+    private String replicaDir;
     private ArrayList<ArrayList<String>> list;
 
-    SynchAgent() {
+    SynchAgent(String replicaDir) {
         list = new ArrayList<>();
+        this.replicaDir = replicaDir;
     }
 
     @Override
     public void run() {
 
     }
+
+    public String getListOfFilesToString() {
+        String string = "";
+        for (ArrayList<String> column : list) {
+            for (String row : column) {
+                string = string + " " + row;
+            }
+        }
+        return string;
+    }
+
+    private void updateFiles() {
+        File folder = new File(replicaDir);
+        File[] listOfFiles = folder.listFiles();
+
+        for (File file : listOfFiles) {
+            ArrayList<String> subList = new ArrayList<>();
+            subList.add(file.getName());              // Add the name
+            subList.add("false");                     // Add lock or not
+            list.add(subList);
+        }
+    }
 }
-
-
-/*import jade.core.AID;
-import jade.core.Agent;
-import java.io.Serializable;
-
-public class SynchAgent extends Agent implements Serializable, Runnable {
-
-    String hostname;
-
-    SynchAgent(String hostname) {
-        this.hostname = hostname;
-        AID id = new AID(hostname, AID.ISLOCALNAME);
-    }
-
-    @Override
-    protected void setup(){
-        System.out.println("Hello! Buyer-agent "+getAID().getName()+ "is ready.");
-    }
-}*/
