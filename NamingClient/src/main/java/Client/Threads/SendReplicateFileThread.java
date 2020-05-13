@@ -29,6 +29,7 @@ public class SendReplicateFileThread extends Thread {
 
             // Create a socket to communicate
             Socket socket = new Socket(dest, 12345);
+            System.out.println("\nSocket at creation " + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
 
             // Get the outputstream from the socket
             OutputStream out = socket.getOutputStream();
@@ -36,7 +37,10 @@ public class SendReplicateFileThread extends Thread {
             PrintWriter writer = new PrintWriter(out, true);
 
             writer.println("File_replicate");
+            System.out.println("\nSocket after command " + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
+
             writer.println(fileName);
+            System.out.println("\nSocket after filename " + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
 
             // Make an array of bytes and store the file in said array
             File file = new File(dir + fileName);
@@ -46,10 +50,13 @@ public class SendReplicateFileThread extends Thread {
 
             // Let the client know how much bytes will be sent
             writer.println(bytes.length);
+            System.out.println("\nSocket after length " + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
 
             // Send the bytes
             out.write(bytes);
+            System.out.println("\nSocket after file " + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
             out.flush();
+            System.out.println("\nSocket after flush " + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
 
             writer.close();
             fileInputStream.close();

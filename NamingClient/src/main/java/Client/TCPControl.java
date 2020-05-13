@@ -16,7 +16,7 @@ public class TCPControl implements Runnable {
     /**
      * The only constructor for TCPControl
      *
-     * @param port   The port on which the socker will listen
+     * @param port   The port on which the socket will listen
      * @param client The instance of client
      * @throws IOException When the port isn't a valid input/is busy
      */
@@ -35,6 +35,7 @@ public class TCPControl implements Runnable {
             while (!stop) {
                 //Accept incoming transmissions
                 Socket socket = serverSocket.accept();
+                System.out.println("\nSocket at start " + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
 
                 // Create a reader to read from the socket
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -52,7 +53,7 @@ public class TCPControl implements Runnable {
                         break;
                     case "File_replicate":
                         //A node is trying to replicate a file to this node
-                        System.out.println("Socket before thread " + socket.toString());
+                        System.out.println("\nSocket before thread " + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
                         Thread receiveReplicationFileTread = new ReceiveReplicateFileThread(socket, client.getReplicaDir(), client.getLocalFileSet(), client.getPrevNode());
                         receiveReplicationFileTread.start();
                         break;

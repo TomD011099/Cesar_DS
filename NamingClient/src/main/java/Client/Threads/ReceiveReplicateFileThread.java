@@ -12,9 +12,9 @@ public class ReceiveReplicateFileThread extends Thread {
     private InetAddress prevNode;
 
     public ReceiveReplicateFileThread(Socket socket, String dir, HashSet<String> localFileSet, InetAddress prevNode) {
-        System.out.println("Socket in thread constructor var" + socket.toString() + " " + socket.isClosed());
+        System.out.println("\nSocket in thread constr-var" + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
         this.socket = socket;
-        System.out.println("Socket in thread constructor local" + this.socket.toString() + " " + socket.isClosed());
+        System.out.println("\nSocket in thread constr-field" + this.socket.toString() + "\nChannel: " + this.socket.getChannel() + "\nIs closed: " + this.socket.isClosed());
         this.dir = dir;
         this.localFileSet = localFileSet;
         this.prevNode = prevNode;
@@ -23,7 +23,7 @@ public class ReceiveReplicateFileThread extends Thread {
     @Override
     public void run() {
         try {
-            System.out.println("Socket in thread " + socket.toString() + " " + socket.isClosed());
+            System.out.println("\nSocket in thread " + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
 
             // Get the in- and outputstreams from the socket
             InputStream in = socket.getInputStream();
