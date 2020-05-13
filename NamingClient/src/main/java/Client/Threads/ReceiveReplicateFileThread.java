@@ -3,6 +3,7 @@ package Client.Threads;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.HashSet;
 
 public class ReceiveReplicateFileThread extends Thread {
@@ -11,9 +12,14 @@ public class ReceiveReplicateFileThread extends Thread {
     private HashSet<String> localFileSet;
     private InetAddress prevNode;
 
-    public ReceiveReplicateFileThread(Socket socket, String dir, HashSet<String> localFileSet, InetAddress prevNode) {
-        System.out.println("\nSocket in thread constr-var" + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
-        this.socket = socket;
+    public ReceiveReplicateFileThread(SocketAddress socketAddress, String dir, HashSet<String> localFileSet, InetAddress prevNode) {
+        System.out.println("\nSocket in thread constr-var" + socketAddress.toString());
+        this.socket = new Socket();
+        try {
+            socket.connect(socketAddress);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println("\nSocket in thread constr-field" + this.socket.toString() + "\nChannel: " + this.socket.getChannel() + "\nIs closed: " + this.socket.isClosed());
         this.dir = dir;
         this.localFileSet = localFileSet;
@@ -56,7 +62,7 @@ public class ReceiveReplicateFileThread extends Thread {
             fileOutputStream.write(bytes, 0, bytes.length);
             fileOutputStream.flush();
 
-            if (localFileSet.contains(fileName) || (fileName.startsWith("log_") && localFileSet.contains(fileName.substring(4, fileName.length()-8)))) {
+            if (localFileSet.contains(fileName) || (fileName.startsWith("log_") && localFileSet.contains(fileName.substring(4, fileName.length() - 8)))) {
                 Thread sendReplicateFileThread = new SendReplicateFileThread(prevNode, dir, fileName);
                 sendReplicateFileThread.start();
                 File file = new File(dir + fileName);

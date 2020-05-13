@@ -54,7 +54,7 @@ public class TCPControl implements Runnable {
                     case "File_replicate":
                         //A node is trying to replicate a file to this node
                         System.out.println("\nSocket before thread " + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
-                        Thread receiveReplicationFileTread = new ReceiveReplicateFileThread(socket, client.getReplicaDir(), client.getLocalFileSet(), client.getPrevNode());
+                        Thread receiveReplicationFileTread = new ReceiveReplicateFileThread(socket.getRemoteSocketAddress(), client.getReplicaDir(), client.getLocalFileSet(), client.getPrevNode());
                         receiveReplicationFileTread.start();
                         break;
                     case "localShutdown":
