@@ -13,6 +13,7 @@ public class SynchAgent implements Runnable, Serializable {
     SynchAgent(String replicaDir) {
         list = new ArrayList<>();
         this.replicaDir = replicaDir;
+        updateFiles();
     }
 
     @Override
