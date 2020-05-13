@@ -61,11 +61,11 @@ public class Client {
     /**
      * The constructor for client
      *
-     * @param localDir The directory from where we'll replicate the files [absolute path]
+     * @param localDir   The directory from where we'll replicate the files [absolute path]
      * @param replicaDir The directory where the replicated files are stored [absolute path]
      * @param requestDir The 'Download' directory [absolute path]
-     * @param name The name of the client
-     * @param ip The ip adres of the client
+     * @param name       The name of the client
+     * @param ip         The ip adres of the client
      */
     public Client(String localDir, String replicaDir, String requestDir, String name, String ip) {
         try {
@@ -84,9 +84,11 @@ public class Client {
         //Initialize localFileSet and add the files
         localFileSet = new HashSet<>();
         File[] files = new File(localDir).listFiles();
-        for (File file : files) {
-            String tempName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
-            localFileSet.add(tempName);
+        if (files != null) {
+            for (File file : files) {
+                String tempName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
+                localFileSet.add(tempName);
+            }
         }
 
         //Initialize TCPControl
@@ -140,23 +142,27 @@ public class Client {
         File[] files = new File(replicaDir).listFiles();
 
         //Send each file to the previous node
-        for (File file : files) {
-            String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
-            Thread sendReplicateThread = new SendReplicateFileThread(prevNode, replicaDir, fileName);
-            sendReplicateThread.start();
+        if (files != null) {
+            for (File file : files) {
+                String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
+                Thread sendReplicateThread = new SendReplicateFileThread(prevNode, replicaDir, fileName);
+                sendReplicateThread.start();
+            }
         }
 
         //Get all localfiles
         File[] localFiles = new File(localDir).listFiles();
 
         //Let each node that has one of your local files
-        for (File file : localFiles) {
-            String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
-            try {
-                InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName).substring(1));
-                sendString(12345, fileName, replicaIP, "LocalShutdown");
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
+        if (localFiles != null) {
+            for (File file : localFiles) {
+                String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
+                try {
+                    InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName).substring(1));
+                    sendString(12345, fileName, replicaIP, "LocalShutdown");
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -179,7 +185,7 @@ public class Client {
      * Method is invoked in DiscoveryThread when an answer to the multicast is received
      *
      * @param numberOfNodes Amount of nodes in the network
-     * @param ipServer The ip address of the server
+     * @param ipServer      The ip address of the server
      */
     public void discoveryResponse(int numberOfNodes, InetAddress ipServer) {
         // Make a new restClient since the server ip is known, also set the server IP
@@ -305,16 +311,18 @@ public class Client {
 
     private void initReplicateFiles() {
         File[] files = new File(localDir).listFiles();
-        for (File file : files) {
-            try {
-                String fileName = file.getAbsolutePath();
-                fileName = fileName.replace('\\', '/').replaceAll(localDir, "");
-                InetAddress location = InetAddress.getByName(requestFileLocation(fileName).replaceAll("/", ""));
-                System.out.println("location: " + location);
-                Thread send = new SendReplicateFileThread(location, localDir, fileName);
-                send.start();
-            } catch (UnknownHostException e) {
-                System.err.println(e.getMessage());
+        if (files != null) {
+            for (File file : files) {
+                try {
+                    String fileName = file.getAbsolutePath();
+                    fileName = fileName.replace('\\', '/').replaceAll(localDir, "");
+                    InetAddress location = InetAddress.getByName(requestFileLocation(fileName).replaceAll("/", ""));
+                    System.out.println("location: " + location);
+                    Thread send = new SendReplicateFileThread(location, localDir, fileName);
+                    send.start();
+                } catch (UnknownHostException e) {
+                    System.err.println(e.getMessage());
+                }
             }
         }
     }
@@ -449,27 +457,29 @@ public class Client {
     public void ownerShutdown(String fileName) {
         File[] files = new File(replicaDir).listFiles();
 
-        for (File file : files) {
-            String tempName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
-            if (tempName.contains("log_" + fileName)) {
-                try {
-                    BufferedReader br = new BufferedReader(new FileReader(file));
-                    br.readLine();
-                    boolean downloaded = Boolean.parseBoolean(br.readLine());
-                    if (!downloaded) {
-                        if (!file.delete()) {
-                            System.err.println("ERR: File " + file.getAbsolutePath() + " not deleted");
+        if (files != null) {
+            for (File file : files) {
+                String tempName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
+                if (tempName.contains("log_" + fileName)) {
+                    try {
+                        BufferedReader br = new BufferedReader(new FileReader(file));
+                        br.readLine();
+                        boolean downloaded = Boolean.parseBoolean(br.readLine());
+                        if (!downloaded) {
+                            if (!file.delete()) {
+                                System.err.println("ERR: File " + file.getAbsolutePath() + " not deleted");
+                            }
+                            String replicatedFileName = replicaDir + tempName.split("_", 2)[1];
+                            int splitPoint = replicatedFileName.lastIndexOf(".");
+                            replicatedFileName = replicatedFileName.substring(0, splitPoint);
+                            File replicatedFile = new File(replicatedFileName);
+                            if (!replicatedFile.delete()) {
+                                System.err.println("ERR: File " + file.getAbsolutePath() + " not deleted");
+                            }
                         }
-                        String replicatedFileName = replicaDir + tempName.split("_", 2)[1];
-                        int splitPoint = replicatedFileName.lastIndexOf(".");
-                        replicatedFileName = replicatedFileName.substring(0, splitPoint);
-                        File replicatedFile = new File(replicatedFileName);
-                        if (!replicatedFile.delete()) {
-                            System.err.println("ERR: File " + file.getAbsolutePath() + " not deleted");
-                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }
