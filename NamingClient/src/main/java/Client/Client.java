@@ -84,7 +84,7 @@ public class Client {
         //Initialize localFileSet and add the files
         localFileSet = new HashSet<>();
         File[] files = new File(localDir).listFiles();
-        for (File file : Objects.requireNonNull(files)) {
+        for (File file : files) {
             String tempName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
             localFileSet.add(tempName);
         }
@@ -140,7 +140,7 @@ public class Client {
         File[] files = new File(replicaDir).listFiles();
 
         //Send each file to the previous node
-        for (File file : Objects.requireNonNull(files)) {
+        for (File file : files) {
             String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
             Thread sendReplicateThread = new SendReplicateFileThread(prevNode, replicaDir, fileName);
             sendReplicateThread.start();
@@ -150,7 +150,7 @@ public class Client {
         File[] localFiles = new File(localDir).listFiles();
 
         //Let each node that has one of your local files
-        for (File file : Objects.requireNonNull(localFiles)) {
+        for (File file : localFiles) {
             String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
             try {
                 InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName).substring(1));
@@ -305,7 +305,7 @@ public class Client {
 
     private void initReplicateFiles() {
         File[] files = new File(localDir).listFiles();
-        for (File file : Objects.requireNonNull(files)) {
+        for (File file : files) {
             try {
                 String fileName = file.getAbsolutePath();
                 fileName = fileName.replace('\\', '/').replaceAll(localDir, "");
@@ -449,7 +449,7 @@ public class Client {
     public void ownerShutdown(String fileName) {
         File[] files = new File(replicaDir).listFiles();
 
-        for (File file : Objects.requireNonNull(files)) {
+        for (File file : files) {
             String tempName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
             if (tempName.contains("log_" + fileName)) {
                 try {
