@@ -348,8 +348,11 @@ public class Client {
 
             writer.println("Update");
 
-            while (!reader.readLine().equals("OK"));
-            
+            String ack = reader.readLine();
+            while (!ack.equals("OK")) {
+                ack = reader.readLine();
+            }
+
             writer.println(out);
             System.out.println("Data sent: " + out);
 

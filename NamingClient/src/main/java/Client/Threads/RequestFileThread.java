@@ -32,7 +32,10 @@ public class RequestFileThread extends Thread{
             //Give command
             writer.println("File_request");
 
-            while (!reader.readLine().equals("OK"));
+            String ack = reader.readLine();
+            while (!ack.equals("OK")) {
+                ack = reader.readLine();
+            }
 
             //Send filename
             writer.println(fileName);
