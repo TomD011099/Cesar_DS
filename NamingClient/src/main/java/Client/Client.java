@@ -347,7 +347,9 @@ public class Client {
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             writer.println("Update");
-            reader.readLine();
+
+            while (!reader.readLine().equals("OK"));
+            
             writer.println(out);
             System.out.println("Data sent: " + out);
 

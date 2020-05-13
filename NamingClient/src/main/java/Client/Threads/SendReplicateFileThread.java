@@ -40,7 +40,7 @@ public class SendReplicateFileThread extends Thread {
             writer.println("File_replicate");
             System.out.println("\nSocket after command " + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
 
-            reader.readLine();
+            while (!reader.readLine().equals("OK"));
 
             writer.println(fileName);
             System.out.println("\nSocket after filename " + socket.toString() + "\nChannel: " + socket.getChannel() + "\nIs closed: " + socket.isClosed());
