@@ -56,35 +56,44 @@ public class ClientUI extends Application {
         fileMenu.getItems().addAll(settings, exit);
         menuBar.getMenus().add(fileMenu);
 
-        /*Menu connectionMenu = new Menu("Connections");
-        MenuItem connect = new MenuItem("Connect");
-        connect.setOnAction(e -> {
-            //TODO set up connection
-        });
-        MenuItem disconnect = new MenuItem("Disconnect");
-        disconnect.setOnAction(e -> {
-            client.stopGraphic();
-        });
-        connectionMenu.getItems().addAll(connect, disconnect);
-        menuBar.getMenus().add(connectionMenu);*/
-
         window.setOnCloseRequest(e -> {
             e.consume();
             closeProgram();
         });
 
         layout.setTop(menuBar);
-        FileTreePane localFiles = new FileTreePane("Local Files", client.getLocalFileSet());
-        layout.setLeft(localFiles.getPane());
+
+        draw(primaryStage, layout);
+
+        Scene scene = new Scene(layout, 1600, 900);
+        window.setScene(scene);
+        window.show();
+    }
+
+    private void closeProgram() {
+        Boolean answer = ConfirmBox.display("Exit", "Are you sure you want to exit?");
+        if (answer) {
+            if (client != null) {
+                client.stopGraphic();
+            }
+            window.close();
+        }
+    }
+
+    private void draw(Stage primaryStage, BorderPane layout){
+        Label selectedFile = new Label();
+
+        HBox filePane = new HBox();
+        FileTreePane localFiles = new FileTreePane("Local Files", client.getLocalFileSet(), selectedFile);
         HashSet<String> downloadedFiles = new HashSet<>();
-        FileTreePane requestedFiles = new FileTreePane("Downloaded files", downloadedFiles);
-        layout.setCenter(requestedFiles.getPane());
+        FileTreePane requestedFiles = new FileTreePane("Downloaded files", downloadedFiles, selectedFile);
         HashSet<String> replicatedFilesSet = new HashSet<>();
         FileTreePane replicatedFiles = new FileTreePane("Replicated files", replicatedFilesSet);
-        layout.setRight(replicatedFiles.getPane());
+        filePane.getChildren().addAll(localFiles.getPane(), requestedFiles.getPane(), replicatedFiles.getPane());
 
-        //TODO File request buttons and other stuff
-        BorderPane buttonPane = new BorderPane();
+        layout.setCenter(filePane);
+
+        FlowPane buttonPane = new FlowPane();
         Button addFileButton = new Button("Add local file");
         addFileButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
@@ -93,13 +102,12 @@ public class ClientUI extends Application {
                 File dest = new File(client.getLocalDir() + source.getName());
                 try {
                     Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    draw(primaryStage, layout);
                 } catch (IOException exc) {
                     exc.printStackTrace();
                 }
             }
         });
-        buttonPane.setLeft(addFileButton);
-        BorderPane requestBox = new BorderPane();
         TextField fileNameField = new TextField();
         fileNameField.setOnKeyPressed(ke -> {
             if (ke.getCode().equals(KeyCode.ENTER)) {
@@ -119,21 +127,12 @@ public class ClientUI extends Application {
         });
         Label requestFile = new Label();
         requestFile.setText("Request file: ");
-        requestBox.setLeft(requestFile);
-        requestBox.setRight(fileNameField);
-        buttonPane.setCenter(requestBox);
+        Button deleteButton = new Button("Delete file");
+        deleteButton.setOnAction(e->{
+            //TODO delete file
+            draw(primaryStage, layout);
+        });
+        buttonPane.getChildren().addAll(addFileButton, requestFile, fileNameField, selectedFile, deleteButton);
         layout.setBottom(buttonPane);
-
-        Scene scene = new Scene(layout, 1600, 900);
-        window.setScene(scene);
-        window.show();
-    }
-
-    private void closeProgram() {
-        Boolean answer = ConfirmBox.display("Exit", "Are you sure you want to exit?");
-        if (answer) {
-            client.stopGraphic();
-            window.close();
-        }
     }
 }
