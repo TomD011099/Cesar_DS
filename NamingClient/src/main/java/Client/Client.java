@@ -31,6 +31,7 @@ public class Client {
     private final String localDir;              //The directory from where we'll replicate the files    [absolute path]
     private final String requestDir;            //The 'Download' directory                              [absolute path]
     private final HashSet<String> localFileSet; //A set of all local files
+    private ArrayList<ArrayList<String>> filesInSystem; // All the files in the system Y
 
     /**
      * Get the replica directory

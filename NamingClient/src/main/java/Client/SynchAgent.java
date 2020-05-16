@@ -16,10 +16,12 @@ public class SynchAgent implements Runnable, Serializable {
     private ArrayList<ArrayList<String>> list;
     private Client client;
 
-    SynchAgent(String replicaDir) {
+    SynchAgent(String replicaDir, Client client) {
         list = new ArrayList<>();
         this.replicaDir = replicaDir;
         this.replicaPath = Paths.get(replicaDir);
+
+        // Get all the files in remote directory at startup
         updateFiles();
     }
 
@@ -31,12 +33,13 @@ public class SynchAgent implements Runnable, Serializable {
                 // TODO update the client's list
             }
 
+            // Delay 5 seconds
             try {
-                // Delay 5 seconds
                 TimeUnit.SECONDS.sleep(5);
             } catch (InterruptedException e) {
                 e.getMessage();
             }
+            System.out.println("Test delay");
         }
     }
 
@@ -64,19 +67,15 @@ public class SynchAgent implements Runnable, Serializable {
                     Path path = (Path) event.context();
 
                     ArrayList<String> subList = new ArrayList<>();
-                    if(eventName.contains("ENTRY_CREATE")) {
+                    if (eventName.contains("ENTRY_CREATE")) {
                         subList.add(path.toString());              // Add the name
                         subList.add("false");                      // Add lock or not
                         list.add(subList);                         // Add file to the list
-                        System.out.println("File created");
-                        System.out.println(list);
                         return true;
                     } else if (eventName.contains("ENTRY_DELETE")) {
                         subList.add(path.toString());              // Add the name
                         subList.add("false");                      // Add lock or not
                         list.remove(subList);                      // Remove the object from the list
-                        System.out.println("File deleted");
-                        System.out.println(list);
                         return true;
                     }
                 }
