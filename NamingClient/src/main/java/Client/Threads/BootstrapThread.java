@@ -1,11 +1,11 @@
 package Client.Threads;
 
 import Client.Client;
+import Client.Util.Ports;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -19,9 +19,9 @@ public class BootstrapThread extends Thread {
         this.client = client;
         this.concernsNext = concernsNext;
         if (this.concernsNext)
-            serverSocket = new ServerSocket(56789);
+            serverSocket = new ServerSocket(Ports.bootstrapNextPort);
         else
-            serverSocket = new ServerSocket(11111);
+            serverSocket = new ServerSocket(Ports.bootstrapPrevPort);
     }
 
     @Override
@@ -39,6 +39,7 @@ public class BootstrapThread extends Thread {
 
             bufferedReader.close();
             socket.close();
+            serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

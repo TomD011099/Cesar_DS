@@ -6,7 +6,6 @@ import java.nio.file.*;
 import java.util.*;
 
 public class UpdateThread extends Thread {
-
     private Path localPath;
     private Client client;
 

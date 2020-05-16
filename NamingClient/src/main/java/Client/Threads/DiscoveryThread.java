@@ -1,6 +1,7 @@
 package Client.Threads;
 
 import Client.Client;
+import Client.Util.Ports;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,12 +10,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class DiscoveryThread extends Thread {
-
     private Client client;
     private ServerSocket serverSocket;
 
     public DiscoveryThread(Client client) throws IOException {
-        serverSocket = new ServerSocket(54321);
+        serverSocket = new ServerSocket(Ports.discoveryPort);
         this.client = client;
     }
 
@@ -27,6 +27,7 @@ public class DiscoveryThread extends Thread {
             client.discoveryResponse(Integer.parseInt(bufferedReader.readLine()), socket.getInetAddress());
             bufferedReader.close();
             socket.close();
+            serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

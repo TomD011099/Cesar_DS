@@ -1,6 +1,14 @@
 package Client;
 
 import Client.Threads.*;
+import Client.Threads.Multicast.MulticastPublisher;
+import Client.Threads.Multicast.MulticastReceiver;
+import Client.Threads.Replicate.ReplicateServer;
+import Client.Threads.Replicate.SendReplicateFileThread;
+import Client.Threads.Request.RequestFileThread;
+import Client.Threads.Request.RequestServer;
+import Client.Util.CesarString;
+import Client.Util.Ports;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -22,14 +30,18 @@ public class Client {
     private InetAddress prevNode;               //The ip address of the previous node
     private InetAddress nextNode;               //The ip address of the next node
     private InetAddress serverIp;               //The ip address of the server
-    private TCPControl tcpControl;              //The TCPController
+
+    private ReplicateServer replicateServer;    //The replicate serversocket
+    private RequestServer requestServer;        //The request serversocket
+    private TCPControl tcpControl;              //TCPControl
+
     private final int currentID;                //The ID of the node
     private int prevID;                         //The ID of the previous node
     private int nextID;                         //The ID of the next node
     private final String replicaDir;            //The directory where the replicated files are stored   [absolute path]
     private final String localDir;              //The directory from where we'll replicate the files    [absolute path]
     private final String requestDir;            //The 'Download' directory                              [absolute path]
-    private final HashSet<String> localFileSet; //A set of all local files
+    private HashSet<String> localFileSet;       //A set of all local files
 
     /**
      * Get the replica directory
@@ -91,11 +103,19 @@ public class Client {
             }
         }
 
-        //Initialize TCPControl
+        //Initialize serversockets
         try {
-            tcpControl = new TCPControl(12345, this);
-            Thread t1 = new Thread(tcpControl, "TCPControl");
-            t1.start();
+            replicateServer = new ReplicateServer(this);
+            Thread replicateServerThread = new Thread(replicateServer, "replicateServer");
+            replicateServerThread.start();
+
+            requestServer = new RequestServer(this);
+            Thread requestServerThread = new Thread(requestServer, "requestServer");
+            requestServerThread.start();
+
+            tcpControl = new TCPControl(this);
+            Thread tcpControlThread = new Thread(tcpControl, "TCPControl");
+            tcpControlThread.start();
         } catch (IOException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
@@ -137,7 +157,6 @@ public class Client {
     public void shutdown() {
         //Replication part of shutdown
 
-
         //Get all files in replicaDir
         File[] files = new File(replicaDir).listFiles();
 
@@ -159,7 +178,7 @@ public class Client {
                 String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
                 try {
                     InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName).substring(1));
-                    sendString(12345, fileName, replicaIP, "LocalShutdown");
+                    sendString(Ports.tcpControlPort, fileName, replicaIP, "LocalShutdown");
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                 }
@@ -246,7 +265,7 @@ public class Client {
             nextNode = ip;
             nextID = hash;
             // Send we are previous node
-            sendString(11111, name, ip);
+            sendString(Ports.bootstrapPrevPort, name, ip);
             System.out.println("We are previous node");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
@@ -254,7 +273,7 @@ public class Client {
             prevNode = ip;
             prevID = hash;
             // Send we are next node
-            sendString(56789, name, ip);
+            sendString(Ports.bootstrapNextPort, name, ip);
             System.out.println("We are next node");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
@@ -264,8 +283,8 @@ public class Client {
             nextNode = ip;
             prevID = hash;
             nextID = hash;
-            sendString(11111, name, ip);
-            sendString(56789, name, ip);
+            sendString(Ports.bootstrapPrevPort, name, ip);
+            sendString(Ports.bootstrapNextPort, name, ip);
             System.out.println("One friend");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
@@ -327,7 +346,6 @@ public class Client {
         }
     }
 
-    //TODO use REST
     private void updateNeighbor(boolean isDestNextNode) {
         try {
             String out;
@@ -340,25 +358,7 @@ public class Client {
                 destIp = prevNode;
             }
 
-            Socket socket = new Socket(destIp, 12345);
-
-            // Create a writer to write to the socket
-            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            writer.println("Update");
-
-            String ack = reader.readLine();
-            while (ack == null) {
-                ack = reader.readLine();
-            }
-
-            writer.println(out);
-            System.out.println("Data sent: " + out);
-
-            reader.close();
-            writer.close();
-            socket.close();
+            sendString(Ports.tcpControlPort, out, destIp, "Update");
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -367,7 +367,6 @@ public class Client {
     }
 
     public void localFileCreated(String filename) {
-
         System.out.println("Filename van ons: " + filename);
 
         // Check if the file itself is not a log file to avoid recursion
@@ -404,16 +403,7 @@ public class Client {
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
 
                 // Send unicast message to delete file
-                Socket socket = new Socket(location, 12345);
-
-                OutputStream out = socket.getOutputStream();
-                PrintWriter writer = new PrintWriter(out, true);
-                //writer.println("Delete_file");
-                //writer.println(filename);
-
-                socket.close();
-                writer.close();
-                out.close();
+                sendString(Ports.tcpControlPort, filename, location, "Delete_file");
 
             } catch (IOException e) {
                 System.err.println(e.getMessage());
@@ -425,21 +415,11 @@ public class Client {
     public void localFileModified(String filename) {
         // Send only the updated file and don't change the log-file
         try {
-            Socket socket = new Socket(serverIp, 12345);
-
             // Request the location where the file should be replicated
             InetAddress location = InetAddress.getByName(requestFileLocation(filename));
 
-            OutputStream out = socket.getOutputStream();
-            PrintWriter writer = new PrintWriter(out, true);
-
             // This will only delete the file on the replication node and not the log-file
-            //writer.println("Update_file");
-            //writer.println(filename);
-
-            socket.close();
-            writer.close();
-            out.close();
+            sendString(Ports.tcpControlPort, filename, serverIp, "Update_file");
 
             // Send the updated file
             Thread send = new SendReplicateFileThread(location, localDir, filename);
@@ -523,6 +503,8 @@ public class Client {
         }
         System.out.println("Shutdown");
         shutdown();
+        replicateServer.stop();
+        requestServer.stop();
         tcpControl.stop();
         multicastReceiver.stop();
         //TODO client doesn't stop
