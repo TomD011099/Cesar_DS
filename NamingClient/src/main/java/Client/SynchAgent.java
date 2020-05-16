@@ -29,20 +29,20 @@ public class SynchAgent implements Runnable, Serializable {
     @Override
     public void run() {
         while (true) {
+            System.out.println("Check");
+
             // Check if files are added to the remote directory
             checkForFileChanges();
 
             // Update our list in client based on the next nodes list
             client.updateList();
 
-            System.out.println("Check");
-
             // Delay 5 seconds
-            /*try {
+            try {
                 TimeUnit.SECONDS.sleep(5);
             } catch (InterruptedException e) {
                 e.getMessage();
-            }*/
+            }
         }
     }
 
@@ -75,11 +75,13 @@ public class SynchAgent implements Runnable, Serializable {
                         subList.add("false");                           // Add lock or not
                         list.add(subList);                              // Add file to the list
                         client.addFilesInSystem(subList);               // Add the file to the nodes list
+                        return;
                     } else if (eventName.contains("ENTRY_DELETE")) {
                         subList.add(path.toString());                   // Add the name
                         subList.add("false");                           // Add lock or not
                         list.remove(subList);                           // Remove the file from the list
                         client.removeFilesInSystem(subList);            // Remove the file from the nodes list
+                        return;
                     }
                 }
             //} while (watchKey.reset());
