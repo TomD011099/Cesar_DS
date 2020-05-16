@@ -60,7 +60,7 @@ public class SynchAgent implements Runnable, Serializable {
             keyMap.put(replicaPath.register(service, StandardWatchEventKinds.ENTRY_CREATE,
                     StandardWatchEventKinds.ENTRY_DELETE), replicaPath);
             WatchKey watchKey;
-            do {
+            //do {
                 watchKey = service.take();
 
                 for (WatchEvent<?> event : watchKey.pollEvents()) {
@@ -80,7 +80,7 @@ public class SynchAgent implements Runnable, Serializable {
                         client.removeFilesInSystem(subList);            // Remove the file from the nodes list
                     }
                 }
-            } while (watchKey.reset());
+            //} while (watchKey.reset());
         } catch (Exception e) {
             e.printStackTrace();
         }
