@@ -489,12 +489,12 @@ public class Client {
 
     public void addFilesInSystem(ArrayList<String> subList) {
         filesInSystem.add(subList);
-        System.out.println(subList);
+        System.out.println(filesInSystem);
     }
 
     public void removeFilesInSystem(ArrayList<String> subList) {
         filesInSystem.remove(subList);
-        System.out.println(subList);
+        System.out.println(filesInSystem);
     }
 
     public void run() throws UnknownHostException {
