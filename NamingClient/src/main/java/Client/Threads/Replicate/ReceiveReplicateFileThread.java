@@ -6,8 +6,8 @@ import java.net.Socket;
 import java.util.HashSet;
 
 public class ReceiveReplicateFileThread extends Thread {
-    private  Socket socket;
-    private  String dir;
+    private Socket socket;
+    private String dir;
     private HashSet<String> localFileSet;
     private InetAddress prevNode;
 

@@ -41,7 +41,7 @@ public class SendReplicateFileThread extends Thread {
             File file = new File(dir + fileName);
             byte[] bytes = new byte[(int) file.length()];
             BufferedInputStream fileInputStream = new BufferedInputStream(new FileInputStream(file));
-            fileInputStream.read(bytes, 0, bytes.length);
+            fileInputStream.read(bytes);
 
             // Let the client know how much bytes will be sent
             writer.println(bytes.length);

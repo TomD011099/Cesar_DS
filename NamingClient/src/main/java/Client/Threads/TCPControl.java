@@ -10,9 +10,9 @@ import java.net.*;
  * The main hub for all TCP communication between nodes
  */
 public class TCPControl implements Runnable {
-    private  ServerSocket serverSocket;    //A serversocket to receive the transmissions
-    private  Client client;                //The instance of client to invoke methods
-    private volatile boolean stop;              //A boolean to end the infinite loop
+    private ServerSocket serverSocket;    //A serversocket to receive the transmissions
+    private Client client;                //The instance of client to invoke methods
+    private volatile boolean stop;        //A boolean to end the infinite loop
 
     /**
      * The only constructor for TCPControl
