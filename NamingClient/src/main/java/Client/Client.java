@@ -101,6 +101,8 @@ public class Client {
             e.printStackTrace();
         }
 
+        filesInSystem = new ArrayList<>();
+
         SynchAgent synchAgent = new SynchAgent(this, replicaDir);
         Thread synchAgentThread = new Thread(synchAgent);
         synchAgentThread.start();
