@@ -24,6 +24,8 @@ public class Client {
     private InetAddress nextNode;               //The ip address of the next node
     private InetAddress serverIp;               //The ip address of the server
     private TCPControl tcpControl;              //The TCPController
+    private RestClient nextNodeREST;            // Communicate with next node via REST
+    private RestClient prevNodeREST;            // Communicate with prev node via REST
     private final int currentID;                //The ID of the node
     private int prevID;                         //The ID of the previous node
     private int nextID;                         //The ID of the next node
@@ -103,10 +105,6 @@ public class Client {
 
         filesInSystem = new ArrayList<>();
 
-        SynchAgent synchAgent = new SynchAgent(this, replicaDir);
-        Thread synchAgentThread = new Thread(synchAgent);
-        synchAgentThread.start();
-
         UpdateThread updateThread = new UpdateThread(this, localDir);
         updateThread.start();
     }
@@ -141,9 +139,6 @@ public class Client {
      * End the node correctly
      */
     public void shutdown() {
-
-        RestClient synchRest = new RestClient(nextNode.toString().substring(1));
-        System.out.println(synchRest.get("/synchList"));
 
         //Replication part of shutdown
 
@@ -285,10 +280,12 @@ public class Client {
 
     public void setPrevNode(InetAddress prevNode) {
         this.prevNode = prevNode;
+        prevNodeREST = new RestClient(prevNode.toString().substring(1));
     }
 
     public void setNextNode(InetAddress nextNode) {
         this.nextNode = nextNode;
+        nextNodeREST = new RestClient(nextNode.toString().substring(1));
     }
 
     public void setNext(String nodeName, InetAddress nextNode) {
@@ -489,19 +486,28 @@ public class Client {
 
     public void addFilesInSystem(ArrayList<String> subList) {
         filesInSystem.add(subList);
-        System.out.println(filesInSystem);
     }
 
     public void removeFilesInSystem(ArrayList<String> subList) {
         filesInSystem.remove(subList);
-        System.out.println(filesInSystem);
+    }
+
+    public void updateList() {
+       String listString = nextNodeREST.get("/fileList");
+       System.out.println("Name from nextNode (test sync): " + listString);
+    }
+
+    public String listToString() {
+        return name;
     }
 
     public void run() throws UnknownHostException {
         discovery();
 
-        // TODO start agent here
-        // SynchAgent synchAgent = new SynchAgent(name);
+        // Start the synchAgent
+        SynchAgent synchAgent = new SynchAgent(this, replicaDir);
+        Thread synchAgentThread = new Thread(synchAgent);
+        synchAgentThread.start();
 
         // Create a multicast receiver for client
         MulticastReceiver multicastReceiver = new MulticastReceiver(this);

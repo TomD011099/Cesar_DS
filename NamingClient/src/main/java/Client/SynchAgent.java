@@ -29,7 +29,11 @@ public class SynchAgent implements Runnable, Serializable {
     @Override
     public void run() {
         while (true) {
+            // Check if files are added to the remote directory
             checkForFileChanges();
+
+            // Update our list in client based on the next nodes list
+            client.updateList();
 
             // Delay 5 seconds
             try {
