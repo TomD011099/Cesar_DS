@@ -493,8 +493,8 @@ public class Client {
     }
 
     public void updateList() {
-       String listString = nextNodeREST.get("/fileList");
-       System.out.println("Name from nextNode (test sync): " + listString);
+        String listString = nextNodeREST.get("fileList");
+        System.out.println("Name from nextNode (test sync): " + listString);
     }
 
     public String listToString() {
