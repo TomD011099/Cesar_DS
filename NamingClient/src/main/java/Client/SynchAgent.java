@@ -35,12 +35,14 @@ public class SynchAgent implements Runnable, Serializable {
             // Update our list in client based on the next nodes list
             client.updateList();
 
+            System.out.println("Check");
+
             // Delay 5 seconds
-            try {
+            /*try {
                 TimeUnit.SECONDS.sleep(5);
             } catch (InterruptedException e) {
                 e.getMessage();
-            }
+            }*/
         }
     }
 
