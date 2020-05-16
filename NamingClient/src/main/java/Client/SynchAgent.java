@@ -67,13 +67,12 @@ public class SynchAgent implements Runnable, Serializable {
                         subList.add(path.toString());              // Add the name
                         subList.add("false");                      // Add lock or not
                         list.add(subList);                         // Add file to the list
-                        System.out.println(list);
+                        System.out.println("File created");
                         return true;
                     } else if (eventName.contains("ENTRY_DELETE")) {
                         subList.add(path.toString());              // Add the name
                         subList.add("false");                      // Add lock or not
                         list.remove(subList);                      // Remove the object from the list
-                        System.out.println(list);
                         return true;
                     }
                 }
