@@ -11,8 +11,12 @@ import java.net.UnknownHostException;
 @RestController
 public class AgentController implements CommandLineRunner {
 
+    /*
+        This makes sure that we can create a Client in AgentController with the arguments
+        passed from the CLI
+     */
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         main(args);
     }
 
@@ -27,15 +31,8 @@ public class AgentController implements CommandLineRunner {
         String ip = args[1];
         Client client;
 
-        System.out.println("Andere main runned");
-        System.out.println("Parameters zijn: " + name + "  " + ip);
-
         try {
             client = new Client("/home/pi/local/","/home/pi/remote/", "/home/pi/request/", name, ip);
-
-            /*SynchAgent synchAgent = new SynchAgent("/home/pi/remote/", client);
-            Thread synchAgentThread = new Thread(synchAgent);
-            synchAgentThread.start();*/
 
             client.run();
         } catch (UnknownHostException e) {

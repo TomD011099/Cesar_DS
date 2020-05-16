@@ -16,8 +16,9 @@ public class SynchAgent implements Runnable, Serializable {
     private ArrayList<ArrayList<String>> list;
     private Client client;
 
-    SynchAgent(String replicaDir, Client client) {
+    SynchAgent(Client client, String replicaDir) {
         list = new ArrayList<>();
+        this.client = client;
         this.replicaDir = replicaDir;
         this.replicaPath = Paths.get(replicaDir);
 
@@ -28,10 +29,7 @@ public class SynchAgent implements Runnable, Serializable {
     @Override
     public void run() {
         while (true) {
-            // Check in remote map if a file is added or deleted
-            if (checkForFileChanges()) {
-                // TODO update the client's list
-            }
+            checkForFileChanges();
 
             // Delay 5 seconds
             try {
@@ -39,7 +37,6 @@ public class SynchAgent implements Runnable, Serializable {
             } catch (InterruptedException e) {
                 e.getMessage();
             }
-            System.out.println("Test delay");
         }
     }
 
@@ -53,7 +50,7 @@ public class SynchAgent implements Runnable, Serializable {
         return string;
     }
 
-    private boolean checkForFileChanges() {
+    private void checkForFileChanges() {
         try (WatchService service = FileSystems.getDefault().newWatchService()) {
             Map<WatchKey, Path> keyMap = new HashMap<>();
             keyMap.put(replicaPath.register(service, StandardWatchEventKinds.ENTRY_CREATE,
@@ -68,23 +65,21 @@ public class SynchAgent implements Runnable, Serializable {
 
                     ArrayList<String> subList = new ArrayList<>();
                     if (eventName.contains("ENTRY_CREATE")) {
-                        subList.add(path.toString());              // Add the name
-                        subList.add("false");                      // Add lock or not
-                        list.add(subList);                         // Add file to the list
-                        return true;
+                        subList.add(path.toString());                   // Add the name
+                        subList.add("false");                           // Add lock or not
+                        list.add(subList);                              // Add file to the list
+                        client.addFilesInSystem(subList);               // Add the file to the nodes list
                     } else if (eventName.contains("ENTRY_DELETE")) {
-                        subList.add(path.toString());              // Add the name
-                        subList.add("false");                      // Add lock or not
-                        list.remove(subList);                      // Remove the object from the list
-                        return true;
+                        subList.add(path.toString());                   // Add the name
+                        subList.add("false");                           // Add lock or not
+                        list.remove(subList);                           // Remove the file from the list
+                        client.removeFilesInSystem(subList);            // Remove the file from the nodes list
                     }
                 }
-                return false;
             } while (watchKey.reset());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
     }
 
     private void updateFiles() {
@@ -93,9 +88,10 @@ public class SynchAgent implements Runnable, Serializable {
 
         for (File file : listOfFiles) {
             ArrayList<String> subList = new ArrayList<>();
-            subList.add(file.getName());              // Add the name
-            subList.add("false");                     // Add lock or not
-            list.add(subList);
+            subList.add(file.getName());                // Add the name
+            subList.add("false");                       // Add lock or not
+            list.add(subList);                          // Add file to the list
+            client.addFilesInSystem(subList);           // Add the file to the nodes list
         }
     }
 }

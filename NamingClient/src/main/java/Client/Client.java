@@ -101,6 +101,10 @@ public class Client {
             e.printStackTrace();
         }
 
+        SynchAgent synchAgent = new SynchAgent(this, replicaDir);
+        Thread synchAgentThread = new Thread(synchAgent);
+        synchAgentThread.start();
+
         UpdateThread updateThread = new UpdateThread(this, localDir);
         updateThread.start();
     }
@@ -479,6 +483,16 @@ public class Client {
                 }
             }
         }
+    }
+
+    public void addFilesInSystem(ArrayList<String> subList) {
+        filesInSystem.add(subList);
+        System.out.println(subList);
+    }
+
+    public void removeFilesInSystem(ArrayList<String> subList) {
+        filesInSystem.remove(subList);
+        System.out.println(subList);
     }
 
     public void run() throws UnknownHostException {

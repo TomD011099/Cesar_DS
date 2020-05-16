@@ -8,10 +8,7 @@ import java.net.UnknownHostException;
 public class Main {
 
     public static void main(String[] args) {
-
         // Start REST application
         SpringApplication.run(Main.class, args);
-
-        System.out.println("Gewone main runned");
     }
 }
