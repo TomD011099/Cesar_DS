@@ -25,18 +25,19 @@ public class SynchAgent implements Runnable, Serializable {
 
     @Override
     public void run() {
-        // Check in remote map if a file is added or deleted
-        if (checkForFileChanges()) {
-            // TODO update the client's list
-        }
+        while (true) {
+            // Check in remote map if a file is added or deleted
+            if (checkForFileChanges()) {
+                // TODO update the client's list
+            }
 
-        try {
-            // Delay 5 seconds
-            TimeUnit.SECONDS.sleep(5);
-        } catch (InterruptedException e) {
-            e.getMessage();
+            try {
+                // Delay 5 seconds
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.getMessage();
+            }
         }
-
     }
 
     public String getListOfFilesToString() {
@@ -76,7 +77,7 @@ public class SynchAgent implements Runnable, Serializable {
                         return true;
                     }
                 }
-
+                return false;
             } while (watchKey.reset());
         } catch (Exception e) {
             e.printStackTrace();

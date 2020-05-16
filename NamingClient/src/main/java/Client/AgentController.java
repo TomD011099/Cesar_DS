@@ -11,7 +11,6 @@ public class AgentController {
     AgentController() {
         Thread synchAgentThread = new Thread(synchAgent);
         synchAgentThread.start();
-        System.out.println("AgentController maakt dink");
     }
 
     @GetMapping("/synchList")
