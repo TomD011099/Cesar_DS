@@ -271,6 +271,8 @@ public class Client {
             System.out.println("My prevNode: " + prevNode);
         }
 
+        System.out.println("Multicast next neighbour: " + nextNode);
+        System.out.println("Multicast prev neighbour: " + prevNode);
         prevNodeRest.setRestIp(prevNode.toString().substring(1));
         nextNodeRest.setRestIp(nextNode.toString().substring(1));
     }
