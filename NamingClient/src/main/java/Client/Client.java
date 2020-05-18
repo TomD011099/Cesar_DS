@@ -179,8 +179,7 @@ public class Client {
                 String fileName = file.getName();
                 try {
                     InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName));
-                    System.out.println("Shutdwon ip: " + replicaIP);
-                    sendString(Ports.tcpControlPort, fileName, replicaIP, "LocalShutdown");
+                    sendString(Ports.tcpControlPort, fileName, replicaIP, "localShutdown");
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                 }
@@ -337,7 +336,6 @@ public class Client {
                 try {
                     String fileName = file.getName();
                     InetAddress location = InetAddress.getByName(requestFileLocation(fileName).replaceAll("/", ""));
-                    System.out.println("location: " + location);
                     Thread send = new SendReplicateFileThread(location, localDir, fileName);
                     send.start();
                 } catch (UnknownHostException e) {
