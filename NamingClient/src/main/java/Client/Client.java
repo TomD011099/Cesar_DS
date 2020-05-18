@@ -521,9 +521,9 @@ public class Client {
         discovery();
 
         // Start the synchAgent
-        SynchAgent synchAgent = new SynchAgent(this, replicaDir);
+        /**SynchAgent synchAgent = new SynchAgent(this, replicaDir);
         Thread synchAgentThread = new Thread(synchAgent);
-        synchAgentThread.start();
+        synchAgentThread.start();**/
 
         // Create a multicast receiver for client
         MulticastReceiver multicastReceiver = new MulticastReceiver(this);
