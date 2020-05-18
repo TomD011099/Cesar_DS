@@ -7,6 +7,7 @@ import Client.Threads.Replicate.ReplicateServer;
 import Client.Threads.Replicate.SendReplicateFileThread;
 import Client.Threads.Request.RequestFileThread;
 import Client.Threads.Request.RequestServer;
+import Client.Threads.TCPControl.TCPControlServer;
 import Client.Util.CesarString;
 import Client.Util.Ports;
 
@@ -33,7 +34,7 @@ public class Client {
 
     private ReplicateServer replicateServer;    //The replicate serversocket
     private RequestServer requestServer;        //The request serversocket
-    private TCPControl tcpControl;              //TCPControl
+    private TCPControlServer tcpControl;        //TCPControl
 
     private final int currentID;                //The ID of the node
     private int prevID;                         //The ID of the previous node
@@ -98,7 +99,7 @@ public class Client {
         File[] files = new File(localDir).listFiles();
         if (files != null) {
             for (File file : files) {
-                String tempName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
+                String tempName = file.getName();
                 localFileSet.add(tempName);
             }
         }
@@ -113,9 +114,9 @@ public class Client {
             Thread requestServerThread = new Thread(requestServer, "requestServer");
             requestServerThread.start();
 
-            tcpControl = new TCPControl(this);
-            Thread tcpControlThread = new Thread(tcpControl, "TCPControl");
-            tcpControlThread.start();
+            tcpControl = new TCPControlServer(this);
+            Thread tcpControlServerThread = new Thread(tcpControl, "TCPControl");
+            tcpControlServerThread.start();
         } catch (IOException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
@@ -163,7 +164,7 @@ public class Client {
         //Send each file to the previous node
         if (files != null) {
             for (File file : files) {
-                String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
+                String fileName = file.getName();
                 Thread sendReplicateThread = new SendReplicateFileThread(prevNode, replicaDir, fileName);
                 sendReplicateThread.start();
             }
@@ -175,7 +176,7 @@ public class Client {
         //Let each node that has one of your local files
         if (localFiles != null) {
             for (File file : localFiles) {
-                String fileName = file.getAbsolutePath().replace('\\', '/').replaceAll(localDir, "");
+                String fileName = file.getName();
                 try {
                     InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName).substring(1));
                     sendString(Ports.tcpControlPort, fileName, replicaIP, "LocalShutdown");
@@ -333,8 +334,7 @@ public class Client {
         if (files != null) {
             for (File file : files) {
                 try {
-                    String fileName = file.getAbsolutePath();
-                    fileName = fileName.replace('\\', '/').replaceAll(localDir, "");
+                    String fileName = file.getName();
                     InetAddress location = InetAddress.getByName(requestFileLocation(fileName).replaceAll("/", ""));
                     System.out.println("location: " + location);
                     Thread send = new SendReplicateFileThread(location, localDir, fileName);
@@ -448,7 +448,7 @@ public class Client {
 
         if (files != null) {
             for (File file : files) {
-                String tempName = file.getAbsolutePath().replace('\\', '/').replaceAll(replicaDir, "");
+                String tempName = file.getName();
                 if (tempName.contains("log_" + fileName)) {
                     try {
                         BufferedReader br = new BufferedReader(new FileReader(file));
