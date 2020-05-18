@@ -44,9 +44,4 @@ public class AgentController implements CommandLineRunner {
     public String getSynchList() {
         return client.listToString();
     }
-
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello World!";
-    }
 }

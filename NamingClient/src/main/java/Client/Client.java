@@ -137,10 +137,6 @@ public class Client {
      * End the node correctly
      */
     public void shutdown() {
-
-        RestClient nextNodeREST = new RestClient(nextNode.toString().substring(1));
-        System.out.println(nextNodeREST.get("hello"));
-
         //Replication part of shutdown
 
 
@@ -492,8 +488,9 @@ public class Client {
     }
 
     public void updateList() {
-        //String listString = nextNodeREST.get("fileList");
-        //System.out.println("Name from nextNode (test sync): " + listString);
+        RestClient nextNodeREST = new RestClient(nextNode.toString().substring(1));
+        String listString = nextNodeREST.get("fileList");
+        System.out.println(listString);
     }
 
     public String listToString() {

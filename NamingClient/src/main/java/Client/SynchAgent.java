@@ -29,13 +29,11 @@ public class SynchAgent implements Runnable, Serializable {
     @Override
     public void run() {
         while (true) {
-            System.out.println("Check");
-
             // Check if files are added to the remote directory
-            checkForFileChanges();
+            //checkForFileChanges();
 
             // Update our list in client based on the next nodes list
-            //client.updateList();
+            client.updateList();
 
             // Delay 5 seconds
             try {
@@ -57,7 +55,7 @@ public class SynchAgent implements Runnable, Serializable {
     }
 
     private void checkForFileChanges() {
-        /*try (WatchService service = FileSystems.getDefault().newWatchService()) {
+        try (WatchService service = FileSystems.getDefault().newWatchService()) {
             Map<WatchKey, Path> keyMap = new HashMap<>();
             keyMap.put(replicaPath.register(service, StandardWatchEventKinds.ENTRY_CREATE,
                     StandardWatchEventKinds.ENTRY_DELETE), replicaPath);
@@ -87,7 +85,7 @@ public class SynchAgent implements Runnable, Serializable {
             //} while (watchKey.reset());
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     private void updateFiles() {
