@@ -179,6 +179,7 @@ public class Client {
                 String fileName = file.getName();
                 try {
                     InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName).substring(1));
+                    System.out.println("Shutdwon ip: " + replicaIP);
                     sendString(Ports.tcpControlPort, fileName, replicaIP, "LocalShutdown");
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
