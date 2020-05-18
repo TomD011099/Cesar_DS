@@ -24,8 +24,6 @@ public class Client {
     private InetAddress nextNode;               //The ip address of the next node
     private InetAddress serverIp;               //The ip address of the server
     private TCPControl tcpControl;              //The TCPController
-    private RestClient nextNodeREST;            // Communicate with next node via REST
-    private RestClient prevNodeREST;            // Communicate with prev node via REST
     private final int currentID;                //The ID of the node
     private int prevID;                         //The ID of the previous node
     private int nextID;                         //The ID of the next node
@@ -140,7 +138,7 @@ public class Client {
      */
     public void shutdown() {
 
-
+        RestClient nextNodeREST = new RestClient(nextNode.toString().substring(1));
         System.out.println(nextNodeREST.get("hello"));
 
         //Replication part of shutdown
@@ -283,12 +281,10 @@ public class Client {
 
     public void setPrevNode(InetAddress prevNode) {
         this.prevNode = prevNode;
-        prevNodeREST = new RestClient(prevNode.toString().substring(1));
     }
 
     public void setNextNode(InetAddress nextNode) {
         this.nextNode = nextNode;
-        nextNodeREST = new RestClient(nextNode.toString().substring(1));
     }
 
     public void setNext(String nodeName, InetAddress nextNode) {
@@ -496,8 +492,8 @@ public class Client {
     }
 
     public void updateList() {
-        String listString = nextNodeREST.get("fileList");
-        System.out.println("Name from nextNode (test sync): " + listString);
+        //String listString = nextNodeREST.get("fileList");
+        //System.out.println("Name from nextNode (test sync): " + listString);
     }
 
     public String listToString() {
