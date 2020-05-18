@@ -271,7 +271,6 @@ public class Client {
             System.out.println("My prevNode: " + prevNode);
         }
 
-        System.out.println("multicast: " + prevNode.toString().substring(1));
         prevNodeRest.setRestIp(prevNode.toString().substring(1));
         nextNodeRest.setRestIp(nextNode.toString().substring(1));
     }

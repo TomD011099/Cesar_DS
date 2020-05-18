@@ -26,6 +26,7 @@ public class RestClient {
     }
 
     public void setRestIp(String ip) {
+        System.out.println("Ip: " + ip);
         this.server = "http://" + ip + ":8080";
     }
 
