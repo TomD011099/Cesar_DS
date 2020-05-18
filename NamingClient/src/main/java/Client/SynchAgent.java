@@ -33,7 +33,7 @@ public class SynchAgent implements Runnable, Serializable {
             //checkForFileChanges();
 
             // Update our list in client based on the next nodes list
-            client.updateList();
+            //client.updateList();
 
             // Delay 5 seconds
             try {
