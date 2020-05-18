@@ -140,6 +140,9 @@ public class Client {
      */
     public void shutdown() {
 
+
+        System.out.println(nextNodeREST.get("hello"));
+
         //Replication part of shutdown
 
 
