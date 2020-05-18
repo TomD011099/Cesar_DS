@@ -29,6 +29,7 @@ public class UpdateThread extends Thread {
                     String eventName = event.kind().name();
                     Path path = (Path) event.context();
 
+
                     switch (eventName) {
                         case "ENTRY_CREATE":
                             client.localFileCreated(path.toString());

@@ -27,6 +27,9 @@ public class SendReplicateFileThread extends Thread {
     @Override
     public void run() {
         try {
+            System.out.println(Thread.currentThread().getName() + " - Sending file...");
+            System.out.println(Thread.currentThread().getName() + " - " + fileName);
+
             // Create a socket to communicate
             Socket socket = new Socket(dest, Ports.replicatePort);
 
