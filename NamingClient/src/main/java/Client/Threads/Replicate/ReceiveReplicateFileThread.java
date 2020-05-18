@@ -21,6 +21,8 @@ public class ReceiveReplicateFileThread extends Thread {
     @Override
     public void run() {
         try {
+            System.out.println(Thread.currentThread().getName() + " - Receiving file...");
+
             // Get the in- and outputstreams from the socket
             InputStream in = socket.getInputStream();
 
@@ -28,6 +30,7 @@ public class ReceiveReplicateFileThread extends Thread {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
             String fileName = reader.readLine();
+            System.out.println(Thread.currentThread().getName() + " - " + fileName);
             File file = new File(dir + fileName);
             file.createNewFile();
 
@@ -39,15 +42,15 @@ public class ReceiveReplicateFileThread extends Thread {
             int count;
             while ((count = in.read(buf)) > 0) {
                 fileOut.write(buf, 0, count);
+                System.out.println(hex(buf));
             }
 
-            /*
             if (localFileSet.contains(fileName) || (fileName.startsWith("log_") && localFileSet.contains(fileName.substring(4, fileName.length() - 8)))) {
                 Thread sendReplicateFileThread = new SendReplicateFileThread(prevNode, dir, fileName);
                 sendReplicateFileThread.start();
-                File file = new File(dir + fileName);
-                file.delete();
-            }*/
+                File f = new File(dir + fileName);
+                f.delete();
+            }
 
             reader.close();
             fileOut.close();
@@ -64,7 +67,7 @@ public class ReceiveReplicateFileThread extends Thread {
         StringBuilder out = new StringBuilder(bytes.length * 2);
 
         for (byte b : bytes) {
-            out.append(String.format("0x%02X ", b));
+            out.append((char) b).append(String.format(" 0x%02X\n", b));
         }
 
         return out.toString();

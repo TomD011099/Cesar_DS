@@ -336,6 +336,7 @@ public class Client {
                 try {
                     String fileName = file.getName();
                     InetAddress location = InetAddress.getByName(requestFileLocation(fileName).replaceAll("/", ""));
+                    System.out.println("Replication destination of " + fileName + ": " + location);
                     Thread send = new SendReplicateFileThread(location, localDir, fileName);
                     send.start();
                 } catch (UnknownHostException e) {
@@ -369,7 +370,7 @@ public class Client {
         System.out.println("Filename van ons: " + filename);
 
         // Check if the file itself is not a log file to avoid recursion
-        if (!filename.startsWith("log_")) {
+        if (!filename.startsWith("log_") && !filename.contains(".swp")) {
             try {
                 localFileSet.add(filename);
 
@@ -394,7 +395,7 @@ public class Client {
 
     public void localFileDeleted(String filename) {
         // Check if the file itself is not a log file to avoid recursion
-        if (!filename.startsWith("log_")) {
+        if (!filename.startsWith("log_") && !filename.contains(".swp")) {
             try {
                 localFileSet.remove(filename);
 

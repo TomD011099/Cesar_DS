@@ -5,7 +5,6 @@ import Client.Util.Ports;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Arrays;
 
 public class SendReplicateFileThread extends Thread {
     private InetAddress dest;
@@ -46,6 +45,7 @@ public class SendReplicateFileThread extends Thread {
             int count;
             while ((count = fileInputStream.read(buf)) > 0) {
                 out.write(buf, 0, count);
+                System.out.println(hex(buf));
             }
 
             writer.close();
@@ -63,7 +63,7 @@ public class SendReplicateFileThread extends Thread {
         StringBuilder out = new StringBuilder(bytes.length * 2);
 
         for (byte b : bytes) {
-            out.append(String.format("0x%02X ", b));
+            out.append((char) b).append(String.format(" 0x%02X\n", b));
         }
 
         return out.toString();
