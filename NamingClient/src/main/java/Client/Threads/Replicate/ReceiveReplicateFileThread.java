@@ -42,7 +42,7 @@ public class ReceiveReplicateFileThread extends Thread {
             int count;
             while ((count = in.read(buf)) > 0) {
                 fileOut.write(buf, 0, count);
-                System.out.println(hex(buf));
+                System.out.println("Receive:\n" + hex(buf));
             }
 
             if (localFileSet.contains(fileName) || (fileName.startsWith("log_") && localFileSet.contains(fileName.substring(4, fileName.length() - 8)))) {
@@ -67,7 +67,8 @@ public class ReceiveReplicateFileThread extends Thread {
         StringBuilder out = new StringBuilder(bytes.length * 2);
 
         for (byte b : bytes) {
-            out.append((char) b).append(String.format(" 0x%02X\n", b));
+            if (b != 0x0)
+                out.append((char) b).append(String.format(" 0x%02X\n", b));
         }
 
         return out.toString();

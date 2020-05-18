@@ -45,7 +45,7 @@ public class SendReplicateFileThread extends Thread {
             int count;
             while ((count = fileInputStream.read(buf)) > 0) {
                 out.write(buf, 0, count);
-                System.out.println(hex(buf));
+                System.out.println("Send:\n" + hex(buf));
             }
 
             writer.close();
@@ -63,7 +63,8 @@ public class SendReplicateFileThread extends Thread {
         StringBuilder out = new StringBuilder(bytes.length * 2);
 
         for (byte b : bytes) {
-            out.append((char) b).append(String.format(" 0x%02X\n", b));
+            if (b != 0x0)
+                out.append((char) b).append(String.format(" 0x%02X\n", b));
         }
 
         return out.toString();
