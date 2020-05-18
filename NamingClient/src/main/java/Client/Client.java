@@ -414,20 +414,22 @@ public class Client {
 
     public void localFileModified(String filename) {
         // Send only the updated file and don't change the log-file
-        try {
-            // Request the location where the file should be replicated
-            InetAddress location = InetAddress.getByName(requestFileLocation(filename));
+        if (!filename.startsWith("log_") && !filename.contains(".swp")) {
+            try {
+                // Request the location where the file should be replicated
+                InetAddress location = InetAddress.getByName(requestFileLocation(filename));
 
-            // This will only delete the file on the replication node and not the log-file
-            sendString(Ports.tcpControlPort, filename, serverIp, "Update_file");
+                // This will only delete the file on the replication node and not the log-file
+                sendString(Ports.tcpControlPort, filename, serverIp, "Update_file");
 
-            // Send the updated file
-            Thread send = new SendReplicateFileThread(location, localDir, filename);
-            send.start();
+                // Send the updated file
+                Thread send = new SendReplicateFileThread(location, localDir, filename);
+                send.start();
 
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
