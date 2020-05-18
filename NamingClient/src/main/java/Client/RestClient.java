@@ -25,11 +25,6 @@ public class RestClient {
         headers.add("Accept","*/*");
     }
 
-    public void setRestIp(String ip) {
-        System.out.println("Ip: " + ip);
-        this.server = "http://" + ip + ":8080";
-    }
-
     public String get(String uri) {
         HttpEntity<String> requestEntity = new HttpEntity<String>("", headers);
         ResponseEntity<String> responseEntity = rest.exchange(server + uri, HttpMethod.GET, requestEntity, String.class);

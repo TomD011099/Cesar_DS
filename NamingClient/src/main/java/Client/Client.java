@@ -271,8 +271,8 @@ public class Client {
             System.out.println("My prevNode: " + prevNode);
         }
 
-        prevNodeRest.setRestIp(prevNode.toString().substring(1));
-        nextNodeRest.setRestIp(nextNode.toString().substring(1));
+        // Make new rest objects to communicate with new neighbour
+        makeNewRestClients();
     }
 
     public String requestFileLocation(String filename) {
@@ -282,14 +282,20 @@ public class Client {
 
     public void setPrevNode(InetAddress prevNode) {
         this.prevNode = prevNode;
-        prevNodeRest.setRestIp(this.prevNode.toString().substring(1));
-        nextNodeRest.setRestIp(this.nextNode.toString().substring(1));
+        makeNewRestClients();
     }
 
     public void setNextNode(InetAddress nextNode) {
         this.nextNode = nextNode;
-        prevNodeRest.setRestIp(this.prevNode.toString().substring(1));
-        nextNodeRest.setRestIp(this.nextNode.toString().substring(1));
+        makeNewRestClients();
+    }
+
+    // Make new rest objects to communicate with new neighbour
+    private void makeNewRestClients() {
+        prevNodeRest = null;
+        nextNodeRest = null;
+        prevNodeRest = new RestClient(this.prevNode.toString().substring(1));
+        nextNodeRest = new RestClient(this.nextNode.toString().substring(1));
     }
 
     public void setNext(String nodeName, InetAddress nextNode) {
