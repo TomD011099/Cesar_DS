@@ -488,10 +488,9 @@ public class Client {
     }
 
     public void updateList() {
-        System.out.println("rest ip: " + nextNode);
-        RestClient nextNodeREST = new RestClient(nextNode.toString().substring(1));
-        String listString = nextNodeREST.get("fileList");
-        System.out.println(listString);
+        //RestClient nextNodeREST = new RestClient(nextNode.toString().substring(1));
+        //String listString = nextNodeREST.get("fileList");
+        //System.out.println(listString);
     }
 
     public String listToString() {
@@ -502,6 +501,7 @@ public class Client {
         discovery();
 
         // Start the synchAgent
+        System.out.println("rest ip: " + nextNode);
         SynchAgent synchAgent = new SynchAgent(this, replicaDir);
         Thread synchAgentThread = new Thread(synchAgent);
         synchAgentThread.start();
