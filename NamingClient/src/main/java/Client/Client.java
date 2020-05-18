@@ -268,6 +268,7 @@ public class Client {
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
         }
+        System.out.println("rest nextNode mult: " + nextNode);
     }
 
     public String requestFileLocation(String filename) {
@@ -277,10 +278,12 @@ public class Client {
 
     public void setPrevNode(InetAddress prevNode) {
         this.prevNode = prevNode;
+        System.out.println("rest previp: " + this.prevNode);
     }
 
     public void setNextNode(InetAddress nextNode) {
         this.nextNode = nextNode;
+        System.out.println("rest nextip: " + this.nextNode);
     }
 
     public void setNext(String nodeName, InetAddress nextNode) {
@@ -501,7 +504,6 @@ public class Client {
         discovery();
 
         // Start the synchAgent
-        System.out.println("rest ip: " + nextNode);
         SynchAgent synchAgent = new SynchAgent(this, replicaDir);
         Thread synchAgentThread = new Thread(synchAgent);
         synchAgentThread.start();
