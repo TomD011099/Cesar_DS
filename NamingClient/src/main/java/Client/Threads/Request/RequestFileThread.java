@@ -6,10 +6,10 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
-public class RequestFileThread extends Thread{
-    private  InetAddress dest;
-    private  String fileName;
-    private  String dir;
+public class RequestFileThread extends Thread {
+    private InetAddress dest;
+    private String fileName;
+    private String dir;
 
     public RequestFileThread(InetAddress dest, String fileName, String dir) {
         this.dest = dest;
@@ -25,39 +25,28 @@ public class RequestFileThread extends Thread{
 
             // Get the in- and outputstreams from the socket
             InputStream in = socket.getInputStream();
-            OutputStream out = socket.getOutputStream();
 
             // Create a reader to read from the socket
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            PrintWriter writer = new PrintWriter(out, true);
+            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
 
             //Send filename
             writer.println(fileName);
 
-            // Read the size of the requested file the server sent back and create a byte array of that size
-            int len = Integer.parseInt(reader.readLine());
-            byte[] bytes = new byte[len];
+            File file = new File(dir + fileName);
+            file.createNewFile();
 
-            int bytesRead;
-            int current = 0;
+            OutputStream fileOut = new FileOutputStream(file);
 
-            // Read the file from the socket
-            do {
-                bytesRead = in.read(bytes, current, (bytes.length - current));
-                current += bytesRead;
-            } while (bytesRead > 0 && current < len);
+            // Create a buffer
+            byte[] buf = new byte[4096];
 
-            // Create an outputstream to write files to the socket
-            BufferedOutputStream fileOutputStream = new BufferedOutputStream(new FileOutputStream(dir + fileName));
-
-            // Create the local file with the data of the downloaded file
-            fileOutputStream.write(bytes, 0, bytes.length);
-            fileOutputStream.flush();
+            int count;
+            while ((count = in.read(buf)) > 0) {
+                fileOut.write(buf, 0, count);
+            }
 
             writer.close();
-            reader.close();
-            fileOutputStream.close();
-            out.close();
+            fileOut.close();
             in.close();
             socket.close();
 

@@ -59,15 +59,15 @@ public class TCPControlThread extends Thread {
                         //A file has been deleted locally and has to be deleted on the remote
                         String filename = reader.readLine();
                         String logFilename = "log_" + filename + ".txt";
-                        File file = new File("./remote/" + filename);
-                        File logFile = new File("./remote/" + logFilename);
+                        File file = new File(client.getReplicaDir() + filename);
+                        File logFile = new File(client.getReplicaDir() + logFilename);
                         deleteFile(file);
                         deleteFile(logFile);
                         break;
                     case "Update_file":
                         //A file has been edited locally, delete that file to prepare for transmission of the new file
                         String updateFilename = reader.readLine();
-                        File updateFile = new File("./remote" + updateFilename);
+                        File updateFile = new File(client.getReplicaDir() + updateFilename);
                         deleteFile(updateFile);
                         break;
                     default:
