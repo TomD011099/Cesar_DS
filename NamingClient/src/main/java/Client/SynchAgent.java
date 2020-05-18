@@ -57,7 +57,7 @@ public class SynchAgent implements Runnable, Serializable {
     }
 
     private void checkForFileChanges() {
-        try (WatchService service = FileSystems.getDefault().newWatchService()) {
+        /*try (WatchService service = FileSystems.getDefault().newWatchService()) {
             Map<WatchKey, Path> keyMap = new HashMap<>();
             keyMap.put(replicaPath.register(service, StandardWatchEventKinds.ENTRY_CREATE,
                     StandardWatchEventKinds.ENTRY_DELETE), replicaPath);
@@ -87,7 +87,7 @@ public class SynchAgent implements Runnable, Serializable {
             //} while (watchKey.reset());
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     private void updateFiles() {
