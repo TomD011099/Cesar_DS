@@ -250,7 +250,6 @@ public class Client {
             System.out.println("We are previous node");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
-            nextNodeRest.setRestIp(nextNode.toString().substring(1));
         } else if (((prevID < hash) && (hash < currentID)) || ((currentID < prevID) && ((prevID < hash) || (hash < currentID)))) {
             prevNode = ip;
             prevID = hash;
@@ -259,7 +258,6 @@ public class Client {
             System.out.println("We are next node");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
-            prevNodeRest.setRestIp(prevNode.toString().substring(1));
         } else if (nextID == currentID && prevID == currentID) {
             // There are two nodes in the network
             prevNode = ip;
@@ -271,9 +269,11 @@ public class Client {
             System.out.println("One friend");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
-            prevNodeRest.setRestIp(prevNode.toString().substring(1));
-            nextNodeRest.setRestIp(nextNode.toString().substring(1));
         }
+
+        System.out.println("multicast: " + prevNode.toString().substring(1));
+        prevNodeRest.setRestIp(prevNode.toString().substring(1));
+        nextNodeRest.setRestIp(nextNode.toString().substring(1));
     }
 
     public String requestFileLocation(String filename) {
