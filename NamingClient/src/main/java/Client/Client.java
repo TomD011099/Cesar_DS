@@ -198,6 +198,7 @@ public class Client {
             System.out.println("We are the only node!");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
+            System.out.println("only node: " + nextNode);
         } else {
             System.out.println("I've more friends");
         }
