@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.*;
 
 /**
- * The main hub for all TCP communication between nodes
+ * The main hub for all small TCP communication between nodes
  */
 public class TCPControl implements Runnable {
     private ServerSocket serverSocket;    //A serversocket to receive the transmissions

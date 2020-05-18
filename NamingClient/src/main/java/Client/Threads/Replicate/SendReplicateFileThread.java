@@ -5,17 +5,18 @@ import Client.Util.Ports;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class SendReplicateFileThread extends Thread {
-    private  InetAddress dest;
-    private  String dir;
-    private  String fileName;
+    private InetAddress dest;
+    private String dir;
+    private String fileName;
 
     /**
      * Constructor
      *
-     * @param dest Ip of dest
-     * @param dir Directory to copy from
+     * @param dest     Ip of dest
+     * @param dir      Directory to copy from
      * @param fileName File to copy
      */
     public SendReplicateFileThread(InetAddress dest, String dir, String fileName) {
@@ -43,6 +44,8 @@ public class SendReplicateFileThread extends Thread {
             BufferedInputStream fileInputStream = new BufferedInputStream(new FileInputStream(file));
             fileInputStream.read(bytes);
 
+            System.out.println("Bytes to be sent: " + hex(bytes));
+
             // Let the client know how much bytes will be sent
             writer.println(bytes.length);
 
@@ -57,6 +60,17 @@ public class SendReplicateFileThread extends Thread {
 
         } catch (IOException e) {
             System.err.println(e.getMessage());
+            e.printStackTrace();
         }
+    }
+
+    private String hex(byte[] bytes) {
+        StringBuilder out = new StringBuilder(bytes.length * 2);
+
+        for (byte b : bytes) {
+            out.append(String.format("0x%02X ", b));
+        }
+
+        return out.toString();
     }
 }

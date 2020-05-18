@@ -42,6 +42,8 @@ public class ReceiveReplicateFileThread extends Thread {
                 current += bytesRead;
             } while (bytesRead > 0 && current < len);
 
+            System.out.println("Bytes received: " + hex(bytes));
+
             // Create an outputstream to write files to the socket
             BufferedOutputStream fileOutputStream = new BufferedOutputStream(new FileOutputStream(dir + fileName));
 
@@ -49,12 +51,13 @@ public class ReceiveReplicateFileThread extends Thread {
             fileOutputStream.write(bytes, 0, bytes.length);
             fileOutputStream.flush();
 
+            /*
             if (localFileSet.contains(fileName) || (fileName.startsWith("log_") && localFileSet.contains(fileName.substring(4, fileName.length() - 8)))) {
                 Thread sendReplicateFileThread = new SendReplicateFileThread(prevNode, dir, fileName);
                 sendReplicateFileThread.start();
                 File file = new File(dir + fileName);
                 file.delete();
-            }
+            }*/
 
             reader.close();
             fileOutputStream.close();
@@ -65,5 +68,15 @@ public class ReceiveReplicateFileThread extends Thread {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private String hex(byte[] bytes) {
+        StringBuilder out = new StringBuilder(bytes.length * 2);
+
+        for (byte b : bytes) {
+            out.append(String.format("0x%02X ", b));
+        }
+
+        return out.toString();
     }
 }
