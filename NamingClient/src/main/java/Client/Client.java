@@ -488,6 +488,7 @@ public class Client {
     }
 
     public void updateList() {
+        System.out.println("rest ip: " + nextNode.toString().substring(1));
         RestClient nextNodeREST = new RestClient(nextNode.toString().substring(1));
         String listString = nextNodeREST.get("fileList");
         System.out.println(listString);
