@@ -24,6 +24,8 @@ public class Client {
     private InetAddress nextNode;               //The ip address of the next node
     private InetAddress serverIp;               //The ip address of the server
     private TCPControl tcpControl;              //The TCPController
+    private RestClient nextNodeRest;
+    private RestClient prevNodeRest;
     private final int currentID;                //The ID of the node
     private int prevID;                         //The ID of the previous node
     private int nextID;                         //The ID of the next node
@@ -198,7 +200,6 @@ public class Client {
             System.out.println("We are the only node!");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
-            System.out.println("only node: " + nextNode);
         } else {
             System.out.println("I've more friends");
         }
@@ -269,7 +270,9 @@ public class Client {
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
         }
-        System.out.println("rest nextNode mult: " + nextNode);
+
+        prevNodeRest.setRestIp(prevNode.toString().substring(1));
+        nextNodeRest.setRestIp(nextNode.toString().substring(1));
     }
 
     public String requestFileLocation(String filename) {
@@ -279,17 +282,20 @@ public class Client {
 
     public void setPrevNode(InetAddress prevNode) {
         this.prevNode = prevNode;
-        System.out.println("rest previp: " + this.prevNode);
+        prevNodeRest.setRestIp(this.prevNode.toString().substring(1));
+        nextNodeRest.setRestIp(this.nextNode.toString().substring(1));
     }
 
     public void setNextNode(InetAddress nextNode) {
         this.nextNode = nextNode;
-        System.out.println("rest nextip: " + this.nextNode);
+        prevNodeRest.setRestIp(this.prevNode.toString().substring(1));
+        nextNodeRest.setRestIp(this.nextNode.toString().substring(1));
     }
 
     public void setNext(String nodeName, InetAddress nextNode) {
         nextID = new CesarString(nodeName).hashCode();
         this.nextNode = nextNode;
+        nextNodeRest = new RestClient(this.nextNode.toString().substring(1));
         System.out.println("setNext");
         System.out.println("prevNode: " + this.prevNode);
         System.out.println("nextNode: " + this.nextNode);
@@ -298,6 +304,7 @@ public class Client {
     public void setPrev(String nodeName, InetAddress prevNode) {
         prevID = new CesarString(nodeName).hashCode();
         this.prevNode = prevNode;
+        prevNodeRest = new RestClient(this.prevNode.toString().substring(1));
         System.out.println("setPrev");
         System.out.println("prevNode: " + this.prevNode);
         System.out.println("nextNode: " + this.nextNode);
@@ -492,9 +499,12 @@ public class Client {
     }
 
     public void updateList() {
-        //RestClient nextNodeREST = new RestClient(nextNode.toString().substring(1));
-        //String listString = nextNodeREST.get("fileList");
-        //System.out.println(listString);
+        if (nextNodeRest != null) {
+            String listString = nextNodeRest.get("fileList");
+            System.out.println(listString);
+        } else {
+            System.out.println("Rest node next is null");
+        }
     }
 
     public String listToString() {
