@@ -40,18 +40,13 @@ public class SendReplicateFileThread extends Thread {
 
             // Make an array of bytes and store the file in said array
             File file = new File(dir + fileName);
-            byte[] bytes = new byte[(int) file.length()];
-            BufferedInputStream fileInputStream = new BufferedInputStream(new FileInputStream(file));
-            fileInputStream.read(bytes);
+            byte[] buf = new byte[4096];
+            InputStream fileInputStream = new FileInputStream(file);
 
-            System.out.println("Bytes to be sent: " + hex(bytes));
-
-            // Let the client know how much bytes will be sent
-            writer.println(bytes.length);
-
-            // Send the bytes
-            out.write(bytes);
-            out.flush();
+            int count;
+            while ((count = fileInputStream.read(buf)) > 0) {
+                out.write(buf, 0, count);
+            }
 
             writer.close();
             fileInputStream.close();

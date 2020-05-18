@@ -28,28 +28,18 @@ public class ReceiveReplicateFileThread extends Thread {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
             String fileName = reader.readLine();
+            File file = new File(dir + fileName);
+            file.createNewFile();
 
-            // Read the size of the requested file the server sent back and create a byte array of that size
-            int len = Integer.parseInt(reader.readLine());
-            byte[] bytes = new byte[len];
+            OutputStream fileOut = new FileOutputStream(file);
 
-            int bytesRead;
-            int current = 0;
+            // Create a buffer
+            byte[] buf = new byte[4096];
 
-            // Read the file from the socket
-            do {
-                bytesRead = in.read(bytes, current, (bytes.length - current));
-                current += bytesRead;
-            } while (bytesRead > 0 && current < len);
-
-            System.out.println("Bytes received: " + hex(bytes));
-
-            // Create an outputstream to write files to the socket
-            BufferedOutputStream fileOutputStream = new BufferedOutputStream(new FileOutputStream(dir + fileName));
-
-            // Create the local file with the data of the downloaded file
-            fileOutputStream.write(bytes, 0, bytes.length);
-            fileOutputStream.flush();
+            int count;
+            while ((count = in.read(buf)) > 0) {
+                fileOut.write(buf, 0, count);
+            }
 
             /*
             if (localFileSet.contains(fileName) || (fileName.startsWith("log_") && localFileSet.contains(fileName.substring(4, fileName.length() - 8)))) {
@@ -60,7 +50,7 @@ public class ReceiveReplicateFileThread extends Thread {
             }*/
 
             reader.close();
-            fileOutputStream.close();
+            fileOut.close();
             in.close();
             socket.close();
 
