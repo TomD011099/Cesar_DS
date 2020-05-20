@@ -403,6 +403,8 @@ public class Client {
             System.out.println("Local file deleted: " + filename);
             try {
                 localFileSet.remove(filename);
+                File logFile = new File(getLocalDir() + "log_" + filename + ".txt");
+                logFile.delete();
 
                 // Request the location where the file is stored
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
