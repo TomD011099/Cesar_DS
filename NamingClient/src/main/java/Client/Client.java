@@ -1,14 +1,11 @@
 package Client;
 
 import Client.Threads.*;
-import Client.Threads.Multicast.MulticastPublisher;
-import Client.Threads.Multicast.MulticastReceiver;
-import Client.Threads.Replicate.ReplicateServer;
-import Client.Threads.Replicate.SendReplicateFileThread;
-import Client.Threads.Request.RequestFileThread;
-import Client.Threads.Request.RequestServer;
-import Client.Threads.TCPControl.TCPControlServer;
-import Client.Util.CesarString;
+import Client.Threads.Multicast.*;
+import Client.Threads.Replicate.*;
+import Client.Threads.Request.*;
+import Client.Threads.TCPControl.*;
+import Client.Util.*;
 import Client.Util.Ports;
 
 import java.io.*;
@@ -22,10 +19,11 @@ import java.nio.file.Paths;
 import java.util.*;
 
 /**
- * The main client class
+ * <h1>The main client class</h1>
+ * <p>Here, the bulk of the logic is handled, threads are created and files are sent and received</p>
  */
 public class Client {
-    private RestClient restClient;              //A RESTclient for REST communication
+    private RestClient restClient;              //A RESTClient for REST communication
     private final String name;                  //The name of the client
     private InetAddress currentIP;              //The ip address of the node
     private InetAddress prevNode;               //The ip address of the previous node
@@ -42,34 +40,7 @@ public class Client {
     private final String replicaDir;            //The directory where the replicated files are stored   [absolute path]
     private final String localDir;              //The directory from where we'll replicate the files    [absolute path]
     private final String requestDir;            //The 'Download' directory                              [absolute path]
-    private HashSet<String> localFileSet;       //A set of all local files
-
-    /**
-     * Get the replica directory
-     *
-     * @return The replica directory [absolute path]
-     */
-    public String getReplicaDir() {
-        return replicaDir;
-    }
-
-    /**
-     * Get the local directory
-     *
-     * @return The local directory [absolute path]
-     */
-    public String getLocalDir() {
-        return localDir;
-    }
-
-    /**
-     * Get the set of all local files
-     *
-     * @return The set of all local files [relative to localDir]
-     */
-    public HashSet<String> getLocalFileSet() {
-        return localFileSet;
-    }
+    private final HashSet<String> localFileSet; //A set of all local files
 
     /**
      * The constructor for client
@@ -127,6 +98,99 @@ public class Client {
     }
 
     /**
+     * Get the replica directory
+     *
+     * @return The replica directory [absolute path]
+     */
+    public String getReplicaDir() {
+        return replicaDir;
+    }
+
+    /**
+     * Get the local directory
+     *
+     * @return The local directory [absolute path]
+     */
+    public String getLocalDir() {
+        return localDir;
+    }
+
+    /**
+     * Get the set of all local files
+     *
+     * @return The set of all local files [relative to localDir]
+     */
+    public HashSet<String> getLocalFileSet() {
+        return localFileSet;
+    }
+
+    /**
+     * Get the ip address of the previous node
+     *
+     * @return the ip address of the previous node
+     */
+    public InetAddress getPrevNode() {
+        return prevNode;
+    }
+
+    /**
+     * Get the ip address of the next node
+     *
+     * @return the ip address of the next node
+     */
+    public InetAddress getNextNode() {
+        return nextNode;
+    }
+
+    /**
+     * Set the prevNode
+     *
+     * @param prevNode The InetAddress of the new prevNode
+     */
+    public void setPrevNode(InetAddress prevNode) {
+        //TODO only use setPrev
+        this.prevNode = prevNode;
+    }
+
+    /**
+     * Set the nextNode
+     *
+     * @param nextNode The InetAddress of the new nextNode
+     */
+    public void setNextNode(InetAddress nextNode) {
+        //TODO only use setNext
+        this.nextNode = nextNode;
+    }
+
+    /**
+     * Set nextNode and nextID
+     *
+     * @param nodeName The new nodeName, from this the ID will be calculated
+     * @param nextNode The InetAddress of the new nextNode
+     */
+    public void setNext(String nodeName, InetAddress nextNode) {
+        nextID = new CesarString(nodeName).hashCode();
+        this.nextNode = nextNode;
+        System.out.println("setNext" +
+                "\n  prevNode: " + this.prevNode +
+                "\n  nextNode: " + this.nextNode);
+    }
+
+    /**
+     * Set nextNode and nextID
+     *
+     * @param nodeName The new nodeName, from this the ID will be calculated
+     * @param prevNode The InetAddress of the new nextNode
+     */
+    public void setPrev(String nodeName, InetAddress prevNode) {
+        prevID = new CesarString(nodeName).hashCode();
+        this.prevNode = prevNode;
+        System.out.println("setPrev" +
+                "\n  prevNode: " + this.prevNode +
+                "\n  nextNode: " + this.nextNode);
+    }
+
+    /**
      * Send name to all nodes using multicast ip-address can be extracted from message
      */
     private void discovery() {
@@ -140,8 +204,6 @@ public class Client {
             // Receiving previous and next node from other nodes (if they exist)
             BootstrapThread bootstrapThreadNext = new BootstrapThread(true, this);
             BootstrapThread bootstrapThreadPrev = new BootstrapThread(false, this);
-
-            System.out.println("send multicast with name");
 
             discoveryThread.start();
 
@@ -200,13 +262,6 @@ public class Client {
     }
 
     /**
-     * TODO
-     */
-    public void failure() {
-
-    }
-
-    /**
      * Method is invoked in DiscoveryThread when an answer to the multicast is received
      *
      * @param numberOfNodes Amount of nodes in the network
@@ -222,29 +277,66 @@ public class Client {
             nextNode = currentIP;
             prevID = currentID;
             nextID = currentID;
-            System.out.println("We are the only node!");
-            System.out.println("My nextNode: " + nextNode);
-            System.out.println("My prevNode: " + prevNode);
+            System.out.println("We are the only node!" +
+                    "\n  My nextNode: " + nextNode +
+                    "\n  My prevNode: " + prevNode);
         } else {
-            System.out.println("I've more friends (naming server, you're my best friend)");
+            System.out.println("I've got more friends (naming server, you're my best friend)");
         }
 
         initReplicateFiles();
     }
 
-    private void sendString(int port, String string, InetAddress ip, String command) {
+    /**
+     * <p>Used to send one command and exactly one string to TCPControl.</p>
+     * <b>Available commands and the expected strings:</b>
+     * <ul>
+     *   <li>Update
+     *      <ul>
+     *          <li><u>Info:</u> Let your neighbour know who their previous/next node will be</li>
+     *          <li><u>String expects:</u> "[prev/next] Inetaddress.toString()"</li>
+     *      </ul>
+     *   </li>
+     *   <li>localShutdown
+     *      <ul>
+     *          <li><u>Info:</u> This will invoke Client.ownerShutdown() on the destination</li>
+     *          <li><u>String expects:</u> "fileName"</li>
+     *      </ul>
+     *   </li>
+     *   <li>Delete_file
+     *      <ul>
+     *          <li><u>Info:</u> A file you have locally has been deleted, let the node that hosts your file know so it can delete it too</li>
+     *          <li><u>String expects:</u> "fileName"</li>
+     *      </ul>
+     *   </li>
+     *   <li>Update_file
+     *      <ul>
+     *          <li><u>Info:</u> A file you have locally has been updated, let the other node know it has to delete it because the new one will be sent momentarily</li>
+     *          <li><u>String expects:</u> "fileName"</li>
+     *      </ul>
+     *   </li>
+     * </ul>
+     *
+     * @param ip      The destination ip address
+     * @param port    The destination port
+     * @param command The command to be sent
+     * @param string  The data to be sent
+     */
+    private void sendString(InetAddress ip, int port, String command, String string) {
         try {
+            //Create a socket
             Socket socket = new Socket(ip, port);
 
             // Create a writer to write to the socket
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
 
-            // Send your name
+            // Send the command, if there is one
             if (!command.equals("")) {
                 writer.println(command);
             }
+
+            //Send the string
             writer.println(string);
-            System.out.println("Data sent: " + string);
 
             writer.close();
             socket.close();
@@ -254,8 +346,15 @@ public class Client {
         }
     }
 
-    private void sendString(int port, String string, InetAddress ip) {
-        sendString(port, string, ip, "");
+    /**
+     * Same as the other sendString, just for destinations other than TCPControl
+     *
+     * @param ip     The destination ip address
+     * @param port   The destination port
+     * @param string The data to be sent
+     */
+    private void sendString(InetAddress ip, int port, String string) {
+        sendString(ip, port, "", string);
     }
 
     private void sendFilesForNextNode() {
@@ -280,84 +379,78 @@ public class Client {
         }
     }
 
+    /**
+     * Invoked when MulticastReceiver gets a message, this method is used for setting prev- and nextNode when a new node joins
+     *
+     * @param nodeName The name of the joining node
+     * @param ip       The ip address of the joining node
+     */
     public void handleMulticastMessage(String nodeName, InetAddress ip) {
+        //Calculate the ID of the new node
         int hash = new CesarString(nodeName).hashCode();
-        System.out.println("Multicast received!");
-        System.out.println("nodeName received: " + nodeName);
-        System.out.println("ip received: " + ip);
-        System.out.println("currentID: " + currentID);
-        System.out.println("nextID " + nextID);
-        System.out.println("prevID " + prevID);
-        System.out.println("hash: " + hash);
+        System.out.println("\nMulticast received!" +
+                "\n  nodeName  " + nodeName +
+                "\n  ip        " + ip +
+                "\n  currentID " + currentID +
+                "\n  nextID    " + nextID +
+                "\n  prevID    " + prevID +
+                "\n  hash      " + hash);
+
+        //See where in the ring the new node is located. If it's a neighbor, change your prev- and/or nextNode
         if (((currentID < hash) && (hash < nextID)) || ((nextID < currentID) && ((hash < nextID) || (hash > currentID)))) {
+            //If the new node is our nextNode
             nextNode = ip;
             nextID = hash;
             // Send we are previous node
             sendString(Ports.bootstrapPrevPort, name, ip);
             // Send the right remote files to the next node
             sendFilesForNextNode();
-            System.out.println("We are previous node");
-            System.out.println("My nextNode: " + nextNode);
-            System.out.println("My prevNode: " + prevNode);
+            System.out.println("We are the previous node" +
+                    "\n  My nextNode: " + nextNode +
+                    "\n  My prevNode: " + prevNode);
         } else if (((prevID < hash) && (hash < currentID)) || ((currentID < prevID) && ((prevID < hash) || (hash < currentID)))) {
+            //If the new node is our prevNode
             prevNode = ip;
             prevID = hash;
-            // Send we are next node
-            sendString(Ports.bootstrapNextPort, name, ip);
-            System.out.println("We are next node");
-            System.out.println("My nextNode: " + nextNode);
-            System.out.println("My prevNode: " + prevNode);
+            // Let the joining node know we are its next node
+            sendString(ip, Ports.bootstrapNextPort, name);
+            System.out.println("We are the next node" +
+                    "\n  My nextNode: " + nextNode +
+                    "\n  My prevNode: " + prevNode);
         } else if (nextID == currentID && prevID == currentID) {
-            // There are two nodes in the network
+            // If there is only one node in the network already
             prevNode = ip;
             nextNode = ip;
             prevID = hash;
             nextID = hash;
-            sendString(Ports.bootstrapPrevPort, name, ip);
-            sendString(Ports.bootstrapNextPort, name, ip);
-            System.out.println("One friend");
-            System.out.println("My nextNode: " + nextNode);
-            System.out.println("My prevNode: " + prevNode);
+            // Let the joining node know we are both its previous and next node
+            sendString(ip, Ports.bootstrapPrevPort, name);
+            sendString(ip, Ports.bootstrapNextPort, name);
+            System.out.println("One friend" +
+                    "\n  My nextNode: " + nextNode +
+                    "\n  My prevNode: " + prevNode);
+        } else {
+            // The new node is not my neighbor
+            System.out.println("We are not a neighbor" +
+                    "\n  My nextNode: " + nextNode +
+                    "\n  My prevNode: " + prevNode);
         }
     }
 
+    /**
+     * Ask the namingserver where a file is/should be located
+     *
+     * @param filename The file from which we want to know its location
+     * @return The ip address of the node where the file is/should be hosted
+     */
     public String requestFileLocation(String filename) {
         System.out.println("Filename request: " + filename);
         return restClient.get("file?filename=" + filename);
     }
 
-    public void setPrevNode(InetAddress prevNode) {
-        this.prevNode = prevNode;
-    }
-
-    public void setNextNode(InetAddress nextNode) {
-        this.nextNode = nextNode;
-    }
-
-    public void setNext(String nodeName, InetAddress nextNode) {
-        nextID = new CesarString(nodeName).hashCode();
-        this.nextNode = nextNode;
-        System.out.println("setNext");
-        System.out.println("prevNode: " + this.prevNode);
-        System.out.println("nextNode: " + this.nextNode);
-    }
-
-    public void setPrev(String nodeName, InetAddress prevNode) {
-        prevID = new CesarString(nodeName).hashCode();
-        this.prevNode = prevNode;
-        System.out.println("setPrev");
-        System.out.println("prevNode: " + this.prevNode);
-        System.out.println("nextNode: " + this.nextNode);
-    }
-
-    public InetAddress getPrevNode() {
-        return prevNode;
-    }
-
-    public InetAddress getNextNode() {
-        return nextNode;
-    }
-
+    /**
+     * Start the replication of files, invoked when this node is created
+     */
     private void initReplicateFiles() {
         File[] files = new File(localDir).listFiles();
         if (files != null) {
@@ -380,6 +473,11 @@ public class Client {
         }
     }
 
+    /**
+     * Let your neighbors know who their neighbors will become, because you're leaving
+     *
+     * @param isDestNextNode Is the message intended for this node's next node?
+     */
     private void updateNeighbor(boolean isDestNextNode) {
         try {
             String out;
@@ -392,7 +490,7 @@ public class Client {
                 destIp = prevNode;
             }
 
-            sendString(Ports.tcpControlPort, out, destIp, "Update");
+            sendString(destIp, Ports.tcpControlPort, "Update", out);
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -400,21 +498,30 @@ public class Client {
         }
     }
 
+    /**
+     * Invoked when UpdateThread detects a local file is created.
+     * This will replicate the file.
+     *
+     * @param filename The filename of the file that has been created
+     */
     public void localFileCreated(String filename) {
         // Check if the file itself is not a log file to avoid recursion
+        // Also check if the file is not a swap file (Linux only), because they're not meant to be sent
         if (!filename.startsWith("log_") && !filename.contains(".swp")) {
+            System.out.println("File created: " + filename);
+
             try {
                 System.out.println("Local file created: " + filename);
 
                 localFileSet.add(filename);
                 // Request the location where the file should be replicated
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
-                System.out.println("location new created: " + location);
+                System.out.println("Send file to: " + location);
 
-                // Make the log-file
+                // Make the logfile
                 String logFilename = makeLogFile(filename);
 
-                // Send the log-file and other file to the destination
+                // Send the logfile and other file to the destination
                 Thread send = new SendReplicateFileThread(location, localDir, filename);
                 Thread sendLog = new SendReplicateFileThread(location, localDir, logFilename);
                 send.start();
@@ -426,10 +533,18 @@ public class Client {
         }
     }
 
+    /**
+     * Invoked when UpdateThread detects a local file is deleted.
+     * This will let the hosting file know it has to delete the file.
+     *
+     * @param filename The filename of the file that has been deleted
+     */
     public void localFileDeleted(String filename) {
-        // Check if the file itself is not a log file to avoid recursion
+        // Check if the file itself is not a log file because we ignore them
+        // Also check if the file is not a swap file (Linux only), because they're not meant to be sent
         if (!filename.startsWith("log_") && !filename.contains(".swp")) {
-            System.out.println("Local file deleted: " + filename);
+            System.out.println("Local file delted: " + filename);
+
             try {
                 localFileSet.remove(filename);
                 File logFile = new File(getLocalDir() + "log_" + filename + ".txt");
@@ -439,7 +554,7 @@ public class Client {
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
 
                 // Send unicast message to delete file
-                sendString(Ports.tcpControlPort, filename, location, "Delete_file");
+                sendString(location, Ports.tcpControlPort, "Delete_file", filename);
 
             } catch (IOException e) {
                 System.err.println(e.getMessage());
@@ -448,16 +563,24 @@ public class Client {
         }
     }
 
+    /**
+     * Invoked when UpdateThread detects a local file is modified.
+     * This will replicate the file after telling the node that hosts the file to delete said file (to prevent errors).
+     *
+     * @param filename The filename of the file that has been modified
+     */
     public void localFileModified(String filename) {
         // Send only the updated file and don't change the log-file
+        // Also check if the file is not a swap file (Linux only), because they're not meant to be sent
         if (!filename.startsWith("log_") && !filename.contains(".swp")) {
-            System.out.println("Local file modified: " + filename);
+            System.out.println("Local file updated: " + filename);
+
             try {
                 // Request the location where the file should be replicated
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
 
-                // This will only delete the file on the replication node and not the log-file
-                sendString(Ports.tcpControlPort, filename, serverIp, "Update_file");
+                // This will only delete the file on the replication node and not the logfile
+                sendString(serverIp, Ports.tcpControlPort, "Update_file", filename);
 
                 // Send the updated file
                 Thread send = new SendReplicateFileThread(location, localDir, filename);
@@ -470,6 +593,12 @@ public class Client {
         }
     }
 
+    /**
+     * Creates a logfile for a file
+     *
+     * @param filename The file for which a logfile has to be created
+     * @return The name of the logfile
+     */
     private String makeLogFile(String filename) {
         String logFilename = "log_" + filename + ".txt";
         try {
@@ -482,19 +611,28 @@ public class Client {
         return logFilename;
     }
 
+    /**
+     * A node from which this node is hosting a file is shutting down.
+     *
+     * @param fileName The file that will be deleted
+     */
     public void ownerShutdown(String fileName) {
         File[] files = new File(replicaDir).listFiles();
 
         if (files != null) {
+            // Iterate over all files
             for (File file : files) {
                 String tempName = file.getName();
+                //Find log files
                 if (tempName.contains("log_" + fileName)) {
                     try {
                         BufferedReader br = new BufferedReader(new FileReader(file));
                         br.readLine();
+                        // Have they been downloaded?
                         boolean downloaded = Boolean.parseBoolean(br.readLine());
                         // Check whether the remote file is downloaded or not
                         if (!downloaded) {
+                            //If not, delete everything
                             if (!file.delete()) {
                                 System.err.println("ERR: File " + file.getAbsolutePath() + " not deleted");
                             }
@@ -518,6 +656,11 @@ public class Client {
         }
     }
 
+    /**
+     * Main run functionality for running in CMD
+     *
+     * @throws UnknownHostException When the given ip address is invalid
+     */
     public void run() throws UnknownHostException {
         discovery();
 

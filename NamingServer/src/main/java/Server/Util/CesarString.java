@@ -1,4 +1,4 @@
-package Client.Util;
+package Server.Util;
 
 /**
  * This class is used for calculating the hash value

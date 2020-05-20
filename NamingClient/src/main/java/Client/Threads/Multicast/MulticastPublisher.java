@@ -7,8 +7,16 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+/**
+ * A class that will send a message via multicast
+ */
 public class MulticastPublisher {
-
+    /**
+     * This method will send a message to all nodes listening to group 230.0.0.0
+     *
+     * @param message The message to be sent
+     * @throws IOException If something goes wrong (creating socket, parsing the group address, sending the packet)
+     */
     public void multicast(String message) throws IOException {
         DatagramSocket socket = new DatagramSocket();
         InetAddress group = InetAddress.getByName("230.0.0.0");

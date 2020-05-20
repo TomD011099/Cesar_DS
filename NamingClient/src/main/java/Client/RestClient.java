@@ -17,6 +17,11 @@ public class RestClient {
     private HttpHeaders headers;
     private HttpStatus status;
 
+    /**
+     * Create the restClient
+     *
+     * @param server The networkaddress of the server
+     */
     public RestClient(String server) {
         this.server = "http://" + server + ":8080";
         this.rest = new RestTemplate();

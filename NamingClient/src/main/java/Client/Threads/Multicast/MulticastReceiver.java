@@ -8,20 +8,34 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
+/**
+ * A thread that will receive the multicastmessages sent by the MulticastPublisher
+ */
 public class MulticastReceiver implements Runnable {
-    private Client client;
-    private volatile boolean quit;
+    private Client client;              //The client to invoke methods
+    private volatile boolean quit;      //A bool to end the thread
 
+    /**
+     * The constructor
+     *
+     * @param client The client instance
+     */
     public MulticastReceiver(Client client) {
         this.client = client;
         this.quit = false;
     }
 
+    /**
+     * Run the thread
+     */
     public void run() {
         try {
+            //Create a socket and join the group
             MulticastSocket socket = new MulticastSocket(Ports.multicastPort);
             InetAddress group = InetAddress.getByName("230.0.0.0");
             socket.joinGroup(group);
+
+            //Receive the packets one by one and let the client handle the messages as they come in
             while (!quit) {
                 byte[] receive = new byte[65535];
                 DatagramPacket nodeInfoPacket = new DatagramPacket(receive, receive.length);
@@ -37,6 +51,9 @@ public class MulticastReceiver implements Runnable {
         }
     }
 
+    /**
+     * Stop the thread
+     */
     public void stop() {
         quit = true;
     }
