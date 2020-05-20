@@ -156,7 +156,11 @@ public class ClientUI extends Application {
             }
             draw(primaryStage, layout);
         });
-        buttonPane.getChildren().addAll(addFileButton, requestFile, fileNameField, selectedFile, deleteButton);
+        Button refreshButton = new Button("Refresh");
+        refreshButton.setOnAction(e -> {
+            draw(primaryStage, layout);
+        });
+        buttonPane.getChildren().addAll(addFileButton, requestFile, fileNameField, selectedFile, deleteButton, refreshButton);
         layout.setBottom(buttonPane);
     }
 }
