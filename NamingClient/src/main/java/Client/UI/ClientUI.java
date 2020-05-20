@@ -16,6 +16,7 @@ import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
+import java.util.Objects;
 
 
 public class ClientUI extends Application {
@@ -49,11 +50,7 @@ public class ClientUI extends Application {
         exit.setOnAction(e -> {
             closeProgram();
         });
-        MenuItem settings = new MenuItem("Settings");
-        settings.setOnAction(e -> {
-            //TODO open settings
-        });
-        fileMenu.getItems().addAll(settings, exit);
+        fileMenu.getItems().addAll(exit);
         menuBar.getMenus().add(fileMenu);
 
         window.setOnCloseRequest(e -> {
@@ -80,15 +77,31 @@ public class ClientUI extends Application {
         }
     }
 
-    private void draw(Stage primaryStage, BorderPane layout){
+    private void draw(Stage primaryStage, BorderPane layout) {
         Label selectedFile = new Label();
 
         HBox filePane = new HBox();
-        FileTreePane localFiles = new FileTreePane("Local Files", client.getLocalFileSet(), selectedFile);
-        HashSet<String> downloadedFiles = new HashSet<>();
-        FileTreePane requestedFiles = new FileTreePane("Downloaded files", downloadedFiles, selectedFile);
-        HashSet<String> replicatedFilesSet = new HashSet<>();
-        FileTreePane replicatedFiles = new FileTreePane("Replicated files", replicatedFilesSet);
+        HashSet<String> localFileSet = new HashSet<>();
+        File[] files = new File(client.getLocalDir()).listFiles();
+        for (File file : Objects.requireNonNull(files)) {
+            String tempName = file.getName();
+            localFileSet.add(tempName);
+        }
+        FileTreePane localFiles = new FileTreePane(client.getLocalDir(), "Local Files", localFileSet, selectedFile);
+        HashSet<String> requestedFileSet = new HashSet<>();
+        files = new File(client.getRequestDir()).listFiles();
+        for (File file : Objects.requireNonNull(files)) {
+            String tempName = file.getName();
+            requestedFileSet.add(tempName);
+        }
+        FileTreePane requestedFiles = new FileTreePane(client.getRequestDir(), "Downloaded files", requestedFileSet, selectedFile);
+        HashSet<String> replicatedFileSet = new HashSet<>();
+        files = new File(client.getReplicaDir()).listFiles();
+        for (File file : Objects.requireNonNull(files)) {
+            String tempName = file.getName();
+            replicatedFileSet.add(tempName);
+        }
+        FileTreePane replicatedFiles = new FileTreePane(client.getReplicaDir(), "Replicated files", replicatedFileSet);
         filePane.getChildren().addAll(localFiles.getPane(), requestedFiles.getPane(), replicatedFiles.getPane());
 
         layout.setCenter(filePane);
@@ -128,8 +141,19 @@ public class ClientUI extends Application {
         Label requestFile = new Label();
         requestFile.setText("Request file: ");
         Button deleteButton = new Button("Delete file");
-        deleteButton.setOnAction(e->{
-            //TODO delete file
+        deleteButton.setOnAction(e -> {
+            File toDelete = new File(selectedFile.getText());
+            if (toDelete.getAbsolutePath().replace('\\', '/').contains(client.getLocalDir()) || toDelete.getAbsolutePath().replace('\\', '/').contains(client.getRequestDir())) {
+                if (toDelete.delete()) {
+                    AlertBox.display("Success", "File successfully deleted");
+                } else {
+                    AlertBox.display("Error", "File could not be deleted");
+                }
+            } else if (toDelete.getAbsolutePath().replace('\\', '/').contains(client.getReplicaDir())) {
+                AlertBox.display("Error", "You can not delete replicated files");
+            } else {
+                AlertBox.display("Error", "No valid file selected");
+            }
             draw(primaryStage, layout);
         });
         buttonPane.getChildren().addAll(addFileButton, requestFile, fileNameField, selectedFile, deleteButton);
