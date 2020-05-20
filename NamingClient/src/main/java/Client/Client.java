@@ -372,13 +372,12 @@ public class Client {
     }
 
     public void localFileCreated(String filename) {
-        System.out.println("Filename van ons: " + filename);
-
         // Check if the file itself is not a log file to avoid recursion
         if (!filename.startsWith("log_") && !filename.contains(".swp")) {
             try {
-                localFileSet.add(filename);
+                System.out.println("Local file created: " + filename);
 
+                localFileSet.add(filename);
                 // Request the location where the file should be replicated
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
                 System.out.println("location new created: " + location);
@@ -388,8 +387,8 @@ public class Client {
 
                 // Send the log-file and other file to the destination
                 Thread send = new SendReplicateFileThread(location, localDir, filename);
-                send.start();
                 Thread sendLog = new SendReplicateFileThread(location, localDir, logFilename);
+                send.start();
                 sendLog.start();
             } catch (UnknownHostException e) {
                 System.err.println(e.getMessage());
@@ -401,6 +400,7 @@ public class Client {
     public void localFileDeleted(String filename) {
         // Check if the file itself is not a log file to avoid recursion
         if (!filename.startsWith("log_") && !filename.contains(".swp")) {
+            System.out.println("Local file deleted: " + filename);
             try {
                 localFileSet.remove(filename);
 
@@ -420,6 +420,7 @@ public class Client {
     public void localFileModified(String filename) {
         // Send only the updated file and don't change the log-file
         if (!filename.startsWith("log_") && !filename.contains(".swp")) {
+            System.out.println("Local file modified: " + filename);
             try {
                 // Request the location where the file should be replicated
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
