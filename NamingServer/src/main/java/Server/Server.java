@@ -121,14 +121,18 @@ public class Server {
 
     public InetAddress fileLocation(String fileName) {
         int id = getId(fileName);
-        int closestId = Collections.max(map.keySet());
-        int closest = closestId - id;
+        int closestId = Collections.min(map.keySet());
+        int closest = id - closestId;
 
-        for (Integer i : map.keySet()) {
-            if (id > i) {
-                if (id - i <= closest) {
-                    closest = id - i;
-                    closestId = i;
+        if (closest < 0) {
+            closestId = Collections.max(map.keySet());
+        } else {
+            for (Integer i : map.keySet()) {
+                if (id > i) {
+                    if (id - i <= closest) {
+                        closest = id - i;
+                        closestId = i;
+                    }
                 }
             }
         }

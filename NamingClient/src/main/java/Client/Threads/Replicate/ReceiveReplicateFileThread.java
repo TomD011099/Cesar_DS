@@ -45,12 +45,13 @@ public class ReceiveReplicateFileThread extends Thread {
                 System.out.println("Receive:\n" + hex(buf));
             }
 
-            if (localFileSet.contains(fileName) || (fileName.startsWith("log_") && localFileSet.contains(fileName.substring(4, fileName.length() - 8)))) {
+            // TODO log files dink
+            /*if (localFileSet.contains(fileName) || (fileName.startsWith("log_") && localFileSet.contains(fileName.substring(4, fileName.length() - 8)))) {
                 Thread sendReplicateFileThread = new SendReplicateFileThread(prevNode, dir, fileName);
                 sendReplicateFileThread.start();
                 File f = new File(dir + fileName);
                 f.delete();
-            }
+            }*/
 
             reader.close();
             fileOut.close();
