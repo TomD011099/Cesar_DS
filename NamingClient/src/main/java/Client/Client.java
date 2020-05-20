@@ -180,6 +180,9 @@ public class Client {
                     String fileName = file.getName();
                     try {
                         InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName));
+                        // If the server says that the file is replicated on yourself, the real place is in the prevNode
+                        if (replicaIP == currentIP)
+                            replicaIP = prevNode;
                         sendString(Ports.tcpControlPort, fileName, replicaIP, "localShutdown");
                     } catch (UnknownHostException e) {
                         e.printStackTrace();
