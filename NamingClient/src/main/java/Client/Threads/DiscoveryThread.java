@@ -9,15 +9,28 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Used to receive the amount of nodes in the network and the ip address of the server
+ */
+//TODO could be in TCPControl
 public class DiscoveryThread extends Thread {
-    private Client client;
-    private ServerSocket serverSocket;
+    private Client client;                  //An instance of client to invoke methods
+    private ServerSocket serverSocket;      //The serversocket to receive communications
 
+    /**
+     * Constructor
+     *
+     * @param client An instance of client to invoke methods
+     * @throws IOException If discoveryPort is invalid/in use
+     */
     public DiscoveryThread(Client client) throws IOException {
         serverSocket = new ServerSocket(Ports.discoveryPort);
         this.client = client;
     }
 
+    /**
+     * Run the thread
+     */
     @Override
     public void run() {
         try {

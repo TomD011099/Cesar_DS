@@ -1,5 +1,8 @@
 package Client.Util;
 
+/**
+ * This is a list of all used TCP ports
+ */
 public class Ports {
     public static int tcpControlPort = 12345;
     public static int replicatePort = 12346;

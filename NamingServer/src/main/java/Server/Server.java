@@ -1,17 +1,28 @@
 package Server;
 
+import Server.Threads.*;
+import Server.Util.*;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.*;
 
+/**
+ * This is the server class, it'll tell the clients where to find/store their files
+ */
 public class Server {
-    private HashMap<Integer, InetAddress> map;
-    private String mapPath;
-    private MulticastReceiver multicastReceiver;
-    private Thread receiverThread;
+    private HashMap<Integer, InetAddress> map;      //A map of clients in the network
+    private String mapPath;                         //The location of the map
+    private MulticastReceiver multicastReceiver;    //A multicastReceiver to detect multicastmessages
+    private Thread receiverThread;                  //The thread that runs multicastReceiver
 
-    Server(String mapPath) {
+    /**
+     * Constructor
+     *
+     * @param mapPath The location where the map will be stored
+     */
+    public Server(String mapPath) {
         multicastReceiver = new MulticastReceiver(this);
         receiverThread = new Thread(multicastReceiver);
         receiverThread.start();
@@ -20,6 +31,13 @@ public class Server {
         loadMap();
     }
 
+    /**
+     * A new node has joined the network
+     *
+     * @param name The name of the node that joined
+     * @param ip   The ip address of the node that joined
+     * @return <ul><li>-1: The map already has that ID</li><li>1: Registered successfully</li></ul>
+     */
     public int registerNode(String name, InetAddress ip) {
         int id = getId(name);
 
@@ -30,10 +48,14 @@ public class Server {
             saveMap();
             return 1;
         }
-        // TODO make sure existing files are moved to correct node --> not yet
-        // TODO make replicas of new files on the new node
     }
 
+    /**
+     * Called by MulticastReceiver, sends the amount of nodes in the network back
+     *
+     * @param nodeName The name of the node that joined
+     * @param ip       The ip address of the node that joined
+     */
     public void handleMulticastMessage(String nodeName, InetAddress ip) {
         // Reply with the number of nodes in the network
         sendNumberOfNodes(ip);
@@ -42,9 +64,14 @@ public class Server {
         registerNode(nodeName, ip);
     }
 
+    /**
+     * Send the number of nodes to the new node
+     *
+     * @param ip The ip address of the node that joined
+     */
     private void sendNumberOfNodes(InetAddress ip) {
         try {
-            Socket socket = new Socket(ip, 54321);
+            Socket socket = new Socket(ip, Ports.discoveryPort);
 
             // Create a writer to write to the socket
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
@@ -60,6 +87,11 @@ public class Server {
         }
     }
 
+    /**
+     * Unregister a node that is going to leave the network
+     *
+     * @param name The name of the node
+     */
     public void unregisterNode(String name) {
         int id = getId(name);
 
@@ -68,11 +100,12 @@ public class Server {
             saveMap();
         } else {
             System.err.println("Node with name " + name + " not found.");
-            // TODO make sure Server returns error to node
         }
-        // TODO relocate hosted files that were on the node
     }
 
+    /**
+     * Save the map on the hard drive
+     */
     private void saveMap() {
         try {
             Properties properties = new Properties();
@@ -95,6 +128,9 @@ public class Server {
         }
     }
 
+    /**
+     * Load the map from the hard drive
+     */
     private void loadMap() {
         Properties properties = new Properties();
 
@@ -119,6 +155,12 @@ public class Server {
         }
     }
 
+    /**
+     * Calculate where a file is located
+     *
+     * @param fileName The file to check
+     * @return The ip address of the node that has the file
+     */
     public InetAddress fileLocation(String fileName) {
         int id = getId(fileName);
         int closestId = Collections.max(map.keySet());
@@ -136,21 +178,23 @@ public class Server {
         return map.get(closestId);
     }
 
+    /**
+     * Get the id of a name
+     *
+     * @param name The name of the file
+     * @return The ID of the file
+     */
     private int getId(String name) {
         int id = new CesarString(name).hashCode();
         System.out.println(name + "\t id = " + id);
         return id;
     }
 
+    /**
+     * Clear the map
+     */
     public void clearMap() {
         map.clear();
-    }
-
-    public void run() {
-        boolean quit = false;
-
-        while (!quit) {
-
-        }
+        saveMap();
     }
 }

@@ -1,22 +1,39 @@
-package Server;
+package Server.Threads;
+
+import Server.Server;
+import Server.Util.Ports;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
+/**
+ * A thread that will receive the multicastmessages sent by the MulticastPublisher
+ */
 public class MulticastReceiver implements Runnable {
-    private Server server;
+    private Server server;  //The server to invoke methods
 
-    MulticastReceiver(Server server) {
+    /**
+     * The constructor
+     *
+     * @param server The server instance
+     */
+    public MulticastReceiver(Server server) {
         this.server = server;
     }
 
+    /**
+     * Run the thread
+     */
     public void run() {
         try {
-            MulticastSocket socket = new MulticastSocket(4446);
+            //Create a socket and join the group
+            MulticastSocket socket = new MulticastSocket(Ports.multicastPort);
             InetAddress group = InetAddress.getByName("230.0.0.0");
             socket.joinGroup(group);
+
+            //Receive the packets one by one and let the client handle the messages as they come in
             while (true) {
                 byte[] receive = new byte[65535];
                 DatagramPacket nodeInfoPacket = new DatagramPacket(receive, receive.length);
