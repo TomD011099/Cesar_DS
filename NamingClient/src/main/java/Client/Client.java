@@ -1,14 +1,11 @@
 package Client;
 
 import Client.Threads.*;
-import Client.Threads.Multicast.MulticastPublisher;
-import Client.Threads.Multicast.MulticastReceiver;
-import Client.Threads.Replicate.ReplicateServer;
-import Client.Threads.Replicate.SendReplicateFileThread;
-import Client.Threads.Request.RequestFileThread;
-import Client.Threads.Request.RequestServer;
-import Client.Threads.TCPControl.TCPControlServer;
-import Client.Util.CesarString;
+import Client.Threads.Multicast.*;
+import Client.Threads.Replicate.*;
+import Client.Threads.Request.*;
+import Client.Threads.TCPControl.*;
+import Client.Util.*;
 import Client.Util.Ports;
 
 import java.io.*;
@@ -179,7 +176,7 @@ public class Client {
                 String fileName = file.getName();
                 try {
                     InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName));
-                    sendString(Ports.tcpControlPort, fileName, replicaIP, "localShutdown");
+                    sendString(replicaIP, Ports.tcpControlPort, "localShutdown", fileName);
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                 }
@@ -195,7 +192,7 @@ public class Client {
     }
 
     /**
-     * TODO
+     * Not implemented because of a lack of time
      */
     public void failure() {
 
@@ -227,7 +224,20 @@ public class Client {
         initReplicateFiles();
     }
 
-    private void sendString(int port, String string, InetAddress ip, String command) {
+    /**
+     * Used to send one command and a string to TCPControl
+     *
+     * @param ip The destination ip address
+     * @param port The destination port
+     * @param command The command to be sent. Available commands:
+     *                  * Update:
+     *                  * localShutdown:
+     *                  * Delete_file:
+     *                  * Update_file:
+     * @param string This depends on the command to be sent:
+     *                  *
+     */
+    private void sendString(InetAddress ip, int port, String command, String string) {
         try {
             Socket socket = new Socket(ip, port);
 
@@ -249,8 +259,8 @@ public class Client {
         }
     }
 
-    private void sendString(int port, String string, InetAddress ip) {
-        sendString(port, string, ip, "");
+    private void sendString(InetAddress ip, int port, String string) {
+        sendString(ip, port, "", string);
     }
 
     public void handleMulticastMessage(String nodeName, InetAddress ip) {
@@ -266,7 +276,7 @@ public class Client {
             nextNode = ip;
             nextID = hash;
             // Send we are previous node
-            sendString(Ports.bootstrapPrevPort, name, ip);
+            sendString(ip, Ports.bootstrapPrevPort, name);
             System.out.println("We are previous node");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
@@ -274,7 +284,7 @@ public class Client {
             prevNode = ip;
             prevID = hash;
             // Send we are next node
-            sendString(Ports.bootstrapNextPort, name, ip);
+            sendString(ip, Ports.bootstrapNextPort, name);
             System.out.println("We are next node");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
@@ -284,8 +294,8 @@ public class Client {
             nextNode = ip;
             prevID = hash;
             nextID = hash;
-            sendString(Ports.bootstrapPrevPort, name, ip);
-            sendString(Ports.bootstrapNextPort, name, ip);
+            sendString(ip, Ports.bootstrapPrevPort, name);
+            sendString(ip, Ports.bootstrapNextPort, name);
             System.out.println("One friend");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
@@ -358,7 +368,7 @@ public class Client {
                 destIp = prevNode;
             }
 
-            sendString(Ports.tcpControlPort, out, destIp, "Update");
+            sendString(destIp, Ports.tcpControlPort, "Update", out);
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -403,7 +413,7 @@ public class Client {
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
 
                 // Send unicast message to delete file
-                sendString(Ports.tcpControlPort, filename, location, "Delete_file");
+                sendString(location, Ports.tcpControlPort, "Delete_file", filename);
 
             } catch (IOException e) {
                 System.err.println(e.getMessage());
@@ -420,7 +430,7 @@ public class Client {
                 InetAddress location = InetAddress.getByName(requestFileLocation(filename));
 
                 // This will only delete the file on the replication node and not the log-file
-                sendString(Ports.tcpControlPort, filename, serverIp, "Update_file");
+                sendString(serverIp, Ports.tcpControlPort, "Update_file", filename);
 
                 // Send the updated file
                 Thread send = new SendReplicateFileThread(location, localDir, filename);
