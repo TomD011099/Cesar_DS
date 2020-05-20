@@ -258,6 +258,28 @@ public class Client {
         sendString(port, string, ip, "");
     }
 
+    private void sendFilesForNextNode() {
+        File[] files = new File(replicaDir).listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (!file.getName().startsWith("log_")) {
+                    CesarString filenameCesar = new CesarString(file.getName());
+                    String filename = file.getName();
+                    if (filenameCesar.hashCode() > nextID) {
+                        Thread send = new SendReplicateFileThread(nextNode, localDir, filename);
+                        Thread sendLog = new SendReplicateFileThread(nextNode, localDir, "log_" + filename + ".txt");
+                        send.start();
+                        sendLog.start();
+
+                        File logFile = new File(getReplicaDir() + "log_" + filename + ".txt");
+                        logFile.delete();
+                        file.delete();
+                    }
+                }
+            }
+        }
+    }
+
     public void handleMulticastMessage(String nodeName, InetAddress ip) {
         int hash = new CesarString(nodeName).hashCode();
         System.out.println("Multicast received!");
@@ -272,6 +294,8 @@ public class Client {
             nextID = hash;
             // Send we are previous node
             sendString(Ports.bootstrapPrevPort, name, ip);
+            // Send the right remote files to the next node
+            sendFilesForNextNode();
             System.out.println("We are previous node");
             System.out.println("My nextNode: " + nextNode);
             System.out.println("My prevNode: " + prevNode);
@@ -478,7 +502,7 @@ public class Client {
                             int splitPoint = replicatedFileName.lastIndexOf(".");
                             replicatedFileName = replicatedFileName.substring(0, splitPoint);
                             File replicatedFile = new File(replicatedFileName);
-                            File logFile = new File("log_" + replicatedFileName + ".txt");
+                            File logFile = new File(getReplicaDir() + "log_" + replicatedFileName + ".txt");
                             if (!replicatedFile.delete()) {
                                 System.err.println("ERR: File " + file.getAbsolutePath() + " not deleted");
                             }
