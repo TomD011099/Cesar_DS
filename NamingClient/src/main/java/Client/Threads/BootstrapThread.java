@@ -26,7 +26,6 @@ public class BootstrapThread extends Thread {
 
     @Override
     public void run() {
-        // TODO (maybe) check this
         try {
             Socket socket = serverSocket.accept();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));

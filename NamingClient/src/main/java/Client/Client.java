@@ -176,12 +176,14 @@ public class Client {
         //Let each node that has one of your local files
         if (localFiles != null) {
             for (File file : localFiles) {
-                String fileName = file.getName();
-                try {
-                    InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName));
-                    sendString(Ports.tcpControlPort, fileName, replicaIP, "localShutdown");
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
+                if (!file.getName().startsWith("log_")) {
+                    String fileName = file.getName();
+                    try {
+                        InetAddress replicaIP = InetAddress.getByName(restClient.get("file?filename=" + fileName));
+                        sendString(Ports.tcpControlPort, fileName, replicaIP, "localShutdown");
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -464,6 +466,7 @@ public class Client {
                         BufferedReader br = new BufferedReader(new FileReader(file));
                         br.readLine();
                         boolean downloaded = Boolean.parseBoolean(br.readLine());
+                        // Check whether the remote file is downloaded or not
                         if (!downloaded) {
                             if (!file.delete()) {
                                 System.err.println("ERR: File " + file.getAbsolutePath() + " not deleted");
@@ -472,8 +475,12 @@ public class Client {
                             int splitPoint = replicatedFileName.lastIndexOf(".");
                             replicatedFileName = replicatedFileName.substring(0, splitPoint);
                             File replicatedFile = new File(replicatedFileName);
+                            File logFile = new File("log_" + replicatedFileName + ".txt");
                             if (!replicatedFile.delete()) {
                                 System.err.println("ERR: File " + file.getAbsolutePath() + " not deleted");
+                            }
+                            if (!logFile.delete()) {
+                                System.err.println("ERR: File " + logFile.getAbsolutePath() + " not deleted");
                             }
                         }
                     } catch (IOException e) {
