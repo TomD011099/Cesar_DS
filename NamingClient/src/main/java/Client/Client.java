@@ -255,7 +255,7 @@ public class Client {
                         // If the server says that the file is replicated on yourself, the real place is in the prevNode
                         if (replicaIP == currentIP)
                             replicaIP = prevNode;
-                        sendString(Ports.tcpControlPort, fileName, replicaIP, "localShutdown");
+                        sendString(replicaIP, Ports.tcpControlPort, "localShutdown", fileName);
                     } catch (UnknownHostException e) {
                         e.printStackTrace();
                     }
@@ -412,7 +412,7 @@ public class Client {
             nextNode = ip;
             nextID = hash;
             // Send we are previous node
-            sendString(Ports.bootstrapPrevPort, name, ip);
+            sendString(ip, Ports.bootstrapPrevPort, name);
             // Send the right remote files to the next node
             sendFilesForNextNode();
             System.out.println("We are the previous node" +
