@@ -334,11 +334,16 @@ public class Client {
         if (files != null) {
             for (File file : files) {
                 try {
-                    String fileName = file.getName();
-                    InetAddress location = InetAddress.getByName(requestFileLocation(fileName).replaceAll("/", ""));
-                    System.out.println("Replication destination of " + fileName + ": " + location);
-                    Thread send = new SendReplicateFileThread(location, localDir, fileName);
-                    send.start();
+                    if (!file.getName().startsWith("log_")) {
+                        String fileName = file.getName();
+                        String logFilename = makeLogFile(fileName);
+                        InetAddress location = InetAddress.getByName(requestFileLocation(fileName).replaceAll("/", ""));
+                        System.out.println("Replication destination of " + fileName + ": " + location);
+                        Thread send = new SendReplicateFileThread(location, localDir, fileName);
+                        Thread sendLog = new SendReplicateFileThread(location, localDir, logFilename);
+                        send.start();
+                        sendLog.start();
+                    }
                 } catch (UnknownHostException e) {
                     System.err.println(e.getMessage());
                 }
