@@ -45,15 +45,18 @@ public class ReceiveReplicateFileThread extends Thread {
                 System.out.println("Receive:\n" + hex(buf));
             }
 
-            System.out.println("log file check: " + localFileSet.contains(fileName.substring(4, fileName.length() - 4)));
-
-            if (localFileSet.contains(fileName) || (fileName.startsWith("log_") && localFileSet.contains(fileName.substring(4, fileName.length() - 4)))) {
+            if (localFileSet.contains(fileName)) {
                 Thread sendReplicateFileThread = new SendReplicateFileThread(prevNode, dir, fileName);
-                Thread sendLogFileThread = new SendReplicateFileThread(prevNode, dir, "log_" + fileName + ".txt");
                 sendReplicateFileThread.start();
-                sendLogFileThread.start();
                 File f = new File(dir + fileName);
                 f.delete();
+            } else if (fileName.startsWith("log_")) {
+                if (localFileSet.contains(fileName.substring(4, fileName.length() - 4))) {
+                    Thread sendLogFileThread = new SendReplicateFileThread(prevNode, dir, fileName);
+                    sendLogFileThread.start();
+                    File f = new File(dir + fileName);
+                    f.delete();
+                }
             }
 
             reader.close();
