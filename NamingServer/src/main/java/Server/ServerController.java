@@ -10,15 +10,12 @@ public class ServerController {
 
     private Server server = new Server("map.xml");
 
-    // TODO can be removed because of discovery
     /**
      * POST: register the node
      *
      * @param name The new name of the node
      * @param ip   The ip address of the node
-     * @return 1: all good,
-     * -1: hash already exists,
-     * -2: host not found
+     * @return <ul><li>1: all good</li><li>-1: hash already exists</li><li>-2: host not found</li></ul>
      */
     @PostMapping("/register")
     public int register(@RequestParam String name, @RequestParam String ip) {

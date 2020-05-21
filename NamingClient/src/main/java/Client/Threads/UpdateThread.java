@@ -5,16 +5,27 @@ import Client.Client;
 import java.nio.file.*;
 import java.util.*;
 
+/**
+ * Thread that checks the local files to see if there are any new, changed or deleted files
+ */
 public class UpdateThread extends Thread {
+    private Path localPath;     //The absoulte path to the directory that has to be checked
+    private Client client;      //The instance of client to invoke methods
 
-    private Path localPath;
-    private Client client;
-
+    /**
+     * Constructor
+     *
+     * @param client    The instance of client to invoke methods
+     * @param localPath The absoulte path to the directory that has to be checked
+     */
     public UpdateThread(Client client, String localPath) {
         this.client = client;
         this.localPath = Paths.get(localPath);
     }
 
+    /**
+     * Run the thread
+     */
     @Override
     public void run() {
         try (WatchService service = FileSystems.getDefault().newWatchService()) {
@@ -29,6 +40,7 @@ public class UpdateThread extends Thread {
                 for (WatchEvent<?> event : watchKey.pollEvents()) {
                     String eventName = event.kind().name();
                     Path path = (Path) event.context();
+
 
                     switch (eventName) {
                         case "ENTRY_CREATE":

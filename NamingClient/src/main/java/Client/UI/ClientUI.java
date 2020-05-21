@@ -1,7 +1,7 @@
 package Client.UI;
 
 import Client.Client;
-import Client.Threads.RequestFileThread;
+import Client.Threads.Request.RequestFileThread;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -37,6 +37,11 @@ public class ClientUI extends Application {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+
+        LoadingBox loading = new LoadingBox("Connecting", "Connecting to server");
+        loading.display();
+        while (!client.isConnected());
+        loading.close();
 
         window = primaryStage;
         window.setTitle("System Y Client");
