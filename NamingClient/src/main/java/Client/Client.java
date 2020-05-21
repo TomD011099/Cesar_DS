@@ -376,6 +376,10 @@ public class Client {
         sendString(ip, port, "", string);
     }
 
+    /**
+     * Send all the correct files in the replicated directory to the nextNode if needed
+     * This function is called when a new node joins the network and we are the previous node
+     */
     private void sendFilesForNextNode() {
         File[] files = new File(replicaDir).listFiles();
         if (files != null) {
@@ -383,7 +387,8 @@ public class Client {
                 if (!file.getName().startsWith("log_")) {
                     CesarString filenameCesar = new CesarString(file.getName());
                     String filename = file.getName();
-                    if (filenameCesar.hashCode() > nextID) {
+                    int hashCode = filenameCesar.hashCode();
+                    if ((hashCode > nextID) && (hashCode < prevID)) {
                         Thread send = new SendReplicateFileThread(nextNode, replicaDir, filename);
                         Thread sendLog = new SendReplicateFileThread(nextNode, replicaDir, "log_" + filename + ".txt");
                         send.start();
@@ -562,7 +567,7 @@ public class Client {
         // Check if the file itself is not a log file because we ignore them
         // Also check if the file is not a swap file (Linux only), because they're not meant to be sent
         if (!filename.startsWith("log_") && !filename.contains(".swp")) {
-            System.out.println("Local file delted: " + filename);
+            System.out.println("Local file deleted: " + filename);
 
             try {
                 localFileSet.remove(filename);
@@ -694,7 +699,7 @@ public class Client {
         String input;
 
         while (!quit) {
-            System.out.println("\n\nGive the file path you want to access: (press x to stop)");
+            System.out.println("\n\nGive the file path you want to access or press x to stop");
             input = sc.nextLine();
             if (!input.isEmpty() && !input.equals("x")) {
                 String location = requestFileLocation(input);
@@ -713,7 +718,7 @@ public class Client {
         requestServer.stop();
         tcpControl.stop();
         multicastReceiver.stop();
-        //TODO client doesn't stop
+        //TODO client doesn't fully stop
     }
 
     public void runGraphic() throws UnknownHostException {
