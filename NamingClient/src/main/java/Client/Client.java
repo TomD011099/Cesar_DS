@@ -390,7 +390,7 @@ public class Client {
                     CesarString filenameCesar = new CesarString(file.getName());
                     String filename = file.getName();
                     int hashCode = filenameCesar.hashCode();
-                    if ((hashCode > nextID) && (hashCode < prevID)) {
+                    if ((hashCode > nextID) && (nextID > currentID) && !((prevID > currentID) && (hashCode > prevID))) {
                         Thread send = new SendReplicateFileThread(nextNode, replicaDir, filename);
                         Thread sendLog = new SendReplicateFileThread(nextNode, replicaDir, "log_" + filename + ".txt");
                         send.start();
