@@ -11,5 +11,6 @@ public class Ports {
     public static int bootstrapPrevPort = 12349;
     public static int discoveryPort = 54321;
 
-    public static int multicastPort = 4446;
+    public static int multicastServerPort = 4446;
+    public static int multicastNeighborPort = 4447;
 }
