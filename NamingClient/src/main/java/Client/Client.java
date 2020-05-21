@@ -300,10 +300,9 @@ public class Client {
                     "\n  My nextNode: " + nextNode +
                     "\n  My prevNode: " + prevNode);
         } else {
-            System.out.println("I've got more friends (naming server, you're my best friend)");
+            System.out.println("I've got more friends, start replication");
+            initReplicateFiles();
         }
-
-        initReplicateFiles();
     }
 
     /**
