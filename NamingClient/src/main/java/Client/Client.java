@@ -727,6 +727,8 @@ public class Client {
             System.out.println("Shutdown");
             shutdown();
             multicastReceiver.stop();
+        } else {
+            System.err.println("Nodename already in use!");
         }
         replicateServer.stop();
         requestServer.stop();

@@ -87,8 +87,7 @@ public class Server {
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-        }
-    }
+        }    }
 
     /**
      * Unregister a node that is going to leave the network
