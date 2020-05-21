@@ -42,7 +42,4 @@ public class FileTreePane {
         return pane;
     }
 
-    public String getPath() {
-        return path;
-    }
 }

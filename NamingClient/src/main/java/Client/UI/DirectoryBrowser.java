@@ -7,7 +7,7 @@ import java.io.File;
 
 public class DirectoryBrowser {
 
-    private Stage primaryStage;
+    private final Stage primaryStage;
 
     public DirectoryBrowser(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -15,7 +15,6 @@ public class DirectoryBrowser {
 
     public String select() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        //directoryChooser.setInitialDirectory();
         File dir = directoryChooser.showDialog(primaryStage);
 
         while (dir == null) {
