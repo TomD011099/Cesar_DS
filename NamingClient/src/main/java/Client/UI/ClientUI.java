@@ -1,7 +1,7 @@
 package Client.UI;
 
 import Client.Client;
-import Client.Threads.RequestFileThread;
+import Client.Threads.Request.RequestFileThread;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;

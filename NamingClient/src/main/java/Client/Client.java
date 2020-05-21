@@ -375,8 +375,8 @@ public class Client {
                     CesarString filenameCesar = new CesarString(file.getName());
                     String filename = file.getName();
                     if (filenameCesar.hashCode() > nextID) {
-                        Thread send = new SendReplicateFileThread(nextNode, localDir, filename);
-                        Thread sendLog = new SendReplicateFileThread(nextNode, localDir, "log_" + filename + ".txt");
+                        Thread send = new SendReplicateFileThread(nextNode, replicaDir, filename);
+                        Thread sendLog = new SendReplicateFileThread(nextNode, replicaDir, "log_" + filename + ".txt");
                         send.start();
                         sendLog.start();
 
