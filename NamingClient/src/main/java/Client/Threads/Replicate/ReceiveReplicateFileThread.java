@@ -63,8 +63,8 @@ public class ReceiveReplicateFileThread extends Thread {
             }
 
             // Check if the received file is stored locally
-            if (localFileSet.contains(fileName)) {
-                // Rereolicate the file to the previous node (as required)
+            /*if (localFileSet.contains(fileName)) {
+                // Replicate the file to the previous node (as required)
                 Thread sendReplicateFileThread = new SendReplicateFileThread(prevNode, dir, fileName);
                 sendReplicateFileThread.start();
                 File f = new File(dir + fileName);
@@ -77,7 +77,7 @@ public class ReceiveReplicateFileThread extends Thread {
                     File f = new File(dir + fileName);
                     f.delete();
                 }
-            }
+            }*/
 
             // Close all connections
             reader.close();

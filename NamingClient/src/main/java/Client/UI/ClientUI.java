@@ -38,11 +38,6 @@ public class ClientUI extends Application {
             e.printStackTrace();
         }
 
-        LoadingBox loading = new LoadingBox("Connecting", "Connecting to server");
-        loading.display();
-        while (!client.isConnected());
-        loading.close();
-
         window = primaryStage;
         window.setTitle("System Y Client");
 
@@ -135,7 +130,7 @@ public class ClientUI extends Application {
                 } else {
                     try {
                         String location = client.requestFileLocation(fileToRequest);
-                        Thread requestFileThread = new RequestFileThread(InetAddress.getByName(location.substring(1)), fileToRequest, client.getRequestDir());
+                        Thread requestFileThread = new RequestFileThread(InetAddress.getByName(location), fileToRequest, client.getRequestDir());
                         requestFileThread.start();
                     } catch (IOException e) {
                         e.printStackTrace();
