@@ -34,6 +34,7 @@ public class Client {
     private RequestServer requestServer;        //The request serversocket
     private TCPControlServer tcpControl;        //TCPControl
 
+    private boolean onlyNode;                   //Indicates if we are the only node in the network
     private final int currentID;                //The ID of the node
     private int prevID;                         //The ID of the previous node
     private int nextID;                         //The ID of the next node
@@ -292,6 +293,7 @@ public class Client {
         restClient = new RestClient(serverIp.toString().substring(1));
         if (numberOfNodes < 1) {
             // We are the only node in the network
+            onlyNode = true;
             prevNode = currentIP;
             nextNode = currentIP;
             prevID = currentID;
@@ -418,6 +420,12 @@ public class Client {
                 "\n  nextID    " + nextID +
                 "\n  prevID    " + prevID +
                 "\n  hash      " + hash);
+
+        // If we were the only node in the network, replicate the local files
+        if (onlyNode) {
+            initReplicateFiles();
+            onlyNode = false;
+        }
 
         //See where in the ring the new node is located. If it's a neighbor, change your prev- and/or nextNode
         if (((currentID < hash) && (hash < nextID)) || ((nextID < currentID) && ((hash < nextID) || (hash > currentID)))) {
