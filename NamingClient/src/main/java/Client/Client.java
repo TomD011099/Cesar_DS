@@ -237,7 +237,7 @@ public class Client {
                 bootstrapThreadNext.start();
                 bootstrapThreadPrev.start();
 
-                while (bootstrapThreadNext.isAlive() || bootstrapThreadPrev.isAlive());
+                while (bootstrapThreadNext.isAlive() || bootstrapThreadPrev.isAlive()) ;
             } else {
                 success = false;
             }
@@ -699,40 +699,38 @@ public class Client {
      * @throws UnknownHostException When the given ip address is invalid
      */
     public void run() throws UnknownHostException {
-        if (!discovery()) {
+        if (discovery()) {
+            // Create a multicast receiver for client
+            MulticastReceiver multicastReceiver = new MulticastReceiver(this);
+            Thread receiverThread = new Thread(multicastReceiver);
+            receiverThread.start();
+            System.out.println("receiverThread started!");
 
-        }
+            boolean quit = false;
+            Scanner sc = new Scanner(System.in);
+            String input;
 
-        // Create a multicast receiver for client
-        MulticastReceiver multicastReceiver = new MulticastReceiver(this);
-        Thread receiverThread = new Thread(multicastReceiver);
-        receiverThread.start();
-        System.out.println("receiverThread started!");
+            while (!quit) {
+                System.out.println("\n\nGive the file path you want to access: (press x to stop)");
+                input = sc.nextLine();
+                if (!input.isEmpty() && !input.equals("x")) {
+                    String location = requestFileLocation(input);
 
-        boolean quit = false;
-        Scanner sc = new Scanner(System.in);
-        String input;
+                    Thread requestFileThread = new RequestFileThread(InetAddress.getByName(location), input, requestDir);
+                    requestFileThread.start();
 
-        while (!quit) {
-            System.out.println("\n\nGive the file path you want to access: (press x to stop)");
-            input = sc.nextLine();
-            if (!input.isEmpty() && !input.equals("x")) {
-                String location = requestFileLocation(input);
-
-                Thread requestFileThread = new RequestFileThread(InetAddress.getByName(location), input, requestDir);
-                requestFileThread.start();
-
-                System.out.println("Location: " + location);
-            } else if (input.equals("x")) {
-                quit = true;
+                    System.out.println("Location: " + location);
+                } else if (input.equals("x")) {
+                    quit = true;
+                }
             }
+            System.out.println("Shutdown");
+            shutdown();
+            multicastReceiver.stop();
         }
-        System.out.println("Shutdown");
-        shutdown();
         replicateServer.stop();
         requestServer.stop();
         tcpControl.stop();
-        multicastReceiver.stop();
         //TODO client doesn't stop
     }
 
