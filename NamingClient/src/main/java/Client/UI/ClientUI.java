@@ -38,6 +38,11 @@ public class ClientUI extends Application {
             e.printStackTrace();
         }
 
+        LoadingBox loading = new LoadingBox("Connecting", "Connecting to server");
+        loading.display();
+        while (!client.isConnected());
+        loading.close();
+
         window = primaryStage;
         window.setTitle("System Y Client");
 

@@ -153,6 +153,15 @@ public class Client {
     }
 
     /**
+     * Check if the client is connected to the server
+     *
+     * @return a boolean determining if the client is connected to a server
+     */
+    public boolean isConnected(){
+        return serverIp != null;
+    }
+
+    /**
      * Set the prevNode
      *
      * @param prevNode The InetAddress of the new prevNode
