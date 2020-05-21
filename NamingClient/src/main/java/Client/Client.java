@@ -304,6 +304,7 @@ public class Client {
         } else {
             System.out.println("I've got more friends, start replication");
             initReplicateFiles();
+            onlyNode = false;
         }
     }
 
@@ -422,6 +423,7 @@ public class Client {
                 "\n  hash      " + hash);
 
         // If we were the only node in the network, replicate the local files
+        System.out.println("Only node bij ontvangst multicast: " + onlyNode);
         if (onlyNode) {
             initReplicateFiles();
             onlyNode = false;
