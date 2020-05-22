@@ -16,6 +16,7 @@ import java.net.Socket;
 public class DiscoveryThread extends Thread {
     private Client client;                  //An instance of client to invoke methods
     private ServerSocket serverSocket;      //The serversocket to receive communications
+    private volatile boolean succes;        //Has the node been added?
 
     /**
      * Constructor
@@ -26,6 +27,7 @@ public class DiscoveryThread extends Thread {
     public DiscoveryThread(Client client) throws IOException {
         serverSocket = new ServerSocket(Ports.discoveryPort);
         this.client = client;
+        this.succes = true;
     }
 
     /**
@@ -37,7 +39,14 @@ public class DiscoveryThread extends Thread {
             // Get the response of the number of nodes
             Socket socket = serverSocket.accept();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            client.discoveryResponse(Integer.parseInt(bufferedReader.readLine()), socket.getInetAddress());
+            int response = Integer.parseInt(bufferedReader.readLine());
+
+            if (response != -1) {
+                client.discoveryResponse(response, socket.getInetAddress());
+            } else {
+                succes = false;
+            }
+
             bufferedReader.close();
             socket.close();
             serverSocket.close();
@@ -45,5 +54,11 @@ public class DiscoveryThread extends Thread {
             e.printStackTrace();
         }
 
+        System.out.println(Thread.currentThread().getName() + " Ended. (Disc)");
+
+    }
+
+    public boolean wasSuccessful() {
+        return succes;
     }
 }

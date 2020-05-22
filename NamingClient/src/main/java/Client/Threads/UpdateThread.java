@@ -61,5 +61,7 @@ public class UpdateThread extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println(Thread.currentThread().getName() + " Ended. (Update)");
     }
 }

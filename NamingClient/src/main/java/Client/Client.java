@@ -34,7 +34,6 @@ public class Client {
     private RequestServer requestServer;        //The request serversocket
     private TCPControlServer tcpControl;        //TCPControl
 
-    private boolean onlyNode;                   //Indicates if we are the only node in the network
     private final int currentID;                //The ID of the node
     private int prevID;                         //The ID of the previous node
     private int nextID;                         //The ID of the next node
@@ -134,7 +133,7 @@ public class Client {
     public String getRequestDir() {
         return requestDir;
     }
-    
+
     /**
      * Get the ip address of the previous node
      *
@@ -158,7 +157,7 @@ public class Client {
      *
      * @return a boolean determining if the client is connected to a server
      */
-    public boolean isConnected(){
+    public boolean isConnected() {
         return serverIp != null;
     }
 
@@ -212,26 +211,44 @@ public class Client {
 
     /**
      * Send name to all nodes using multicast ip-address can be extracted from message
+     *
+     * @return If the node was added successfully
      */
-    private void discovery() {
+    private boolean discovery() {
         MulticastPublisher publisher = new MulticastPublisher();
+        boolean success = true;
+
         try {
-            publisher.multicast(name);
+            publisher.multicastServer(name);
 
             // Receiving the number of nodes from the server
             DiscoveryThread discoveryThread = new DiscoveryThread(this);
-
-            // Receiving previous and next node from other nodes (if they exist)
-            BootstrapThread bootstrapThreadNext = new BootstrapThread(true, this);
-            BootstrapThread bootstrapThreadPrev = new BootstrapThread(false, this);
-
             discoveryThread.start();
 
-            bootstrapThreadNext.start();
-            bootstrapThreadPrev.start();
+            while (discoveryThread.isAlive()) ;
+
+            if (discoveryThread.wasSuccessful()) {
+                publisher.multicastNeigbors(name);
+
+                // Receiving previous and next node from other nodes (if they exist)
+                BootstrapThread bootstrapThreadNext = new BootstrapThread(true, this);
+                BootstrapThread bootstrapThreadPrev = new BootstrapThread(false, this);
+
+                bootstrapThreadNext.start();
+                bootstrapThreadPrev.start();
+
+                while (bootstrapThreadNext.isAlive() || bootstrapThreadPrev.isAlive()) ;
+            } else {
+                success = false;
+            }
+
         } catch (IOException e) {
+            System.err.println(e.getMessage());
             e.printStackTrace();
+            success = false;
         }
+
+        return success;
     }
 
     /**
@@ -293,7 +310,6 @@ public class Client {
         restClient = new RestClient(serverIp.toString().substring(1));
         if (numberOfNodes < 1) {
             // We are the only node in the network
-            onlyNode = true;
             prevNode = currentIP;
             nextNode = currentIP;
             prevID = currentID;
@@ -302,10 +318,10 @@ public class Client {
                     "\n  My nextNode: " + nextNode +
                     "\n  My prevNode: " + prevNode);
         } else {
-            System.out.println("I've got more friends, start replication");
-            initReplicateFiles();
-            onlyNode = false;
+            System.out.println("I've got more friends (naming server, you're my best friend)");
         }
+
+        initReplicateFiles();
     }
 
     /**
@@ -378,10 +394,6 @@ public class Client {
         sendString(ip, port, "", string);
     }
 
-    /**
-     * Send all the correct files in the replicated directory to the nextNode if needed
-     * This function is called when a new node joins the network and we are the previous node
-     */
     private void sendFilesForNextNode() {
         File[] files = new File(replicaDir).listFiles();
         if (files != null) {
@@ -389,10 +401,9 @@ public class Client {
                 if (!file.getName().startsWith("log_")) {
                     CesarString filenameCesar = new CesarString(file.getName());
                     String filename = file.getName();
-                    int hashCode = filenameCesar.hashCode();
-                    if ((hashCode > nextID) && (nextID > currentID) && !((prevID > currentID) && (hashCode > prevID))) {
-                        Thread send = new SendReplicateFileThread(nextNode, replicaDir, filename);
-                        Thread sendLog = new SendReplicateFileThread(nextNode, replicaDir, "log_" + filename + ".txt");
+                    if (filenameCesar.hashCode() > nextID) {
+                        Thread send = new SendReplicateFileThread(nextNode, localDir, filename);
+                        Thread sendLog = new SendReplicateFileThread(nextNode, localDir, "log_" + filename + ".txt");
                         send.start();
                         sendLog.start();
 
@@ -421,13 +432,6 @@ public class Client {
                 "\n  nextID    " + nextID +
                 "\n  prevID    " + prevID +
                 "\n  hash      " + hash);
-
-        // If we were the only node in the network, replicate the local files
-        System.out.println("Only node bij ontvangst multicast: " + onlyNode);
-        if (onlyNode) {
-            initReplicateFiles();
-            onlyNode = false;
-        }
 
         //See where in the ring the new node is located. If it's a neighbor, change your prev- and/or nextNode
         if (((currentID < hash) && (hash < nextID)) || ((nextID < currentID) && ((hash < nextID) || (hash > currentID)))) {
@@ -576,7 +580,7 @@ public class Client {
         // Check if the file itself is not a log file because we ignore them
         // Also check if the file is not a swap file (Linux only), because they're not meant to be sent
         if (!filename.startsWith("log_") && !filename.contains(".swp")) {
-            System.out.println("Local file deleted: " + filename);
+            System.out.println("Local file delted: " + filename);
 
             try {
                 localFileSet.remove(filename);
@@ -695,39 +699,41 @@ public class Client {
      * @throws UnknownHostException When the given ip address is invalid
      */
     public void run() throws UnknownHostException {
-        discovery();
+        if (discovery()) {
+            // Create a multicast receiver for client
+            MulticastReceiver multicastReceiver = new MulticastReceiver(this);
+            Thread receiverThread = new Thread(multicastReceiver);
+            receiverThread.start();
+            System.out.println("receiverThread started!");
 
-        // Create a multicast receiver for client
-        MulticastReceiver multicastReceiver = new MulticastReceiver(this);
-        Thread receiverThread = new Thread(multicastReceiver);
-        receiverThread.start();
-        System.out.println("receiverThread started!");
+            boolean quit = false;
+            Scanner sc = new Scanner(System.in);
+            String input;
 
-        boolean quit = false;
-        Scanner sc = new Scanner(System.in);
-        String input;
+            while (!quit) {
+                System.out.println("\n\nGive the file path you want to access: (press x to stop)");
+                input = sc.nextLine();
+                if (!input.isEmpty() && !input.equals("x")) {
+                    String location = requestFileLocation(input);
 
-        while (!quit) {
-            System.out.println("\n\nGive the file path you want to access or press x to stop");
-            input = sc.nextLine();
-            if (!input.isEmpty() && !input.equals("x")) {
-                String location = requestFileLocation(input);
+                    Thread requestFileThread = new RequestFileThread(InetAddress.getByName(location), input, requestDir);
+                    requestFileThread.start();
 
-                Thread requestFileThread = new RequestFileThread(InetAddress.getByName(location.substring(1)), input, requestDir);
-                requestFileThread.start();
-
-                System.out.println("Location: " + location);
-            } else if (input.equals("x")) {
-                quit = true;
+                    System.out.println("Location: " + location);
+                } else if (input.equals("x")) {
+                    quit = true;
+                }
             }
+            System.out.println("Shutdown");
+            shutdown();
+            multicastReceiver.stop();
+        } else {
+            System.err.println("Nodename already in use!");
         }
-        System.out.println("Shutdown");
-        shutdown();
         replicateServer.stop();
         requestServer.stop();
         tcpControl.stop();
-        multicastReceiver.stop();
-        //TODO client doesn't fully stop
+        //TODO client doesn't stop
     }
 
     public void runGraphic() throws UnknownHostException {

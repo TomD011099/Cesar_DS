@@ -31,7 +31,7 @@ public class MulticastReceiver implements Runnable {
     public void run() {
         try {
             //Create a socket and join the group
-            MulticastSocket socket = new MulticastSocket(Ports.multicastPort);
+            MulticastSocket socket = new MulticastSocket(Ports.multicastNeighborPort);
             InetAddress group = InetAddress.getByName("230.0.0.0");
             socket.joinGroup(group);
 
@@ -45,6 +45,7 @@ public class MulticastReceiver implements Runnable {
                 client.handleMulticastMessage(strNodeName, nodeInfoPacket.getAddress());
             }
             socket.close();
+            System.out.println(Thread.currentThread().getName() + " Ended. (MulticastReceiver)");
 
         } catch (IOException e) {
             e.printStackTrace();
