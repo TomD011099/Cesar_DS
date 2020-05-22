@@ -57,5 +57,7 @@ public class SendRequestedFileThread extends Thread {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+
+        System.out.println("SendRequestedFile Thread ended");
     }
 }

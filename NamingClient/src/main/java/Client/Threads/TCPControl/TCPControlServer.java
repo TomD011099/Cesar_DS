@@ -43,6 +43,8 @@ public class TCPControlServer implements Runnable {
             }
 
         }
+
+        System.out.println("TCPControlServer Thread ended");
     }
 
     /**

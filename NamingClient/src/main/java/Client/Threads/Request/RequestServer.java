@@ -47,6 +47,8 @@ public class RequestServer implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println("RequestServer Thread ended");
     }
 
     /**

@@ -49,6 +49,8 @@ public class MulticastReceiver implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println("MulticastReceiver Thread ended");
     }
 
     /**

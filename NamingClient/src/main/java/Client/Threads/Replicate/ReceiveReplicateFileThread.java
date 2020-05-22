@@ -89,6 +89,8 @@ public class ReceiveReplicateFileThread extends Thread {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+
+        System.out.println("ReceiveReplicateFile Thread ended");
     }
 
     /**

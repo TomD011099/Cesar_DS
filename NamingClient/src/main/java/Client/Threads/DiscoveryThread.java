@@ -53,7 +53,8 @@ public class DiscoveryThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Discovery has ended");
+
+        System.out.println("Discovery Thread ended");
     }
 
     public boolean wasSuccessfull() {

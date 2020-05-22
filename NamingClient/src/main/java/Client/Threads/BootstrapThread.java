@@ -55,5 +55,7 @@ public class BootstrapThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println("Bootstrap Thread ended");
     }
 }
