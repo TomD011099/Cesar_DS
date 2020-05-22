@@ -290,7 +290,7 @@ public class Client {
         // Make a new restClient since the server ip is known, also set the server IP
         serverIp = ipServer;
         restClient = new RestClient(serverIp.toString().substring(1));
-        if (numberOfNodes < 1) {
+        if (numberOfNodes == 0) {
             // We are the only node in the network
             onlyNode = true;
             prevNode = currentIP;

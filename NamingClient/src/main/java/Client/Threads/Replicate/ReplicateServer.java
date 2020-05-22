@@ -55,6 +55,11 @@ public class ReplicateServer implements Runnable {
      * Stop the thread
      */
     public void stop() {
-        stop = true;
+        try {
+            stop = true;
+            serverSocket.close();
+        } catch (Exception e) {
+            e.getMessage();
+        }
     }
 }
