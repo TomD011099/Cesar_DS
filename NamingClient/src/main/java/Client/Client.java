@@ -224,7 +224,9 @@ public class Client {
             DiscoveryThread discoveryThread = new DiscoveryThread(this);
             discoveryThread.start();
 
-            while (discoveryThread.isAlive()) ;
+            while (discoveryThread.isAlive()) {
+                System.out.println("lololololololol");
+            }
 
             if (discoveryThread.wasSuccessfull()) {
                 publisher.multicastNeigbors(name);
