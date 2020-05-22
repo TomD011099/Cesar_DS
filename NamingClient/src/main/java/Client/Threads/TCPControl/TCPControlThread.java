@@ -84,6 +84,8 @@ public class TCPControlThread extends Thread {
             System.err.println(e);
             e.printStackTrace();
         }
+
+        System.out.println(Thread.currentThread().getName() + " Ended. (TCPThread)");
     }
 
     /**

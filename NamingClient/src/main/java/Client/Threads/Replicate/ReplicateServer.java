@@ -47,6 +47,8 @@ public class ReplicateServer implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println(Thread.currentThread().getName() + " Ended. (ReplServ)");
     }
 
     /**

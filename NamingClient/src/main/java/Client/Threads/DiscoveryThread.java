@@ -54,6 +54,8 @@ public class DiscoveryThread extends Thread {
             e.printStackTrace();
         }
 
+        System.out.println(Thread.currentThread().getName() + " Ended. (Disc)");
+
     }
 
     public boolean wasSuccessful() {

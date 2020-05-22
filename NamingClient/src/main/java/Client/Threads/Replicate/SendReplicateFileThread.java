@@ -70,6 +70,8 @@ public class SendReplicateFileThread extends Thread {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+
+        System.out.println(Thread.currentThread().getName() + " Ended. (SendRepl)");
     }
 
     /**

@@ -45,6 +45,7 @@ public class MulticastReceiver implements Runnable {
                 client.handleMulticastMessage(strNodeName, nodeInfoPacket.getAddress());
             }
             socket.close();
+            System.out.println(Thread.currentThread().getName() + " Ended. (MulticastReceiver)");
 
         } catch (IOException e) {
             e.printStackTrace();
