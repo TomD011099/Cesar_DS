@@ -238,7 +238,9 @@ public class Client {
                 bootstrapThreadNext.start();
                 bootstrapThreadPrev.start();
 
-                while (bootstrapThreadNext.isAlive() || bootstrapThreadPrev.isAlive()) ;
+                while (bootstrapThreadNext.isAlive() || bootstrapThreadPrev.isAlive()) {
+                    System.out.println("tweede while dink");
+                }
             } else {
                 success = false;
             }
