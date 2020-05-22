@@ -35,7 +35,7 @@ public class RequestServer implements Runnable {
         while (!stop) {
             try {
                 Socket socket = serverSocket.accept();
-                Thread sendRequestedFileThread = new SendRequestedFileThread(socket, client.getLocalDir());
+                Thread sendRequestedFileThread = new SendRequestedFileThread(socket, client.getRequestDir());
                 sendRequestedFileThread.start();
             } catch (IOException e) {
                 e.printStackTrace();

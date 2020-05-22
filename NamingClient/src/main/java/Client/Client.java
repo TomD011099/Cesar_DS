@@ -213,25 +213,41 @@ public class Client {
     /**
      * Send name to all nodes using multicast ip-address can be extracted from message
      */
-    private void discovery() {
+    private boolean discovery() {
         MulticastPublisher publisher = new MulticastPublisher();
+        boolean success = true;
+
         try {
-            publisher.multicast(name);
+            publisher.multicastServer(name);
 
             // Receiving the number of nodes from the server
             DiscoveryThread discoveryThread = new DiscoveryThread(this);
-
-            // Receiving previous and next node from other nodes (if they exist)
-            BootstrapThread bootstrapThreadNext = new BootstrapThread(true, this);
-            BootstrapThread bootstrapThreadPrev = new BootstrapThread(false, this);
-
             discoveryThread.start();
 
-            bootstrapThreadNext.start();
-            bootstrapThreadPrev.start();
+            while (discoveryThread.isAlive()) ;
+
+            if (discoveryThread.wasSuccessfull()) {
+                publisher.multicastNeigbors(name);
+
+                // Receiving previous and next node from other nodes (if they exist)
+                BootstrapThread bootstrapThreadNext = new BootstrapThread(true, this);
+                BootstrapThread bootstrapThreadPrev = new BootstrapThread(false, this);
+
+                bootstrapThreadNext.start();
+                bootstrapThreadPrev.start();
+
+                while (bootstrapThreadNext.isAlive() || bootstrapThreadPrev.isAlive()) ;
+            } else {
+                success = false;
+            }
+
         } catch (IOException e) {
+            System.err.println(e.getMessage());
             e.printStackTrace();
+            success = false;
         }
+
+        return success;
     }
 
     /**
@@ -695,38 +711,41 @@ public class Client {
      * @throws UnknownHostException When the given ip address is invalid
      */
     public void run() throws UnknownHostException {
-        discovery();
 
-        // Create a multicast receiver for client
-        MulticastReceiver multicastReceiver = new MulticastReceiver(this);
-        Thread receiverThread = new Thread(multicastReceiver);
-        receiverThread.start();
-        System.out.println("receiverThread started!");
+        if (discovery()) {
+            // Create a multicast receiver for client
+            MulticastReceiver multicastReceiver = new MulticastReceiver(this);
+            Thread receiverThread = new Thread(multicastReceiver);
+            receiverThread.start();
+            System.out.println("receiverThread started!");
 
-        boolean quit = false;
-        Scanner sc = new Scanner(System.in);
-        String input;
+            boolean quit = false;
+            Scanner sc = new Scanner(System.in);
+            String input;
 
-        while (!quit) {
-            System.out.println("\n\nGive the file path you want to access or press x to stop");
-            input = sc.nextLine();
-            if (!input.isEmpty() && !input.equals("x")) {
-                String location = requestFileLocation(input);
+            while (!quit) {
+                System.out.println("\n\nGive the file path you want to access or press x to stop");
+                input = sc.nextLine();
+                if (!input.isEmpty() && !input.equals("x")) {
+                    String location = requestFileLocation(input);
 
-                Thread requestFileThread = new RequestFileThread(InetAddress.getByName(location.substring(1)), input, requestDir);
-                requestFileThread.start();
+                    Thread requestFileThread = new RequestFileThread(InetAddress.getByName(location), input, requestDir);
+                    requestFileThread.start();
 
-                System.out.println("Location: " + location);
-            } else if (input.equals("x")) {
-                quit = true;
+                    System.out.println("Location: " + location);
+                } else if (input.equals("x")) {
+                    quit = true;
+                }
             }
+            System.out.println("Shutdown");
+            shutdown();
+            multicastReceiver.stop();
+        } else {
+            System.out.println("Node name " + name + " already in use!");
         }
-        System.out.println("Shutdown");
-        shutdown();
         replicateServer.stop();
         requestServer.stop();
         tcpControl.stop();
-        multicastReceiver.stop();
         //TODO client doesn't fully stop
     }
 
