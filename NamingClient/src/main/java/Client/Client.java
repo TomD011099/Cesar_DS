@@ -36,8 +36,8 @@ public class Client {
     private TCPControlServer tcpControl;        //TCPControl
 
     private boolean onlyNode;                   //Indicates if we are the only node in the network
-    private boolean ready;                      //Init is ready
-    private boolean allowed;                    //Is the name valid?
+    private volatile boolean ready;             //Init is ready
+    private volatile boolean allowed;           //Is the name valid?
     private final int currentID;                //The ID of the node
     private int prevID;                         //The ID of the previous node
     private int nextID;                         //The ID of the next node
