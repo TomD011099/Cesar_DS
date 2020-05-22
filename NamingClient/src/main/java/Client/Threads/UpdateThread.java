@@ -2,6 +2,7 @@ package Client.Threads;
 
 import Client.Client;
 
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 
@@ -9,9 +10,10 @@ import java.util.*;
  * Thread that checks the local files to see if there are any new, changed or deleted files
  */
 public class UpdateThread implements Runnable {
-    private Path localPath;     //The absoulte path to the directory that has to be checked
-    private Client client;      //The instance of client to invoke methods
-    private volatile  boolean stop;
+    private Path localPath;             //The absoulte path to the directory that has to be checked
+    private Client client;              //The instance of client to invoke methods
+    private volatile boolean stop;      //Stop the thread
+    private WatchService service;       //The service that'll watch the files
 
     /**
      * Constructor
@@ -23,6 +25,11 @@ public class UpdateThread implements Runnable {
         this.client = client;
         this.localPath = Paths.get(localPath);
         this.stop = false;
+        try {
+            this.service = FileSystems.getDefault().newWatchService();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -30,7 +37,7 @@ public class UpdateThread implements Runnable {
      */
     @Override
     public void run() {
-        try (WatchService service = FileSystems.getDefault().newWatchService()) {
+        try {
             Map<WatchKey, Path> keyMap = new HashMap<>();
             keyMap.put(localPath.register(service, StandardWatchEventKinds.ENTRY_CREATE,
                     StandardWatchEventKinds.ENTRY_DELETE,
@@ -60,6 +67,10 @@ public class UpdateThread implements Runnable {
                 }
 
             } while (watchKey.reset() && !stop);
+        } catch (ClosedWatchServiceException e) {
+            if (!stop) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,6 +79,11 @@ public class UpdateThread implements Runnable {
     }
 
     public void stop() {
-        stop = true;
+        try {
+            stop = true;
+            service.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

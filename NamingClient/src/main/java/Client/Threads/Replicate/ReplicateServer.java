@@ -38,14 +38,10 @@ public class ReplicateServer implements Runnable {
                 Thread receiveReplicationFileTread = new ReceiveReplicateFileThread(socket, client.getReplicaDir(), client.getLocalFileSet(), client.getPrevNode());
                 receiveReplicationFileTread.start();
             } catch (IOException e) {
-                e.printStackTrace();
+                if (!stop) {
+                    e.printStackTrace();
+                }
             }
-        }
-
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         System.out.println("ReplicateServer Thread ended");

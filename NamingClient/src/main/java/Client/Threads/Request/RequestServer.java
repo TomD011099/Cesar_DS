@@ -38,14 +38,10 @@ public class RequestServer implements Runnable {
                 Thread sendRequestedFileThread = new SendRequestedFileThread(socket, client.getRequestDir());
                 sendRequestedFileThread.start();
             } catch (IOException e) {
-                e.printStackTrace();
+                if (!stop) {
+                    e.printStackTrace();
+                }
             }
-        }
-
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         System.out.println("RequestServer Thread ended");
