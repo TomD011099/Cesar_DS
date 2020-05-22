@@ -317,6 +317,7 @@ public class Client {
                     bootstrapThreadPrev.start();
 
                     while(prevNode == null || nextNode == null);
+                    System.out.println("next and prev set");
                     initReplicateFiles();
                     onlyNode = false;
                 } catch (Exception e) {
@@ -719,6 +720,8 @@ public class Client {
         discovery();
 
         while (!ready);
+
+        System.out.println("ready");
 
         if (allowed) {
             // Create a multicast receiver for client
