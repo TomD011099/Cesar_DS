@@ -6,6 +6,7 @@ import Client.Util.Ports;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The thread that monitors incoming traffic for TCPControl and creates thread to handle these communications
@@ -13,7 +14,7 @@ import java.net.Socket;
 public class TCPControlServer implements Runnable {
     private ServerSocket serverSocket;  //The serversocket that'll accept all incoming connections
     private Client client;              //The client to give along with the threads
-    private volatile boolean stop;      //A boolean to stop the thread
+    private static AtomicBoolean stop;      //A boolean to stop the thread
 
     /**
      * Constructor
@@ -24,7 +25,7 @@ public class TCPControlServer implements Runnable {
     public TCPControlServer(Client client) throws IOException {
         this.serverSocket = new ServerSocket(Ports.tcpControlPort);
         this.client = client;
-        this.stop = false;
+        this.stop = new AtomicBoolean(false);
     }
 
     /**
@@ -32,7 +33,7 @@ public class TCPControlServer implements Runnable {
      */
     @Override
     public void run() {
-        while (!stop) {
+        while (!stop.get()) {
             try {
                 Socket socket = serverSocket.accept();
                 Thread tcpControlThread = new TCPControlThread(socket, client);
@@ -51,6 +52,6 @@ public class TCPControlServer implements Runnable {
      * Stop the thread
      */
     public void stop() {
-        stop = true;
+        stop.set(true);
     }
 }

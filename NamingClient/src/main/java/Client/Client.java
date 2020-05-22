@@ -236,6 +236,8 @@ public class Client {
                 bootstrapThreadNext.start();
                 bootstrapThreadPrev.start();
 
+                while(prevNode == null || nextNode == null);
+
             } else {
                 success = false;
             }
@@ -723,7 +725,7 @@ public class Client {
             String input;
 
             while (!quit) {
-                System.out.println("\n\nGive the file path you want to access or press x to stop");
+                System.out.println("\n\nGive the file you want to download or press x to stop");
                 input = sc.nextLine();
                 if (!input.isEmpty() && !input.equals("x")) {
                     String location = requestFileLocation(input);
