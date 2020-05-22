@@ -52,6 +52,12 @@ public class TCPControlServer implements Runnable {
      * Stop the thread
      */
     public void stop() {
-        stop.set(true);
+        try {
+            stop.set(true);
+            serverSocket.close();
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
     }
 }

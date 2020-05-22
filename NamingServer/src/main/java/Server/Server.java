@@ -59,9 +59,6 @@ public class Server {
     public void handleMulticastMessage(String nodeName, InetAddress ip) {
         // Reply with the number of nodes in the network
         sendNumberOfNodes(ip, (registerNode(nodeName, ip) == 1));
-
-        // Register the node
-        registerNode(nodeName, ip);
     }
 
     /**
@@ -76,10 +73,14 @@ public class Server {
             // Create a writer to write to the socket
             PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
 
-            if (ok)
+            if (ok) {
                 writer.println(map.size() - 1);
-            else
+                System.out.println("Data send: " + (map.size() - 1));
+            }
+            else {
                 writer.println(-1);
+                System.out.println("Data send: " + -1);
+            }
 
             writer.close();
             socket.close();

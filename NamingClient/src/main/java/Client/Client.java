@@ -10,6 +10,7 @@ import Client.Util.Ports;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
@@ -35,6 +36,8 @@ public class Client {
     private TCPControlServer tcpControl;        //TCPControl
 
     private boolean onlyNode;                   //Indicates if we are the only node in the network
+    private boolean ready;                      //Init is ready
+    private boolean allowed;                    //Is the name valid?
     private final int currentID;                //The ID of the node
     private int prevID;                         //The ID of the previous node
     private int nextID;                         //The ID of the next node
@@ -66,6 +69,8 @@ public class Client {
         this.replicaDir = replicaDir;
         this.localDir = localDir;
         this.requestDir = requestDir;
+        this.ready = false;
+        this.allowed = true;
 
         //Initialize localFileSet and add the files
         localFileSet = new HashSet<>();
@@ -211,12 +216,10 @@ public class Client {
     }
 
     /**
-     * Send name to all nodes using multicast ip-address can be extracted from message
+     * Send the name to the server (multicast because it's not yet known)
      */
-    private boolean discovery() {
+    private void discovery() {
         MulticastPublisher publisher = new MulticastPublisher();
-        boolean success = true;
-
         try {
             publisher.multicastServer(name);
 
@@ -224,31 +227,10 @@ public class Client {
             DiscoveryThread discoveryThread = new DiscoveryThread(this);
             discoveryThread.start();
 
-            while (discoveryThread.isAlive());
-
-            if (discoveryThread.wasSuccessfull()) {
-                publisher.multicastNeigbors(name);
-
-                // Receiving previous and next node from other nodes (if they exist)
-                BootstrapThread bootstrapThreadNext = new BootstrapThread(true, this);
-                BootstrapThread bootstrapThreadPrev = new BootstrapThread(false, this);
-
-                bootstrapThreadNext.start();
-                bootstrapThreadPrev.start();
-
-                while(prevNode == null || nextNode == null);
-
-            } else {
-                success = false;
-            }
-
         } catch (IOException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
-            success = false;
         }
-
-        return success;
     }
 
     /**
@@ -304,7 +286,7 @@ public class Client {
      * @param numberOfNodes Amount of nodes in the network
      * @param ipServer      The ip address of the server
      */
-    public void discoveryResponse(int numberOfNodes, InetAddress ipServer) {
+    public void discoveryResponse(int numberOfNodes, InetAddress ipServer, boolean wasSuccessfull) {
         // Make a new restClient since the server ip is known, also set the server IP
         serverIp = ipServer;
         restClient = new RestClient(serverIp.toString().substring(1));
@@ -319,10 +301,32 @@ public class Client {
                     "\n  My nextNode: " + nextNode +
                     "\n  My prevNode: " + prevNode);
         } else {
-            System.out.println("I've got more friends, start replication");
-            initReplicateFiles();
-            onlyNode = false;
+            System.out.println("I've got more friends");
+
+            if (wasSuccessfull) {
+                System.out.println("Accepted by server");
+                MulticastPublisher publisher = new MulticastPublisher();
+                try {
+                    publisher.multicastNeigbors(name);
+
+                    // Receiving previous and next node from other nodes (if they exist)
+                    BootstrapThread bootstrapThreadNext = new BootstrapThread(true, this);
+                    BootstrapThread bootstrapThreadPrev = new BootstrapThread(false, this);
+
+                    bootstrapThreadNext.start();
+                    bootstrapThreadPrev.start();
+
+                    while(prevNode == null || nextNode == null);
+                    initReplicateFiles();
+                    onlyNode = false;
+                } catch (Exception e) {
+                    e.getMessage();
+                }
+            } else {
+                allowed = false;
+            }
         }
+        ready = true;
     }
 
     /**
@@ -712,8 +716,11 @@ public class Client {
      * @throws UnknownHostException When the given ip address is invalid
      */
     public void run() throws UnknownHostException {
+        discovery();
 
-        if (discovery()) {
+        while (!ready);
+
+        if (allowed) {
             // Create a multicast receiver for client
             MulticastReceiver multicastReceiver = new MulticastReceiver(this);
             Thread receiverThread = new Thread(multicastReceiver);
