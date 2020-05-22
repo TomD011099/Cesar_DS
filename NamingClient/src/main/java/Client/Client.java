@@ -224,9 +224,7 @@ public class Client {
             DiscoveryThread discoveryThread = new DiscoveryThread(this);
             discoveryThread.start();
 
-            while (discoveryThread.isAlive()) {
-                System.out.println("lololololololol");
-            }
+            while (discoveryThread.isAlive());
 
             if (discoveryThread.wasSuccessfull()) {
                 publisher.multicastNeigbors(name);
@@ -238,9 +236,6 @@ public class Client {
                 bootstrapThreadNext.start();
                 bootstrapThreadPrev.start();
 
-                while (bootstrapThreadNext.isAlive() || bootstrapThreadPrev.isAlive()) {
-                    System.out.println("tweede while dink");
-                }
             } else {
                 success = false;
             }
