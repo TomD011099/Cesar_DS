@@ -34,6 +34,7 @@ public class Client {
     private ReplicateServer replicateServer;    //The replicate serversocket
     private RequestServer requestServer;        //The request serversocket
     private TCPControlServer tcpControl;        //TCPControl
+    private UpdateThread update;
 
     private boolean onlyNode;                   //Indicates if we are the only node in the network
     private volatile boolean ready;             //Init is ready
@@ -95,13 +96,14 @@ public class Client {
             tcpControl = new TCPControlServer(this);
             Thread tcpControlServerThread = new Thread(tcpControl, "TCPControl");
             tcpControlServerThread.start();
+
+            update = new UpdateThread(this, localDir);
+            Thread updateThread = new Thread(update, "UpdateThread");
+            updateThread.start();
         } catch (IOException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
-
-        UpdateThread updateThread = new UpdateThread(this, localDir);
-        updateThread.start();
     }
 
     /**
@@ -757,6 +759,7 @@ public class Client {
         replicateServer.stop();
         requestServer.stop();
         tcpControl.stop();
+        update.stop();
         //TODO client doesn't fully stop
     }
 

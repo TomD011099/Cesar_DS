@@ -14,6 +14,7 @@ import java.net.MulticastSocket;
 public class MulticastReceiver implements Runnable {
     private Client client;              //The client to invoke methods
     private volatile boolean quit;      //A bool to end the thread
+    private MulticastSocket socket;
 
     /**
      * The constructor
@@ -23,6 +24,11 @@ public class MulticastReceiver implements Runnable {
     public MulticastReceiver(Client client) {
         this.client = client;
         this.quit = false;
+        try {
+            this.socket  = new MulticastSocket(Ports.multicastNeighborPort);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -31,7 +37,6 @@ public class MulticastReceiver implements Runnable {
     public void run() {
         try {
             //Create a socket and join the group
-            MulticastSocket socket = new MulticastSocket(Ports.multicastNeighborPort);
             InetAddress group = InetAddress.getByName("230.0.0.0");
             socket.joinGroup(group);
 
@@ -44,7 +49,6 @@ public class MulticastReceiver implements Runnable {
                 System.out.println("Node " + strNodeName + " detected.");
                 client.handleMulticastMessage(strNodeName, nodeInfoPacket.getAddress());
             }
-            socket.close();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -57,6 +61,11 @@ public class MulticastReceiver implements Runnable {
      * Stop the thread
      */
     public void stop() {
-        quit = true;
+        try {
+            quit = true;
+            socket.close();
+        } catch (Exception e) {
+            e.getMessage();
+        }
     }
 }

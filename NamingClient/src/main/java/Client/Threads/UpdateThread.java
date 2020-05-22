@@ -8,9 +8,10 @@ import java.util.*;
 /**
  * Thread that checks the local files to see if there are any new, changed or deleted files
  */
-public class UpdateThread extends Thread {
+public class UpdateThread implements Runnable {
     private Path localPath;     //The absoulte path to the directory that has to be checked
     private Client client;      //The instance of client to invoke methods
+    private volatile  boolean stop;
 
     /**
      * Constructor
@@ -21,6 +22,7 @@ public class UpdateThread extends Thread {
     public UpdateThread(Client client, String localPath) {
         this.client = client;
         this.localPath = Paths.get(localPath);
+        this.stop = false;
     }
 
     /**
@@ -57,11 +59,15 @@ public class UpdateThread extends Thread {
                     }
                 }
 
-            } while (watchKey.reset());
+            } while (watchKey.reset() && !stop);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         System.out.println("Update Thread ended");
+    }
+
+    public void stop() {
+        stop = true;
     }
 }
