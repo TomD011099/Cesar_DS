@@ -27,8 +27,8 @@ public class Client {
     private RestClient restClient;              //A RESTClient for REST communication
     private final String name;                  //The name of the client
     private InetAddress currentIP;              //The ip address of the node
-    private InetAddress prevNode;               //The ip address of the previous node
-    private InetAddress nextNode;               //The ip address of the next node
+    private volatile InetAddress prevNode;               //The ip address of the previous node
+    private volatile InetAddress nextNode;               //The ip address of the next node
     private InetAddress serverIp;               //The ip address of the server
 
     private ReplicateServer replicateServer;    //The replicate serversocket
